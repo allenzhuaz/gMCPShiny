@@ -67,7 +67,8 @@ headingPanel(
           numericInput("trhh", "Transition Box Height", .1, .05, .3, .01),
           numericInput("trdigits", "# Digits for transitions", 2, 1, 6, 1),
           sliderInput("trprop", "Transition positioning", .05, .95, .33, .01),
-          numericInput("arrowsize", "Arrow Size", .035, .005, .6, .005)
+          numericInput("arrowsize", "Arrow Size", .035, .005, .6, .005),
+          numericInput("offset", "Space between Neighbor Arrows", .01, pi, .6, pi/4)
         ), # end Connections subtab
 
         tabPanel(

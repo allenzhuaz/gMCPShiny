@@ -318,7 +318,7 @@ plotInput <- reactive({
     trdigits = input$trdigits, # Number of decimal digits to show for transition digit arrow boxes
     trprop = input$trprop, # Transition positioning
     arrowsize = input$arrowsize, # Arrow Size
-
+    offset = input$offset,
     # ELLIPSES PLACEMENT
     x = xInputs(),
     y = yInputs(),

@@ -1,5 +1,5 @@
 tabPanel(
-  title = "hGraph",
+  title = "Initial Graph Setup",
   icon = icon("drafting-compass"),
   fluidRow(
     column(

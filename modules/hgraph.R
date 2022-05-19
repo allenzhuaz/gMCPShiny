@@ -107,7 +107,8 @@ hGraph <- function(nHypotheses = 4, # Number of hypotheses
                    fillalpha = 1,
                    legendTitle = NULL,
                    legend = FALSE,
-                   legendtextsize = 20) {
+                   legendtextsize = 20,
+                   legend.position = "bottom") {
   latestCall <<- as.list(environment())
   # compute middle of each rectangle
   radian <- (radianStart - (0:(nHypotheses - 1)) / nHypotheses * 2 * pi) %% (2 * pi)
@@ -185,7 +186,8 @@ hGraph <- function(nHypotheses = 4, # Number of hypotheses
     x <- x + theme_void() +
       theme(
         legend.title = element_text(size = legendtextsize),
-        legend.text = element_text(size = legendtextsize)
+        legend.text = element_text(size = legendtextsize),
+        legend.position = legend.position
       )
   } else {
     x <- x + theme_nothing()

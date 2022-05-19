@@ -86,6 +86,7 @@ headingPanel(
           conditionalPanel(
             condition = "input.chkLegend == true",
             textInput("txtLegendName", label = "Legend Name:", value = "Group Name"),
+            selectInput("legend.position", label = "Legend Position", choices = c("none", "left", "right", "bottom", "top"), selected = "bottom", multiple = FALSE),
             numericInput("legendtextsize", "Legend text size", 20, 6, 14, 1)
           ) # end Show Legend conditional panel
         ) # end Colors subtab

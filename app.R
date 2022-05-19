@@ -3,7 +3,7 @@
 library(shiny)
 library(rhandsontable)
 library(colourpicker)
-
+library(markdown)
 # Global modules and functions -------------------------------------------------
 
 source("modules/navbar-page-custom.R")

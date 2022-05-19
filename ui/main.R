@@ -24,6 +24,7 @@ navbarPageCustom(
     tags$script(src = "js/download-plot.js")
   ),
   source("ui/hgraph.R", local = TRUE)$value,
+  source("ui/gmcp.R", local = TRUE)$value,
   source("ui/about.R", local = TRUE)$value,
   footer = source("ui/footer.R", local = TRUE)$value
 )

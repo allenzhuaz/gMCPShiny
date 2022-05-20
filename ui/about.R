@@ -1,0 +1,22 @@
+tabPanel(
+  title = "About",
+  icon = icon("info-circle"),
+  fluidRow(
+    column(
+      width = 10, offset = 1,
+      fluidRow(
+        column(
+          width = 12,
+          span("About", style = "font-size:1.5rem;")
+        )
+      ),
+      hr(),
+      tags$style("#panel_about { padding: 32px 32px; }"),
+      headingPanel(
+        "About hgraph app",
+        id = "panel_about",
+        includeMarkdown("include/about.md")
+      )
+    )
+  )
+)

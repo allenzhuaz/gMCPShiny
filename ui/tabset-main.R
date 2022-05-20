@@ -1,0 +1,33 @@
+headingPanel(
+  "Outputs",
+
+  # Custom HTML to trigger JS which downloads image from DOM
+  # HTML('<a href="#" role="button" class="btn btn-default" onclick="prepHref(this)" download><i class="fa fa-download"></i>Download Image</a>'),
+
+  tabsetPanel(
+    tabPanel(
+      "Graph",
+      plotOutput("thePlot")
+    ),
+    tabPanel(
+      "Code",
+      p("Code from both the below tabs is needed in order to replicate this hGraph."),
+      downloadButton("downloadCode", label = "Download Code to an R File", class = "btn btn-outline-primary"),
+      br(),
+      br(),
+      tabsetPanel(
+        tabPanel(
+          "Function call for creating the hGraph",
+          p("This code can be updated when changes are made to the graph."),
+          actionButton("updateCode", label = "Update Code", class = "btn btn-outline-primary", icon = icon("sync")),
+          verbatimTextOutput("changingCode")
+        ),
+        tabPanel(
+          "Supporting code for creating the hGraph",
+          p("This code stays constant throughout graph changes."),
+          verbatimTextOutput("fixedCode")
+        )
+      )
+    )
+  )
+)

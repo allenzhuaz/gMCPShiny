@@ -1,0 +1,30 @@
+navbarPageCustom(
+  id = "hgraphnav",
+  title = "Multiplicity Graphs for Hypothesis Testing",
+  brand_image = "images/favicon.png",
+  brand_image_width = "22px",
+  brand_image_height = "22px",
+  lang = "en",
+  theme = bslib::bs_theme(
+    version = 5,
+    primary = "#00857c",
+    "navbar-light-brand-color" = "#212529",
+    "navbar-light-brand-hover-color" = "#212529",
+    "navbar-light-bg" = "#fff",
+    "navbar-light-color" = "#212529",
+    "navbar-light-active-color" = "#00857c",
+    "navbar-light-hover-color" = "#00857c"
+  ),
+  inverse = FALSE,
+  collapsible = TRUE,
+  header = tags$head(
+    tags$link(rel = "shortcut icon", type = "image/png", href = "images/favicon.png"),
+    tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
+    # Custom JS to enable downloading PNG from DOM
+    tags$script(src = "js/download-plot.js")
+  ),
+  source("ui/hgraph.R", local = TRUE)$value,
+  source("ui/gmcp.R", local = TRUE)$value,
+  source("ui/about.R", local = TRUE)$value,
+  footer = source("ui/footer.R", local = TRUE)$value
+)

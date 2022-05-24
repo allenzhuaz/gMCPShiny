@@ -5,6 +5,7 @@ Version: 2022.05.0
 Imports:
     colourpicker,
     rhandsontable,
+    shinyMatrix,
     shiny,
     dplyr,
     ggplot2,

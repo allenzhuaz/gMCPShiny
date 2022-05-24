@@ -74,7 +74,7 @@ headingPanel(
         tabPanel(
           "Colors",
           br(),
-          checkboxInput("chkAddColors", label = "Add Colors", value = FALSE),
+          checkboxInput("chkAddColors", label = "Add Colors", value = TRUE),
           conditionalPanel(
             condition = "input.chkAddColors == true",
             h4("Set the Colors"),
@@ -82,7 +82,7 @@ headingPanel(
             uiOutput("colorSet")
           ), # end Add Colors conditional panel
 
-          checkboxInput("chkLegend", label = "Show Legend", value = FALSE),
+          checkboxInput("chkLegend", label = "Show Legend", value = TRUE),
           conditionalPanel(
             condition = "input.chkLegend == true",
             textInput("txtLegendName", label = "Legend Name:", value = "Group Name"),

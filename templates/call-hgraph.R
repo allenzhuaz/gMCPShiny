@@ -21,7 +21,7 @@ h <- hGraph(
   legend          = <%=input$chkLegend%>,
   legendTitle     = <%=getLegendTitle()%>,
   legendtextsize  = <%=input$legendtextsize%>,
-  legend.position = "bottom"
+  legend.position = <%=paste0('"',input$legend.position,'"')%>
 )
 
 plot(h)

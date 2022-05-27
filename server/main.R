@@ -281,7 +281,8 @@ plotInput <- reactive({
     ellipsesColors  = groupColors,                   # colors for each groupName
     legend          = input$chkLegend,
     legendTitle     = getLegendTitle(),
-    legendtextsize  = input$legendtextsize
+    legendtextsize  = input$legendtextsize,
+    legend.position = input$legend.position
   )
 
 })

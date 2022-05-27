@@ -11,11 +11,28 @@ headingPanel(
       p("(Both name and group must be updated.)"),
       HTML('<p>The text input uses the plotmath syntax. See <a href="https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/plotmath.html", target = "_blank">plot math syntax</a> for details. Use <code>\\n</code> to add a line break.</p>'),
       br(),
-      rHandsontableOutput("hotHypotheses"),
+ #     rHandsontableOutput("hotHypotheses"),
+      matrixInput("hypothesesMatrix",
+                  value = as.matrix(data.frame(cbind(Name = paste0("H", 1:4),
+                                                     Alpha = rep(0.025/4, 4),
+                                                     Group = LETTERS[1:4]))),
+                  #class = "numeric",
+                  rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
+                  cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
+      ),
+      matrixButtonGroup("hypothesesMatrix"),
       br(),
-      rHandsontableOutput("hotGroups"),
+#      rHandsontableOutput("hotGroups"),
+      matrixInput("groupMatrix",
+                  value = as.matrix(data.frame(cbind(Group = LETTERS[1:4],
+                                                     GroupName = paste0("Group ", LETTERS[1:4])))),
+                  #class = "numeric",
+                  rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
+                  cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
+      ),
+      matrixButtonGroup("groupMatrix"),
       br(),
-      actionButton("update", label = "Update Nodes", class = "btn btn-outline-primary", icon = icon("sync")),
+#      actionButton("update", label = "Update Nodes", class = "btn btn-outline-primary", icon = icon("sync")),
       # bookmarkButton(),
       br(),
       h4("Save or load table data"),
@@ -31,9 +48,18 @@ headingPanel(
       "Transitions",
       h4("Input Data Frame"),
       p("Transitions between non-existing hypotheses will not influence graph output."),
-      rHandsontableOutput("hotTransitions"),
+#      rHandsontableOutput("hotTransitions"),
+      matrixInput("trwtMatrix",
+                  value = as.matrix(data.frame(cbind(From = c(1, 2, 3, 4),
+                                                     To = c(2, 3, 4, 1),
+                                                     Weight = rep(1, 4)))),
+                  class = "numeric",
+                  rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
+                  cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
+      ),
+      matrixButtonGroup("trwtMatrix"),
       br(),
-      actionButton("updateEdges", label = "Update Edges", class = "btn btn-outline-primary", icon = icon("sync"))
+#      actionButton("updateEdges", label = "Update Edges", class = "btn btn-outline-primary", icon = icon("sync"))
     ), # end Transitions Tab
 
     # Format Tab -----

@@ -69,10 +69,10 @@ output$colorSet <- renderUI({
   if (is.null(input$palette)) {
     print("No Value Selected for Color Palette")
   } else {
-    groupNames <- dataGroups()$GroupName
+    groupNames <- input$groupMatrix[,"GroupName"]
     if (input$palette == "All Colors") { # if palette selected is "All Colors"
       list(
-        lapply(1:nrow(dataGroups()), function(x) {
+        lapply(1:nrow(input$groupMatrix), function(x) {
           list(
             colourInput(
               # Create colorpicker inputs for all groups. Names of inputs are input$col1, input$col2, etc.
@@ -94,7 +94,7 @@ output$colorSet <- renderUI({
       )
 
       list(
-        lapply(1:nrow(dataGroups()), function(x) {
+        lapply(1:nrow(input$groupMatrix), function(x) {
           list(
             colourInput(
               # Create colorpicker inputs for all groups with options limited by palette. Names of inputs are input$col1, input$col2, etc.
@@ -149,12 +149,12 @@ dataGroups <- reactive({
 })
 
 dataColorsDF <- reactive({
-  DFColors <- dataGroups()
-  colorsExist <- eval(parse(text = paste0("input$col", nrow(dataGroups()))))
+  DFColors <- input$groupMatrix
+  colorsExist <- eval(parse(text = paste0("input$col", nrow(input$groupMatrix))))
   if (input$chkAddColors == FALSE | is.null(colorsExist)) { # if either Add Colors checkbox is false or color inputs don't exist, use light grey for all hypotheses
-    DFColors$cols <- rep("#DCDCDC", nrow(dataGroups()))
+    DFColors$cols <- rep("#DCDCDC", nrow(input$groupMatrix))
   } else { # otherwise, add a column for the desired color per group
-    DFColors$cols <- sapply(1:nrow(dataGroups()), function(x) eval(parse(text = paste0("input$col", x))))
+    DFColors$cols <- sapply(1:nrow(input$groupMatrix), function(x) eval(parse(text = paste0("input$col", x))))
   }
   DFColors
 })
@@ -282,56 +282,84 @@ getLegendTitle <- function() {
 # Create plot ------------------------------------------------------------------
 
 plotInput <- reactive({
-  DFHypotheses <- dataHypotheses()
+#  DFHypotheses <- dataHypotheses()
 
-  DFColors <- dataColorsDF()
+#  DFColors <- dataColorsDF()
 
-  DFAll <- left_join(DFHypotheses, DFColors, by = "Group")
+#  DFAll <- left_join(DFHypotheses, DFColors, by = "Group")
 
   # Remove invalid transitions from input
-  keepTransRows <- (dataTrans()$From %in% c(1:nrow(DFAll))) & (dataTrans()$To %in% c(1:nrow(DFAll)))
-  transitions <- dataTrans()[keepTransRows, ]
+#  keepTransRows <- (dataTrans()$From %in% c(1:nrow(DFAll))) & (dataTrans()$To %in% c(1:nrow(DFAll)))
+#  transitions <- dataTrans()[keepTransRows, ]
 
-  m <- df2graph(transitions)
+  m <- df2graph(as.data.frame(input$trwtMatrix))
 
   # Create a named vector for group colors
-  groupColors <- DFColors$cols
-  names(groupColors) <- DFColors$GroupName
+#  groupColors <- DFColors$cols
+#  names(groupColors) <- DFColors$GroupName
 
   # Call hGraph()
-  hGraph(
-    nHypotheses = nrow(DFAll), # Number of Hypotheses, determines the number of circles to draw
+  # hGraph(
+  #   nHypotheses = nrow(input$hypothesesMatrix), # Number of Hypotheses, determines the number of circles to draw
+  #
+  #   # ELLIPSES FORMATTING AND TEXT
+  #   nodeTextTop = input$hypothesesMatrix[,"Name"],
+  #   nodeTextBottom = input$hypothesesMatrix[,"Alpha"],
+  #   halfHgt = input$height,
+  #   halfWid = input$width,
+  #   size = input$size,
+  #   digits = input$digits, # Number of decimal digits to show for alpha - not used right now?
+  #
+  #   # TRANSITION FORMATTING AND TEXT
+  #   m = m, # Transition df
+  #   boxtextsize = input$boxtextsize, # Transition Text Size
+  #   trhw = input$trhw, # Transition Box Width
+  #   trhh = input$trhh, # Transition Box Height
+  #   trdigits = input$trdigits, # Number of decimal digits to show for transition digit arrow boxes
+  #   trprop = input$trprop, # Transition positioning
+  #   arrowsize = input$arrowsize, # Arrow Size
+  #   offset = input$offset,
+  #   # ELLIPSES PLACEMENT
+  #   x = xInputs(),
+  #   y = yInputs(),
+  #
+  #   # COLOR AND LEGEND
+  #   groupNames = input$groupMatrix[,"GroupName"], # groupNames used to determine how the ellipses will be filled
+  #   ellipsesColors = groupColors, # colors for each groupName
+  #   legend = input$chkLegend,
+  #   legendTitle = getLegendTitle(),
+  #   legendtextsize = input$legendtextsize,
+  #   legend.position = input$legend.position
+  # )
 
-    # ELLIPSES FORMATTING AND TEXT
-    nodeTextTop = DFAll$Name,
-    nodeTextBottom = DFAll$Alpha,
-    halfHgt = input$height,
-    halfWid = input$width,
+  gsDesign::hGraph(
+    nHypotheses = nrow(input$hypothesesMatrix),
+    nameHypotheses = input$hypothesesMatrix[,"Name"],
+    alphaHypotheses = as.numeric(input$hypothesesMatrix[,"Alpha"]),
+    m = m,
+    fill = input$hypothesesMatrix[,"Group"],
+    #    palette = grDevices::gray.colors(length(unique(fill)), start = 0.5, end = 0.8),
+    labels = input$groupMatrix[,"GroupName"],
+    legend.name = getLegendTitle(),
+    legend.position = "bottom",
+    halfWid = input$height,
+    halfHgt = input$width,
+    trhw = input$trhw,
+    trhh = input$trhh,
+    trprop = input$trprop,
+    digits = input$digits,
+    trdigits = input$trdigits,
     size = input$size,
-    digits = input$digits, # Number of decimal digits to show for alpha - not used right now?
-
-    # TRANSITION FORMATTING AND TEXT
-    m = m, # Transition df
-    boxtextsize = input$boxtextsize, # Transition Text Size
-    trhw = input$trhw, # Transition Box Width
-    trhh = input$trhh, # Transition Box Height
-    trdigits = input$trdigits, # Number of decimal digits to show for transition digit arrow boxes
-    trprop = input$trprop, # Transition positioning
-    arrowsize = input$arrowsize, # Arrow Size
+    boxtextsize = input$boxtextsize,
+    arrowsize = input$arrowsize,
     offset = input$offset,
-    # ELLIPSES PLACEMENT
-    x = xInputs(),
-    y = yInputs(),
-
-    # COLOR AND LEGEND
-    groupNames = as.character(DFAll$GroupName), # groupNames used to determine how the ellipses will be filled
-    ellipsesColors = groupColors, # colors for each groupName
-    legend = input$chkLegend,
-    legendTitle = getLegendTitle(),
-    legendtextsize = input$legendtextsize,
-    legend.position = input$legend.position
+ #   x = xInputs(),
+ #   y = yInputs(),
   )
+
+
 })
+
 
 output$thePlot <- renderPlot({
   print(parseQueryString(session$clientData$url_search))

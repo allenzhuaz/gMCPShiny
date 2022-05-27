@@ -21,11 +21,6 @@ headingPanel(
           p("This code can be updated when changes are made to the graph."),
           actionButton("updateCode", label = "Update Code", class = "btn btn-outline-primary", icon = icon("sync")),
           verbatimTextOutput("changingCode")
-        ),
-        tabPanel(
-          "Supporting code for creating the hGraph",
-          p("This code stays constant throughout graph changes."),
-          verbatimTextOutput("fixedCode")
         )
       )
     )

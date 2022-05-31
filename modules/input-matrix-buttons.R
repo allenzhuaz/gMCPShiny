@@ -8,7 +8,7 @@ matrixButtonGroup <- function(inputId) {
         label = "",
         icon = icon("plus"),
         width = "100%",
-        class = "btn btn-block btn-outline"
+        class = "btn btn-block btn-outline-primary"
       )
     ),
     column(
@@ -18,7 +18,7 @@ matrixButtonGroup <- function(inputId) {
         label = "",
         icon = icon("minus"),
         width = "100%",
-        class = "btn btn-block btn-outline"
+        class = "btn btn-block btn-outline-primary"
       )
     ),
     column(
@@ -28,13 +28,11 @@ matrixButtonGroup <- function(inputId) {
         label = "",
         icon = icon("undo"),
         width = "100%",
-        class = "btn btn-block btn-outline"
+        class = "btn btn-block btn-outline-primary"
       )
     )
   )
 }
-
-
 
 addMatrixRow <- function(x) {
   rbind(x, rep(NA, ncol(x)))

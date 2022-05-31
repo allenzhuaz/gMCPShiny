@@ -11,22 +11,24 @@ headingPanel(
       p("(Both name and group must be updated.)"),
       HTML('<p>The text input uses the plotmath syntax. See <a href="https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/plotmath.html", target = "_blank">plot math syntax</a> for details. Use <code>\\n</code> to add a line break.</p>'),
       br(),
-      matrixInput(
-        "hotHypotheses",
-        label = tagList(
-          "Set hypotheses",
-          helpPopover(
-            "hotHypotheses",
-            "The text input uses the plotmath syntax. See plot math syntax for details. Use \n to add a line break."
-          )
-        ),
-        value = as.matrix(data.frame(cbind(Name = c("H1","H2","H3","H4"), Alpha = rep(0.025/4,4), Group = c("A","B","C","D")))),
-        class = "character",
-        rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
-        cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
+      matrixInput("hypothesesMatrix",
+                  label = tagList(
+                    "Set hypotheses",
+                    helpPopover(
+                      "hypothesesMatrix",
+                      "The text input for hypotheses or group name uses the plotmath syntax. See plot math syntax for details. Use \n to add a line break."
+                    )
+                  ),
+                  value = as.matrix(data.frame(cbind(Name = paste0("H", 1:4),
+                                                     Alpha = rep(0.025/4, 4),
+                                                     Group = LETTERS[1:4]))),
+                  class = "character",
+                  rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
+                  cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
       ),
-      matrixButtonGroup("hotHypotheses"),
-
+      matrixButtonGroup("hypothesesMatrix"),
+      br(),
+      #      actionButton("update", label = "Update Nodes", class = "btn btn-outline-primary", icon = icon("sync")),
       # bookmarkButton(),
       br(),
       h4("Save or load table data"),
@@ -42,23 +44,19 @@ headingPanel(
       "Transitions",
       h4("Input Data Frame"),
       p("Transitions between non-existing hypotheses will not influence graph output."),
-      matrixInput(
-        "hotTransitions",
-        label = tagList(
-          "Transitions",
-          helpPopover(
-            "hotTransitions",
-            "Transitions between non-existing hypotheses will not influence graph output."
-          )
-        ),
-        value = as.matrix(data.frame(cbind(From = c("H1","H2","H3","H4"), To = c("H2","H3","H4","H1"), Weight = c(1,1,1,1)))),
-        class = "character",
-        rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
-        cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
+      #      rHandsontableOutput("hotTransitions"),
+      matrixInput("trwtMatrix",
+                  value = as.matrix(data.frame(cbind(From = paste0("H", c(1, 2, 3, 4)),
+                                                     To = paste0("H", c(2, 3, 4, 1)),
+                                                     Weight = rep(1, 4)))),
+                  class = "character",
+                  rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
+                  cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
       ),
-      matrixButtonGroup("hotTransitions")
+      matrixButtonGroup("trwtMatrix"),
+      br(),
+      #      actionButton("updateEdges", label = "Update Edges", class = "btn btn-outline-primary", icon = icon("sync"))
     ), # end Transitions Tab
-
 
     # Format Tab -----
 
@@ -79,21 +77,8 @@ headingPanel(
           p("By default, any custom positioning data will be lost if you add hypotheses or set the rotation (hypotheses will become equally spaced again).
                   Check the box below to keep custom positions, place all new hypotheses at position (0,0), and maintain current spacing when rotating."),
           checkboxInput("chkCustomPositions", label = "Keep Custom Positions", value = FALSE),
-          matrixInput(
-            "hotPositions",
-            label = tagList(
-              "Set the Positions",
-              helpPopover(
-                "hotPositions",
-                "By default, any custom positioning data will be lost if you add hypotheses or set the rotation (hypotheses will become equally spaced again). Check the box below to keep custom positions, place all new hypotheses at position (0,0), and maintain current spacing when rotating."
-              )
-            ),
-            value = as.matrix(data.frame(cbind(Name = c("H1","H2","H3","H4"), X = c(-1.414214,1.414214,1.414214,-1.414214), Y = c(1.414214,1.414214,-1.414214,-1.414214)))),
-            class = "character",
-            rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
-            cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
-          ),
-          matrixButtonGroup("hotPositions")
+          rHandsontableOutput("hotPositions"),
+          actionButton("updatePositions", label = "Update Custom Positions", class = "btn btn-outline-primary", icon = icon("sync"))
         ), # end Ellipses subtab
 
         tabPanel(
@@ -111,7 +96,7 @@ headingPanel(
         tabPanel(
           "Colors",
           br(),
-          checkboxInput("chkAddColors", label = "Add Colors", value = FALSE),
+          checkboxInput("chkAddColors", label = "Add Colors", value = TRUE),
           conditionalPanel(
             condition = "input.chkAddColors == true",
             h4("Set the Colors"),
@@ -119,7 +104,7 @@ headingPanel(
             uiOutput("colorSet")
           ), # end Add Colors conditional panel
 
-          checkboxInput("chkLegend", label = "Show Legend", value = FALSE),
+          checkboxInput("chkLegend", label = "Show Legend", value = TRUE),
           conditionalPanel(
             condition = "input.chkLegend == true",
             textInput("txtLegendName", label = "Legend Name:", value = "Group Name"),

@@ -1,7 +1,7 @@
 # Packages ---------------------------------------------------------------------
 
 library(shiny)
-library(rhandsontable)
+library(shinyMatrix)
 library(colourpicker)
 library(markdown)
 library(shinyMatrix)

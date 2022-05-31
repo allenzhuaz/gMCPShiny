@@ -133,10 +133,10 @@ hGraph <- function(nHypotheses = 4, # Number of hypotheses
 
   indices <- 1:nHypotheses # make sure each ellipses's points are in its own "group" - different from the hypotheses groups used to color the ellipses (fill)
   ellipses <- rbind(
-    data.frame(x = rr$x, y = rr$y + h, fill = groupNames, fillalpha = fillalpha, group = indices),
-    data.frame(x = rr$x, y = rr$y - h, fill = groupNames, fillalpha = fillalpha, group = indices),
-    data.frame(x = rr$x + w, y = rr$y, fill = groupNames, fillalpha = fillalpha, group = indices),
-    data.frame(x = rr$x - w, y = rr$y, fill = groupNames, fillalpha = fillalpha, group = indices)
+    data.frame(x = as.numeric(rr$x), y = as.numeric(rr$y) + h, fill = groupNames, fillalpha = fillalpha, group = indices),
+    data.frame(x = rr$x, y = as.numeric(rr$y) - h, fill = groupNames, fillalpha = fillalpha, group = indices),
+    data.frame(x = as.numeric(rr$x) + w, y = rr$y, fill = groupNames, fillalpha = fillalpha, group = indices),
+    data.frame(x = as.numeric(rr$x) - w, y = rr$y, fill = groupNames, fillalpha = fillalpha, group = indices)
   )
   ellipses$txt <- ""
 

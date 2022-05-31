@@ -12,6 +12,7 @@ source("modules/heading-panel.R")
 source("modules/hgraph.R")
 source("modules/df2graph.R")
 source("modules/input-matrix-buttons.R")
+source("modules/help-popover.R")
 
 # Global declarations ----------------------------------------------------------
 

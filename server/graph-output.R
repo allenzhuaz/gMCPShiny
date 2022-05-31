@@ -113,40 +113,6 @@ output$colorSet <- renderUI({
 })
 outputOptions(output, "colorSet", suspendWhenHidden = FALSE) # colorSet runs even when not visible so that colors update when nodes are added
 
-# rhandsontable Dependencies ---------------------------------------------------
-dataHypotheses <- reactive({
-  input$update
-  loadFlag()
-  isolate({
-    if (is.null(input$hotHypotheses)) {
-      DF <- data.frame(
-        Name = c("H1", "H2", "H3", "H4"),
-        Alpha = c(0.00625, 0.00625, 0.00625, 0.00625),
-        Group = c("A", "B", "C", "D")
-      )
-    } else {
-      DF <- hot_to_r(input$hotHypotheses)
-    }
-    DF
-  })
-})
-
-dataGroups <- reactive({
-  input$update
-  loadFlag()
-
-  isolate({
-    if (is.null(input$hotGroups)) {
-      DF <- data.frame(
-        Group = c("A", "B", "C", "D"),
-        GroupName = c("Group A", "Group B", "Group C", "Group D")
-      )
-    } else {
-      DF <- hot_to_r(input$hotGroups)
-    }
-    DF
-  })
-})
 
 dataColorsDF <- reactive({
   DFColors <- input$groupMatrix
@@ -159,23 +125,6 @@ dataColorsDF <- reactive({
   DFColors
 })
 
-dataTrans <- reactive({
-  input$updateEdges
-  loadFlag()
-
-  isolate({
-    if (is.null(input$hotTransitions)) {
-      DF <- data.frame(
-        From = c(1, 2, 3, 4),
-        To = c(2, 3, 4, 1),
-        Weight = rep(1, 4)
-      )
-    } else {
-      DF <- hot_to_r(input$hotTransitions)
-    }
-    DF
-  })
-})
 
 # rhandsontable dependencies for node positioning ------------------------------
 
@@ -193,7 +142,7 @@ observeEvent(c(input$updatePositions, loadFlag()), {
   if (is.null(input$hotPositions)) {
     DF <- getPositions()
   } else {
-    DF <- hot_to_r(input$hotPositions)
+    DF <- data.frame(input$hotPositions)
   }
   dataPositions$data <- DF
 })
@@ -292,7 +241,7 @@ plotInput <- reactive({
 #  keepTransRows <- (dataTrans()$From %in% c(1:nrow(DFAll))) & (dataTrans()$To %in% c(1:nrow(DFAll)))
 #  transitions <- dataTrans()[keepTransRows, ]
 
-  m <- df2graph(as.data.frame(input$trwtMatrix))
+  m <- df2graph(namesH = input$trwtMatrix[,1], df = data.frame(input$trwtMatrix))
 
   # Create a named vector for group colors
 #  groupColors <- DFColors$cols

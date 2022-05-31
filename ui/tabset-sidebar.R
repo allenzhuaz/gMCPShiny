@@ -28,7 +28,7 @@ headingPanel(
       ),
       matrixButtonGroup("hypothesesMatrix"),
       br(),
-      #      actionButton("update", label = "Update Nodes", class = "btn btn-outline-primary", icon = icon("sync")),
+#      actionButton("update", label = "Update Nodes", class = "btn btn-outline-primary", icon = icon("sync")),
       # bookmarkButton(),
       br(),
       h4("Save or load table data"),
@@ -44,7 +44,7 @@ headingPanel(
       "Transitions",
       h4("Input Data Frame"),
       p("Transitions between non-existing hypotheses will not influence graph output."),
-      #      rHandsontableOutput("hotTransitions"),
+#      rHandsontableOutput("hotTransitions"),
       matrixInput("trwtMatrix",
                   value = as.matrix(data.frame(cbind(From = paste0("H", c(1, 2, 3, 4)),
                                                      To = paste0("H", c(2, 3, 4, 1)),
@@ -55,7 +55,7 @@ headingPanel(
       ),
       matrixButtonGroup("trwtMatrix"),
       br(),
-      #      actionButton("updateEdges", label = "Update Edges", class = "btn btn-outline-primary", icon = icon("sync"))
+#      actionButton("updateEdges", label = "Update Edges", class = "btn btn-outline-primary", icon = icon("sync"))
     ), # end Transitions Tab
 
     # Format Tab -----

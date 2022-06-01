@@ -24,10 +24,14 @@ getCode <- function(name, closure) {
 
 # Output for graph code that changes based on user inputs ----------------------
 
+changingCode <- reactive({
+  report <- tempfile(fileext = ".R")
+  brew::brew("templates/call-hgraph.R", output = report)
+  paste0(readLines(report), collapse = "\n")
+})
+
 output$changingCode <- renderPrint({
-  hGraphCall <- paste0("h <- hGraph(\n", getHGraphArgs(), ")\n\nplot(h)\n", collapse = "")
-  session$userData$changingCode <- hGraphCall # save in the session to use for code file download
-  cat(hGraphCall)
+  cat(changingCode(),sep="\n")
 })
 
 # Get the latest input args to the hGraph() function as a string for the R code to reproduce the graph output

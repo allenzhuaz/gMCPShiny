@@ -3,35 +3,7 @@
 # <https://github.com/jrowen/rhandsontable/issues/13>
 
 # Render user inputs for hypotheses
-output$hotHypotheses <- renderRHandsontable({
-  DF <- dataHypotheses()
-  rhandsontable(DF, stretchH = "all", useTypes = FALSE, selectCallback = TRUE)
-})
-outputOptions(output, "hotHypotheses", suspendWhenHidden = FALSE)
 
-# Render user inputs for hypotheses groups
-output$hotGroups <- renderRHandsontable({
-  DF <- dataGroups()
-  rhandsontable(DF, stretchH = "all", useTypes = FALSE, selectCallback = TRUE)
-})
-outputOptions(output, "hotGroups", suspendWhenHidden = FALSE)
-
-# Render user inputs for transitions
-output$hotTransitions <- renderRHandsontable({
-  DF <- dataTrans()
-  rhandsontable(DF, stretchH = "all", useTypes = FALSE, selectCallback = TRUE)
-})
-outputOptions(output, "hotTransitions", suspendWhenHidden = FALSE)
-
-output$hotPositions <- renderRHandsontable({ # render user inputs for node positions
-  if (is.null(dataPositions$data)) {
-    DF <- getPositions()
-  } else {
-    DF <- dataPositions$data
-  }
-  rhandsontable(DF, stretchH = "all", useTypes = FALSE, selectCallback = TRUE)
-})
-outputOptions(output, "hotPositions", suspendWhenHidden = FALSE)
 
 # Color Picker Inputs; based on selected color palette -------------------------
 
@@ -126,97 +98,7 @@ dataColorsDF <- reactive({
 })
 
 
-# rhandsontable dependencies for node positioning ------------------------------
 
-dataPositions <- reactiveValues()
-
-observeEvent(input$update, {
-  dataPositions$data <- getPositions()
-})
-
-observeEvent(input$rotation, {
-  dataPositions$data <- getRotatedPositions()
-})
-
-observeEvent(c(input$updatePositions, loadFlag()), {
-  if (is.null(input$hotPositions)) {
-    DF <- getPositions()
-  } else {
-    DF <- data.frame(input$hotPositions)
-  }
-  dataPositions$data <- DF
-})
-
-xInputs <- reactive({
-  dataPositions$data$X
-})
-
-yInputs <- reactive({
-  dataPositions$data$Y
-})
-
-# Get new positions after updating the hypotheses or if the hotPositions input doesn't exist yet.
-getPositions <- function() {
-  # Keep custom hotPositions inputs
-  if (input$chkCustomPositions & !is.null(input$hotPositions)) {
-    positions <- getCustomPositions()
-  } else {
-    positions <- getDefaultPositions()
-  }
-  return(positions)
-}
-
-# Get new positions after updating the rotation
-getRotatedPositions <- function() {
-  if (input$chkCustomPositions & !is.null(input$hotPositions)) { # keep custom hotPositions inputs (rotate so current spacing is preserved) - this math needs work (sorry, folks!)
-    positions <- getCustomPositions()
-    currentAngles <- atan2(0, 0) - atan2(positions$X, positions$Y)
-    newAngles <- (currentAngles + (pi * (input$rotation + 1))) %% (2 * pi)
-    radius <- 2
-    positions$X <- radius * cos(newAngles)
-    positions$Y <- radius * sin(newAngles)
-  } else {
-    positions <- getDefaultPositions()
-  }
-  return(positions)
-}
-
-# Get the user input hotPositions, and add positons for new hypotheses at (0,0)
-getCustomPositions <- function() {
-  positions <- hot_to_r(input$hotPositions)
-
-  # Keep only the rows that contain info for existing hypotheses
-  names <- dataHypotheses()$Name
-  keepPositionRows <- (rownames(positions) %in% names)
-  positions <- positions[keepPositionRows, ]
-
-  # Add rows for new hypotheses, position at (0,0)
-  newNames <- subset(names, !names %in% rownames(positions))
-  for (name in newNames) {
-    positions <- rbind(positions, "temp" = c(0, 0))
-    rownames(positions)[rownames(positions) == "temp"] <- name
-  }
-  return(positions)
-}
-
-# Get default positions that are evenly spaced in a circle
-getDefaultPositions <- function() {
-  numRows <- nrow(dataHypotheses())
-  radianStart <- if ((numRows) %% 2 != 0) {
-    pi * (input$rotation + 1) * (1 / 2 + 1 / numRows)
-  } else {
-    pi * (input$rotation + 1) * (1 + 2 / numRows) / 2
-  }
-  radian <- (radianStart - (0:(numRows - 1)) / numRows * 2 * pi) %% (2 * pi)
-  radius <- 2
-  radius2 <- radius
-
-  xPosition <- radius * cos(radian)
-  yPosition <- radius * sin(radian)
-  positions <- data.frame("X" = xPosition, "Y" = yPosition)
-  rownames(positions) <- dataHypotheses()$Name
-  return(positions)
-}
 
 # Get legend title -------------------------------------------------------------
 
@@ -230,6 +112,7 @@ getLegendTitle <- function() {
 
 # Create plot ------------------------------------------------------------------
 
+
 plotInput <- reactive({
 #  DFHypotheses <- dataHypotheses()
 
@@ -241,7 +124,7 @@ plotInput <- reactive({
 #  keepTransRows <- (dataTrans()$From %in% c(1:nrow(DFAll))) & (dataTrans()$To %in% c(1:nrow(DFAll)))
 #  transitions <- dataTrans()[keepTransRows, ]
 
-  m <- df2graph(namesH = input$trwtMatrix[,1], df = data.frame(input$trwtMatrix))
+  m <- df2graph(namesH = unique(c(input$trwtMatrix[,1:2])), df = data.frame(input$trwtMatrix))
 
   # Create a named vector for group colors
 #  groupColors <- DFColors$cols
@@ -288,7 +171,7 @@ plotInput <- reactive({
     m = m,
     fill = input$hypothesesMatrix[,"Group"],
     #    palette = grDevices::gray.colors(length(unique(fill)), start = 0.5, end = 0.8),
-    labels = input$groupMatrix[,"GroupName"],
+    labels = input$hypothesesMatrix[,"Group"],
     legend.name = getLegendTitle(),
     legend.position = "bottom",
     halfWid = input$height,
@@ -313,5 +196,6 @@ plotInput <- reactive({
 output$thePlot <- renderPlot({
   print(parseQueryString(session$clientData$url_search))
   print(plotInput())
+
 })
 outputOptions(output, "thePlot", suspendWhenHidden = FALSE) # thePlot runs even when not visible

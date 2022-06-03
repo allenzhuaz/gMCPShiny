@@ -123,8 +123,11 @@ plotInput <- reactive({
   # Remove invalid transitions from input
 #  keepTransRows <- (dataTrans()$From %in% c(1:nrow(DFAll))) & (dataTrans()$To %in% c(1:nrow(DFAll)))
 #  transitions <- dataTrans()[keepTransRows, ]
+  Trans <- data.frame(input$trwtMatrix)
+  keepTransRows <-  (Trans[,1] %in% input$hypothesesMatrix[,1]) & (Trans[,2] %in% input$hypothesesMatrix[,1])
+  transitions <- Trans[keepTransRows,]
 
-  m <- df2graph(namesH = unique(c(input$trwtMatrix[,1:2])), df = data.frame(input$trwtMatrix))
+  m <- df2graph(namesH = unique(input$hypothesesMatrix[,1]), df = transitions)
 
   # Create a named vector for group colors
 #  groupColors <- DFColors$cols

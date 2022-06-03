@@ -26,16 +26,7 @@ headingPanel(
                   rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
                   cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
       ),
-      matrixButtonGroup("hypothesesMatrix"),
-      br(),
-#      actionButton("update", label = "Update Nodes", class = "btn btn-outline-primary", icon = icon("sync")),
-      # bookmarkButton(),
-      br(),
-      h4("Save or load table data"),
-      p("When loading data, only the tables (hypotheses, groups, transitions, and positions) will be updated. User must press the each update button to change the graph."),
-      downloadButton("save_inputs", label = "Save Tables", class = "btn btn-outline-primary"),
-      br(),
-      fileInput("load_inputs", "Load Table Inputs from .rda or .rdata file", accept = c(".rda", ".rdata"))
+      matrixButtonGroup("hypothesesMatrix")
     ), # end Hypotheses Tab
 
     # Transitions Tab -----

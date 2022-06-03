@@ -8,7 +8,7 @@ h <- hGraph(
   halfWid         = <%=input$width%>,
   size            = <%=input$size%>,
   digits          = <%=input$digits%>,
-  m               = matrix(c(<%=paste0(c(df2graph(namesH = unique(c(input$trwtMatrix[,1:2])), df = data.frame(input$trwtMatrix))), collapse = ", ")%>), nrow = <%=length(unique(c(input$trwtMatrix[,1:2])))%>)
+  m               = matrix(c(<%=paste0(c(df2graph(namesH = unique(input$hypothesesMatrix[,1]), df = data.frame(input$trwtMatrix)[(data.frame(input$trwtMatrix)[,1] %in% input$hypothesesMatrix[,1]) & (data.frame(input$trwtMatrix)[,2] %in% input$hypothesesMatrix[,1]),])), collapse = ", ")%>), nrow = <%=nrow(input$hypothesesMatrix)%>)
   boxtextsize     = <%=input$boxtextsize%>,
   trhw            = <%=input$trhw%>,
   trhh            = <%=input$trhh%>,
@@ -16,9 +16,9 @@ h <- hGraph(
   trprop          = <%=input$trprop%>,
   arrowsize       = <%=input$arrowsize%>,
   offset          = <%=input$offset%>,
-  groupNames      = c(<%=paste0(input$hypothesesMatrix[,"Group"], collapse = ", ")%>),
+  groupNames      = c(<%=paste0(paste0('"', input$hypothesesMatrix[,"Group"], '"'), collapse = ", ")%>)
   legend          = <%=input$chkLegend%>,
-  legendTitle     = <%=getLegendTitle()%>,
+  legendTitle     = <%=paste0('"',getLegendTitle(), '"')%>,
   legendtextsize  = <%=input$legendtextsize%>,
   legend.position = <%=paste0('"',input$legend.position,'"')%>
 )

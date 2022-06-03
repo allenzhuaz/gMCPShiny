@@ -1,112 +1,66 @@
-
-# Output for graph code that doesn't change based on user inputs ---------------
-
-output$fixedCode <- renderPrint({
-  librariesCode <- "library(dplyr)\nlibrary(reshape2)\nlibrary(ggplot2)\nlibrary(stringr)\n"
-  plainToPlotCode <- getCode(deparse(substitute(plainToPlot)), plainToPlot)
-  theme_nothingCode <- getCode(deparse(substitute(theme_nothing)), theme_nothing)
-  radiansCode <- getCode(deparse(substitute(radians)), radians)
-  hGraphCode <- getCode(deparse(substitute(hGraph)), hGraph)
-  fixedCode <- c(librariesCode, plainToPlotCode, theme_nothingCode, radiansCode, hGraphCode)
-  fixedCode <- paste0(fixedCode, collapse = "\n")
-  session$userData$fixedCode <- fixedCode # save in the session to use for code file download
-  cat(fixedCode)
+# Save design modal (from Design tab)
+observeEvent(input$btn_design_save_modal, {
+  showModal(modalDialog(
+    title = "Save Graph Design",
+    textInputAddonRight("filename_rds_design", label = "Name the hgraph design:", value = "design", addon = ".rds", width = "100%"),
+    easyClose = TRUE,
+    footer = tagList(
+      downloadButton("btn_design_save", label = "Save Graph Design", class = "btn-primary", icon = icon("download")),
+      modalButton("Cancel")
+    )
+  ))
 })
 
-getCode <- function(name, closure) {
-  code <- capture.output(closure)
-  if (startsWith(code[length(code)], "<bytecode:")) {
-    code[length(code)] <- "\n" # replace last line with a newline if the lastline is <bytecode: something> (not part of the function code)
-  }
-  code[1] <- paste0(name, " <- ", code[1], "\n")
-  return(code)
-}
 
-# Output for graph code that changes based on user inputs ----------------------
+# Save hgraph design object, all input parameters, and reactive values
+output$btn_design_save <- downloadHandler(
+  filename = function() {
+    x <- input$filename_rds_design
+    # sanitize from input
+    fn0 <- if (x == "") "design" else sanitize_filename(x)
+    # sanitize again
+    fn <- if (fn0 == "") "design" else fn0
+    paste0(fn, ".rds")
+  },
+  content = function(con) {
 
-changingCode <- reactive({
-  report <- tempfile(fileext = ".R")
-  brew::brew("templates/call-hgraph.R", output = report)
-  paste0(readLines(report), collapse = "\n")
-})
+    # Get inputs
+    hgraph_inputs <- lapply(isolate(reactiveValuesToList(input)), unclass)
+    # Remove all irrelevant input values
+    hgraph_inputs[which(grepl(
+      "btn_|hgraphnav",
+      names(hgraph_inputs)
+    ))] <- NULL
 
-output$changingCode <- renderPrint({
-  cat(changingCode(),sep="\n")
-})
-
-# Get the latest input args to the hGraph() function as a string for the R code to reproduce the graph output
-getHGraphArgs <- reactive({
-  input$updateCode
-  envList <- latestCall
-  argStr <- "\t"
-  nameVector <- names(envList)
-  len <- length(nameVector)
-  for (i in 1:len) {
-    comma <- ",\n\t"
-    if (i == len) {
-      comma <- "\n"
-    }
-    x <- nameVector[i]
-    value <- paste0(capture.output(dput(envList[[x]])), collapse = "")
-    argStr <- paste0(argStr, x, " = ", value, comma, collapse = "")
-  }
-
-  return(argStr)
-})
-
-# Download graph code ----------------------------------------------------------
-
-output$downloadCode <- downloadHandler(
-  filename = "hGraphCode.R",
-  content = function(file) {
-    write(session$userData$fixedCode, file)
-    write(session$userData$changingCode, file, append = TRUE)
+    # Save to file
+    lst <- list("hgraph_inputs" = hgraph_inputs)
+    saveRDS(lst, file = con)
   }
 )
 
-# Save and load graph inputs ---------------------------------------------------
 
-savedFields <- c("hotHypotheses", "hotGroups", "hotTransitions", "hotPositions")
-output$save_inputs <- downloadHandler(
-  filename = "table_inputs.rda",
-  content = function(file) {
-    # inputList <- reactiveValuesToList(input)
-    # print(inputList)
-    # saveRDS(reactiveValuesToList(input) , file = file)
 
-    data <- sapply(savedFields, function(x) hot_to_r(input[[x]]))
-    save(data, file = file)
-  }
-)
+# Restore hgraph parameters
+observeEvent(input$btn_design_restore, {
+  rds <- input$btn_design_restore
+  req(rds)
+  lst <- readRDS(rds$datapath)
+  hgraph_inputs <- lst$hgraph_inputs
 
-loadFlag <- reactiveVal(value = FALSE) # value of flag (T/F) doesn't matter, just need it to change
+  # Restore regular inputs and matrix inputs separately
+  is_matrix_input <- unname(sapply(
+    lapply(lst$hgraph_inputs, class),
+    FUN = function(x) "matrix" %in% x
+  ))
 
-observeEvent(input$load_inputs, {
-  inFile <- input$load_inputs
-  if (is.null(inFile)) {
-    return(NULL)
-  }
-  # savedInputs <- readRDS(inFile$datapath)
-  # print(savedInputs)
-  # inputIDs <- names(savedInputs)
-  # inputValues <- unlist(savedInputs)
-  # for(i in 1:length(savedInputs)){
-  #   session$sendInputMessage(inputIDs[i], list(value=inputValues[[i]]))
-  # }
+  lapply(
+    names(hgraph_inputs)[!is_matrix_input],
+    function(x) session$sendInputMessage(x, list(value = hgraph_inputs[[x]]))
+  )
 
-  # load hot table data into temporary environment and list
-  e1 <- new.env()
-  invisible(load(inFile$datapath, envir = e1))
-  tmp <- as.list(e1)$data
+  lapply(
+    names(hgraph_inputs)[is_matrix_input],
+    function(x) updateMatrixInput(session, inputId = x, value = hgraph_inputs[[x]])
+  )
 
-  # update rhandsontables
-  lapply(savedFields, function(x) {
-    output[[x]] <- renderRHandsontable({
-      DF <- tmp[[x]]
-      rhandsontable(DF, stretchH = "all", useTypes = FALSE, selectCallback = TRUE)
-    })
-  })
-
-  loadFlag(!loadFlag()) # flag intended to trigger changes in the graph by bypassing user button clicks to "update" the tables. Does not work yet, sorry!
 })
-

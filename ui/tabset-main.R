@@ -18,8 +18,6 @@ headingPanel(
       tabsetPanel(
         tabPanel(
           "Function call for creating the hGraph",
-          p("This code can be updated when changes are made to the graph."),
-          actionButton("updateCode", label = "Update Code", class = "btn btn-outline-primary", icon = icon("sync")),
           verbatimTextOutput("changingCode")
         )
       )

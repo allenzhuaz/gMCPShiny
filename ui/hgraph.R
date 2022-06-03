@@ -1,9 +1,26 @@
 tabPanel(
   title = "Initial Graph Setup",
   icon = icon("drafting-compass"),
+  useShinyjs(),
   fluidRow(
     column(
       width = 10, offset = 1,
+      fluidRow(
+        column(
+          width = 4,
+          span("Create Design", style = "font-size:1.5rem;")
+        ),
+        column(
+          width = 8,
+          tags$style("#btn_group_design { float:right; }"),
+          div(
+            id = "btn_group_design",
+            actionButton("btn_design_save_modal", label = "Save hgraph Design", class = "btn btn-outline-primary", icon = icon("download")),
+            fileButtonInput("btn_design_restore", label = NULL, buttonLabel = "Restore hgraph", multiple = FALSE, accept = ".rds", width = "50%")
+          )
+        )
+      ),
+      hr(),
       fluidRow(
         column(
           width = 4,

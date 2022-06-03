@@ -202,3 +202,24 @@ output$thePlot <- renderPlot({
 
 })
 outputOptions(output, "thePlot", suspendWhenHidden = FALSE) # thePlot runs even when not visible
+
+
+# Output for graph code that changes based on user inputs
+changingCode <- reactive({
+  report <- tempfile(fileext = ".R")
+  brew::brew("templates/call-hgraph.R", output = report)
+  paste0(readLines(report), collapse = "\n")
+})
+
+output$changingCode <- renderPrint({
+  session$userData$changingCode <- changingCode()  # save in the session to use for code file download
+  cat(changingCode(),sep="\n")
+})
+
+# Download graph code
+output$downloadCode <- downloadHandler(
+  filename = "hGraphCode.R",
+  content = function(file) {
+    write(session$userData$changingCode, file)
+  }
+)

@@ -2,12 +2,12 @@
 
 library(shiny)
 library(shinyjs)
-library(shinyMatrix)
 library(colourpicker)
 library(markdown)
 library(gsDesign)
 library(shinyMatrix)
 library(rhandsontable)
+
 # Global modules and functions -------------------------------------------------
 
 source("modules/navbar-page-custom.R")
@@ -19,10 +19,6 @@ source("modules/help-popover.R")
 source("modules/input-file-button.R")
 source("modules/input-text-addon.R")
 source("modules/sanitize-filename.R")
-
-# Global declarations ----------------------------------------------------------
-
-enableBookmarking(store = "url")
 
 # UI ---------------------------------------------------------------------------
 

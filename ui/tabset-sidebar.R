@@ -11,18 +11,22 @@ headingPanel(
       p("(Both name and group must be updated.)"),
       HTML('<p>The text input uses the plotmath syntax. See <a href="https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/plotmath.html", target = "_blank">plot math syntax</a> for details. Use <code>\\n</code> to add a line break.</p>'),
       br(),
-      rHandsontableOutput("hotHypotheses"),
-      br(),
-      rHandsontableOutput("hotGroups"),
-      br(),
-      actionButton("update", label = "Update Nodes", class = "btn btn-outline-primary", icon = icon("sync")),
-      # bookmarkButton(),
-      br(),
-      h4("Save or load table data"),
-      p("When loading data, only the tables (hypotheses, groups, transitions, and positions) will be updated. User must press the each update button to change the graph."),
-      downloadButton("save_inputs", label = "Save Tables", class = "btn btn-outline-primary"),
-      br(),
-      fileInput("load_inputs", "Load Table Inputs from .rda or .rdata file", accept = c(".rda", ".rdata"))
+      matrixInput("hypothesesMatrix",
+                  label = tagList(
+                    "Set hypotheses",
+                    helpPopover(
+                      "hypothesesMatrix",
+                      "The text input for hypotheses or group name uses the plotmath syntax. See plot math syntax for details. Use \n to add a line break."
+                    )
+                  ),
+                  value = as.matrix(data.frame(cbind(Name = paste0("H", 1:4),
+                                                     Alpha = rep(0.025/4, 4),
+                                                     Group = LETTERS[1:4]))),
+                  class = "character",
+                  rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
+                  cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
+      ),
+      matrixButtonGroup("hypothesesMatrix")
     ), # end Hypotheses Tab
 
     # Transitions Tab -----
@@ -31,9 +35,18 @@ headingPanel(
       "Transitions",
       h4("Input Data Frame"),
       p("Transitions between non-existing hypotheses will not influence graph output."),
-      rHandsontableOutput("hotTransitions"),
+#      rHandsontableOutput("hotTransitions"),
+      matrixInput("trwtMatrix",
+                  value = as.matrix(data.frame(cbind(From = paste0("H", c(1, 2, 3, 4)),
+                                                     To = paste0("H", c(2, 3, 4, 1)),
+                                                     Weight = rep(1, 4)))),
+                  class = "character",
+                  rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
+                  cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
+      ),
+      matrixButtonGroup("trwtMatrix"),
       br(),
-      actionButton("updateEdges", label = "Update Edges", class = "btn btn-outline-primary", icon = icon("sync"))
+#      actionButton("updateEdges", label = "Update Edges", class = "btn btn-outline-primary", icon = icon("sync"))
     ), # end Transitions Tab
 
     # Format Tab -----
@@ -74,7 +87,7 @@ headingPanel(
         tabPanel(
           "Colors",
           br(),
-          checkboxInput("chkAddColors", label = "Add Colors", value = FALSE),
+          checkboxInput("chkAddColors", label = "Add Colors", value = TRUE),
           conditionalPanel(
             condition = "input.chkAddColors == true",
             h4("Set the Colors"),
@@ -82,7 +95,7 @@ headingPanel(
             uiOutput("colorSet")
           ), # end Add Colors conditional panel
 
-          checkboxInput("chkLegend", label = "Show Legend", value = FALSE),
+          checkboxInput("chkLegend", label = "Show Legend", value = TRUE),
           conditionalPanel(
             condition = "input.chkLegend == true",
             textInput("txtLegendName", label = "Legend Name:", value = "Group Name"),

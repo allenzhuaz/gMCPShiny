@@ -1,12 +1,15 @@
-df2graph <- function(df) {
+df2graph <- function(namesH,df) {
   # Check to make sure the column names are present
   if (!any(names(df) %in% c("From", "To", "Weight"))) {
     print("Must have three columns in the input data frame: 'From', 'To', and 'Weight'")
   }
+  dim <- length(namesH)
+  m <- matrix(rep(0, dim^2), nrow = dim)
 
-  maxUnNodes <- max(unique(c(df$From, df$To)))
-  m <- matrix(rep(0, maxUnNodes^2), nrow = maxUnNodes)
-  m[df$From + maxUnNodes * (df$To - 1)] <- df$Weight # From = rows, and To = columns
-
+  for (i in 1:nrow(df)){
+    row.index <- which(namesH%in%df$From[i])
+    col.index <- which(namesH%in%df$To[i])
+    m[row.index,col.index] <- as.numeric(df$Weight[i])
+  }
   m
 }

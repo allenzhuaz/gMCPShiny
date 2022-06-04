@@ -11,16 +11,8 @@ headingPanel(
     ),
     tabPanel(
       "Code",
-      p("Code from both the below tabs is needed in order to replicate this hGraph."),
-      downloadButton("downloadCode", label = "Download Code to an R File", class = "btn btn-outline-primary"),
-      br(),
-      br(),
-      tabsetPanel(
-        tabPanel(
-          "Function call for creating the hGraph",
-          verbatimTextOutput("changingCode")
-        )
-      )
+      downloadButton("downloadCode", label = "Download R Code", class = "btn btn-outline-primary", style = "margin-bottom: 1rem;"),
+      rcodeOutput("changingCode")
     )
   )
 )

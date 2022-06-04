@@ -39,3 +39,23 @@ hr {
     color: #dee2e6;
     opacity: 1;
 }
+
+/* popover icon */
+a.help-popover {
+    color: #6c757d;
+}
+
+a.help-popover:hover,
+a.help-popover:focus {
+    color: #565e64;
+}
+
+a[data-toggle='popover'] {
+    text-decoration: none;
+}
+
+/* popover style hotfix */
+/* https://github.com/rstudio/bslib/issues/375 */
+.popover-header {
+    margin-top: 0
+}

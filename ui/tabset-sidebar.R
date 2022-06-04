@@ -9,14 +9,12 @@ headingPanel(
       "Hypotheses",
       h4("Set the # of Hypotheses"),
       p("(Both name and group must be updated.)"),
-      HTML('<p>The text input uses the plotmath syntax. See <a href="https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/plotmath.html", target = "_blank">plot math syntax</a> for details. Use <code>\\n</code> to add a line break.</p>'),
-      br(),
       matrixInput("hypothesesMatrix",
                   label = tagList(
-                    "Set hypotheses",
+                    "Hypotheses matrix",
                     helpPopover(
                       "hypothesesMatrix",
-                      "The text input for hypotheses or group name uses the plotmath syntax. See plot math syntax for details. Use \n to add a line break."
+                      "The text input uses the plotmath syntax. See ?grDevices::plotmath for details. Use \\n to add a line break."
                     )
                   ),
                   value = as.matrix(data.frame(cbind(Name = paste0("H", 1:4),

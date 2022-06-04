@@ -13,7 +13,9 @@ navbarPageCustom(
     "navbar-light-bg" = "#fff",
     "navbar-light-color" = "#212529",
     "navbar-light-active-color" = "#00857c",
-    "navbar-light-hover-color" = "#00857c"
+    "navbar-light-hover-color" = "#00857c",
+    "popover-header-bg" = "#f8f9fa",
+    "popover-border-color" = "#dee2e6"
   ),
   inverse = FALSE,
   collapsible = TRUE,
@@ -21,7 +23,8 @@ navbarPageCustom(
     tags$link(rel = "shortcut icon", type = "image/png", href = "images/favicon.png"),
     tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
     # Custom JS to enable downloading PNG from DOM
-    tags$script(src = "js/download-plot.js")
+    tags$script(src = "js/download-plot.js"),
+    tags$script(src = "js/help-popover.js")
   ),
   source("ui/hgraph.R", local = TRUE)$value,
   source("ui/gmcp.R", local = TRUE)$value,

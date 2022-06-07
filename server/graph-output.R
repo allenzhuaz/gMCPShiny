@@ -85,6 +85,31 @@ output$colorSet <- renderUI({
 })
 outputOptions(output, "colorSet", suspendWhenHidden = FALSE) # colorSet runs even when not visible so that colors update when nodes are added
 
+# Initial node position uioutput
+output$initnodepos <- renderUI({
+  radianStart <- if((nrow(input$hypothesesMatrix))%%2 != 0) {
+    pi * (1/2 + 1/nrow(input$hypothesesMatrix)) } else {
+      pi * (1 + 2/nrow(input$hypothesesMatrix))/2 }
+
+  matrixInput("nodeposMatrix",
+              label = tagList(
+                "Node position matrix",
+                helpPopover(
+                  "nodeposMatrix",
+                  "The hypothesis input uses the plotmath syntax. See ?grDevices::plotmath for details. Use \\n to add a line break.
+                            The x, y coordinates are for the relative position of the hypothesis ellipses."
+                )
+              ),
+              value = as.matrix(data.frame(cbind(Hypothesis = input$hypothesesMatrix[,"Name"],
+                                                 x = 2 * cos((radianStart - (0:(nrow(input$hypothesesMatrix)-1))/nrow(input$hypothesesMatrix)*2*pi) %% (2*pi))
+                                                 ,
+                                                 y = 2 * sin((radianStart - (0:(nrow(input$hypothesesMatrix)-1))/nrow(input$hypothesesMatrix)*2*pi) %% (2*pi))
+              ))),
+              class = "character",
+              rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
+              cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
+  )
+})
 
 dataColorsDF <- reactive({
   DFColors <- input$groupMatrix
@@ -188,8 +213,8 @@ plotInput <- reactive({
     boxtextsize = input$boxtextsize,
     arrowsize = input$arrowsize,
     offset = input$offset,
- #   x = xInputs(),
- #   y = yInputs(),
+    x = if(is.null(input$nodeposMatrix[,"x"])){NULL} else{as.numeric(input$nodeposMatrix[,"x"])},
+    y = if(is.null(input$nodeposMatrix[,"y"])){NULL} else{as.numeric(input$nodeposMatrix[,"y"])},
   )
 
 
@@ -199,7 +224,6 @@ plotInput <- reactive({
 output$thePlot <- renderPlot({
   print(parseQueryString(session$clientData$url_search))
   print(plotInput())
-
 })
 outputOptions(output, "thePlot", suspendWhenHidden = FALSE) # thePlot runs even when not visible
 

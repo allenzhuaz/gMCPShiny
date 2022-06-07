@@ -60,14 +60,19 @@ headingPanel(
           sliderInput("height", "Set the ellipsis height:", 0, 1, .5, .01),
           numericInput("size", "Hypothesis Text Size", 8, 1, 10, 1),
           numericInput("digits", "# Digits for weight/alpha", 3, 1, 6, 1),
-          sliderInput("rotation", "Set the rotation", -1, 1, 0, .005),
+#          sliderInput("rotation", "Set the rotation", -1, 1, 0, .005),
           br(),
           h4("Set the Positions"),
           p("By default, any custom positioning data will be lost if you add hypotheses or set the rotation (hypotheses will become equally spaced again).
                   Check the box below to keep custom positions, place all new hypotheses at position (0,0), and maintain current spacing when rotating."),
-          checkboxInput("chkCustomPositions", label = "Keep Custom Positions", value = FALSE),
-          rHandsontableOutput("hotPositions"),
-          actionButton("updatePositions", label = "Update Custom Positions", class = "btn btn-outline-primary", icon = icon("sync"))
+          # checkboxInput("chkCustomPositions", label = "Keep Custom Positions", value = FALSE),
+          # conditionalPanel(
+          #   condition = "input.chkCustomPositions == true",
+            uiOutput("initnodepos"),
+            matrixButtonGroup("nodeposMatrix")
+          # )
+          #rHandsontableOutput("hotPositions"),
+          #actionButton("updatePositions", label = "Update Custom Positions", class = "btn btn-outline-primary", icon = icon("sync"))
         ), # end Ellipses subtab
 
         tabPanel(

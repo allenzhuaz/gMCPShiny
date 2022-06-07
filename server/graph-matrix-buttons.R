@@ -52,7 +52,14 @@ observeEvent(input$btn_nodeposMatrix_delrow, {
 })
 
 observeEvent(input$btn_nodeposMatrix_reset, {
-  updateMatrixInput(session, inputId = "nodeposMatrix", value = as.matrix(data.frame(cbind(X = c(-1, 1, -1, 1),
-                                                                                           Y = c(1, 1, -1, -1)))))
+  radianStart <- if((nrow(input$hypothesesMatrix))%%2 != 0) {
+    pi * (1/2 + 1/nrow(input$hypothesesMatrix)) } else {
+      pi * (1 + 2/nrow(input$hypothesesMatrix))/2 }
+
+  updateMatrixInput(session, inputId = "nodeposMatrix", value = as.matrix(data.frame(cbind(Hypothesis = input$hypothesesMatrix[,"Name"],
+                                                                                           x = 2 * cos((radianStart - (0:(nrow(input$hypothesesMatrix)-1))/nrow(input$hypothesesMatrix)*2*pi) %% (2*pi))
+,
+                                                                                           y = 2 * sin((radianStart - (0:(nrow(input$hypothesesMatrix)-1))/nrow(input$hypothesesMatrix)*2*pi) %% (2*pi))
+))))
 })
 

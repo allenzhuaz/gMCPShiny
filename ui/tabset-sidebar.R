@@ -94,8 +94,8 @@ headingPanel(
           conditionalPanel(
             condition = "input.chkAddColors == true",
             h4("Set the Colors"),
-            selectInput("palette", "Select the Color Palette:", c("Dark2", "Greyscale", "Color Blind", "All Colors")),
-            uiOutput("colorSet")
+            selectInput("palette", "Select the Color Palette:", grDevices::palette.pals(), selected = "ggplot2"),
+ #           uiOutput("colorSet")
           ), # end Add Colors conditional panel
 
           checkboxInput("chkLegend", label = "Show Legend", value = TRUE),

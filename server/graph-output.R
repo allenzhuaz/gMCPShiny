@@ -198,7 +198,7 @@ plotInput <- reactive({
     alphaHypotheses = as.numeric(input$hypothesesMatrix[,"Alpha"]),
     m = m,
     fill = input$hypothesesMatrix[,"Group"],
-    #    palette = grDevices::gray.colors(length(unique(fill)), start = 0.5, end = 0.8),
+    palette = unname(palette.colors(n = length(unique(input$hypothesesMatrix[,"Group"])), palette = input$palette, recycle = TRUE)),
     labels = input$hypothesesMatrix[,"Group"],
     legend.name = getLegendTitle(),
     legend.position = "bottom",

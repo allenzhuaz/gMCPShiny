@@ -15,23 +15,14 @@ output$initnodepos <- renderUI({
                 )
               ),
               value = as.matrix(data.frame(cbind(Hypothesis = input$hypothesesMatrix[,"Name"],
-                                                 x = 2 * cos((radianStart - (0:(nrow(input$hypothesesMatrix)-1))/nrow(input$hypothesesMatrix)*2*pi) %% (2*pi))
-                                                 ,
-                                                 y = 2 * sin((radianStart - (0:(nrow(input$hypothesesMatrix)-1))/nrow(input$hypothesesMatrix)*2*pi) %% (2*pi))
+                                                 x = round(2 * cos((radianStart - (0:(nrow(input$hypothesesMatrix)-1))/nrow(input$hypothesesMatrix)*2*pi) %% (2*pi)), 6),
+                                                 y = round(2 * sin((radianStart - (0:(nrow(input$hypothesesMatrix)-1))/nrow(input$hypothesesMatrix)*2*pi) %% (2*pi)), 6)
               ))),
               class = "character",
               rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
               cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
   )
 })
-
-
-
-
-
-
-# Get legend title -------------------------------------------------------------
-
 
 
 # Create plot ------------------------------------------------------------------
@@ -56,7 +47,6 @@ plotInput <- reactive({
     labels = input$hypothesesMatrix[,"Group"],
     legend.name = input$legend.name,
     legend.position = input$legendPosition,
-    legend.textsize = input$legend.textsize,
     halfWid = input$height,
     halfHgt = input$width,
     trhw = input$trhw,
@@ -66,15 +56,16 @@ plotInput <- reactive({
     trdigits = input$trdigits,
     size = input$size,
     boxtextsize = input$boxtextsize,
+    legend.textsize = input$legend.textsize,
     arrowsize = input$arrowsize,
     offset = input$offset,
     x = if(is.null(input$nodeposMatrix[,"x"]) | !setequal(input$nodeposMatrix[,"Hypothesis"], input$hypothesesMatrix[,"Name"])){NULL} else{as.numeric(input$nodeposMatrix[,"x"])},
     y = if(is.null(input$nodeposMatrix[,"y"]) | !setequal(input$nodeposMatrix[,"Hypothesis"], input$hypothesesMatrix[,"Name"])){NULL} else{as.numeric(input$nodeposMatrix[,"y"])},
+    wchar = input$wchar
   )
 
 
 })
-
 
 output$thePlot <- renderPlot({
   print(parseQueryString(session$clientData$url_search))

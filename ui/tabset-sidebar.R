@@ -33,7 +33,6 @@ headingPanel(
       "Transitions",
       h4("Input Data Frame"),
       p("Transitions between non-existing hypotheses will not influence graph output."),
-#      rHandsontableOutput("hotTransitions"),
       matrixInput("trwtMatrix",
                   value = as.matrix(data.frame(cbind(From = paste0("H", c(1, 2, 3, 4)),
                                                      To = paste0("H", c(2, 3, 4, 1)),
@@ -44,7 +43,6 @@ headingPanel(
       ),
       matrixButtonGroup("trwtMatrix"),
       br(),
-#      actionButton("updateEdges", label = "Update Edges", class = "btn btn-outline-primary", icon = icon("sync"))
     ), # end Transitions Tab
 
     # Format Tab -----
@@ -60,19 +58,13 @@ headingPanel(
           sliderInput("height", "Set the ellipsis height:", 0, 1, .5, .01),
           numericInput("size", "Hypothesis Text Size", 8, 1, 10, 1),
           numericInput("digits", "# Digits for weight/alpha", 3, 1, 6, 1),
-#          sliderInput("rotation", "Set the rotation", -1, 1, 0, .005),
+          textInput("wchar", "Type 1 error symbol", "\u03b1"),
           br(),
           h4("Set the Positions"),
           p("By default, any custom positioning data will be lost if you add hypotheses or set the rotation (hypotheses will become equally spaced again).
                   Check the box below to keep custom positions, place all new hypotheses at position (0,0), and maintain current spacing when rotating."),
-          # checkboxInput("chkCustomPositions", label = "Keep Custom Positions", value = FALSE),
-          # conditionalPanel(
-          #   condition = "input.chkCustomPositions == true",
             uiOutput("initnodepos"),
             matrixButtonGroup("nodeposMatrix")
-          # )
-          #rHandsontableOutput("hotPositions"),
-          #actionButton("updatePositions", label = "Update Custom Positions", class = "btn btn-outline-primary", icon = icon("sync"))
         ), # end Ellipses subtab
 
         tabPanel(
@@ -90,25 +82,16 @@ headingPanel(
         tabPanel(
           "Color and Legend",
           br(),
-          # checkboxInput("chkAddColors", label = "Add Colors", value = TRUE),
-          # conditionalPanel(
-          #   condition = "input.chkAddColors == true",
-          #  h4("Set the Colors"),
             selectInput("pal_name", "Select the Color Palette", c("d3--category20", "d3--category20b", "d3--category20c", "Grey", "Merck", "Okabe-Ito"), selected = "Grey"),
-            sliderInput("pal_alpha", "Color Transparency", 0.1, 1, 1, .01),
- #           uiOutput("colorSet")
- #         ), # end Add Colors conditional panel
+            sliderInput("pal_alpha", "Color Transparency", 0.1, 1, 0.6, .01),
 
- #         checkboxInput("chkLegend", label = "Show Legend", value = TRUE),
- #         conditionalPanel(
- #           condition = "input.chkLegend == true",
             selectInput("legendPosition", label = "Legend Position", choices = c("none", "left", "right", "bottom", "top"), selected = "bottom", multiple = FALSE),
-         conditionalPanel(
-           condition = "input.legendPosition != 'none'",
-            textInput("legend.name", label = "Legend Name:", value = "Group Name"),
-            numericInput("legend.textsize", "Legend text size", 20, 6, 14, 1)
-          ) # end Show Legend conditional panel
-        ) # end Colors subtab
+             conditionalPanel(
+               condition = "input.legendPosition != 'none'",
+                textInput("legend.name", label = "Legend Name:", value = "Group Name"),
+                numericInput("legend.textsize", "Legend text size", 20, 6, 14, 1)
+              ) # end Show Legend conditional panel
+        ) # end Color and Legend subtab
       ) # end tabsetPanel (subtabs)
     ) # end Format tab
   ) # end tabsetPanel (maintabs)

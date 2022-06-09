@@ -5,7 +5,6 @@ library(shinyjs)
 library(markdown)
 library(gMCPmini)
 library(shinyMatrix)
-#library(rhandsontable)
 
 # Global modules and functions -------------------------------------------------
 

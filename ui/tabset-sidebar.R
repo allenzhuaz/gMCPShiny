@@ -88,22 +88,25 @@ headingPanel(
         ), # end Connections subtab
 
         tabPanel(
-          "Colors",
+          "Color and Legend",
           br(),
-          checkboxInput("chkAddColors", label = "Add Colors", value = TRUE),
-          conditionalPanel(
-            condition = "input.chkAddColors == true",
-            h4("Set the Colors"),
-            selectInput("palette", "Select the Color Palette:", grDevices::palette.pals(), selected = "ggplot2"),
+          # checkboxInput("chkAddColors", label = "Add Colors", value = TRUE),
+          # conditionalPanel(
+          #   condition = "input.chkAddColors == true",
+          #  h4("Set the Colors"),
+            selectInput("pal_name", "Select the Color Palette", c("d3--category20", "d3--category20b", "d3--category20c", "Grey", "Merck", "Okabe-Ito"), selected = "Grey"),
+            sliderInput("pal_alpha", "Color Transparency", 0.1, 1, 1, .01),
  #           uiOutput("colorSet")
-          ), # end Add Colors conditional panel
+ #         ), # end Add Colors conditional panel
 
-          checkboxInput("chkLegend", label = "Show Legend", value = TRUE),
-          conditionalPanel(
-            condition = "input.chkLegend == true",
-            textInput("txtLegendName", label = "Legend Name:", value = "Group Name"),
-            selectInput("legend.position", label = "Legend Position", choices = c("none", "left", "right", "bottom", "top"), selected = "bottom", multiple = FALSE),
-            numericInput("legendtextsize", "Legend text size", 20, 6, 14, 1)
+ #         checkboxInput("chkLegend", label = "Show Legend", value = TRUE),
+ #         conditionalPanel(
+ #           condition = "input.chkLegend == true",
+            selectInput("legendPosition", label = "Legend Position", choices = c("none", "left", "right", "bottom", "top"), selected = "bottom", multiple = FALSE),
+         conditionalPanel(
+           condition = "input.legendPosition != 'none'",
+            textInput("legend.name", label = "Legend Name:", value = "Group Name"),
+            numericInput("legend.textsize", "Legend text size", 20, 6, 14, 1)
           ) # end Show Legend conditional panel
         ) # end Colors subtab
       ) # end tabsetPanel (subtabs)

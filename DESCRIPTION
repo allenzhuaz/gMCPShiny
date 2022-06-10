@@ -3,11 +3,12 @@ Title: hGraph Shiny App
 Type: Shiny
 Version: 2022.06.0
 Imports:
-    colourpicker,
-    rhandsontable,
-    shinyMatrix,
+    brew,
+    bslib,
+    gMCPmini,
+    markdown,
+    ragg,
     shiny,
-    dplyr,
-    ggplot2,
-    reshape2,
-    stringr
+    shinyjs,
+    shinyMatrix,
+    stringi

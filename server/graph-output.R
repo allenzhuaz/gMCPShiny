@@ -68,7 +68,6 @@ plotInput <- reactive({
 })
 
 output$thePlot <- renderPlot({
-  print(parseQueryString(session$clientData$url_search))
   print(plotInput())
 })
 outputOptions(output, "thePlot", suspendWhenHidden = FALSE) # thePlot runs even when not visible

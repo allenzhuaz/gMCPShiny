@@ -10,19 +10,21 @@ headingPanel(
       h4("Set Hypotheses"),
       br(),
       matrixInput("hypothesesMatrix",
-                  label = tagList(
-                    "Hypotheses matrix",
-                    helpPopover(
-                      "hypothesesMatrix",
-                      "Name and Group need text input, and Alpha need numeric input. The text input uses the plotmath syntax. See ?grDevices::plotmath for details. Use \\n to add a line break."
-                    )
-                  ),
-                  value = as.matrix(data.frame(cbind(Name = paste0("H", 1:4),
-                                                     Alpha = rep(0.025/4, 4),
-                                                     Group = LETTERS[1:4]))),
-                  class = "character",
-                  rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
-                  cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
+        label = tagList(
+          "Hypotheses matrix",
+          helpPopover(
+            "hypothesesMatrix",
+            "Name and Group need text input, and Alpha need numeric input. The text input uses the plotmath syntax. See ?grDevices::plotmath for details. Use \\n to add a line break."
+          )
+        ),
+        value = as.matrix(data.frame(cbind(
+          Name = paste0("H", 1:4),
+          Alpha = rep(0.025 / 4, 4),
+          Group = LETTERS[1:4]
+        ))),
+        class = "character",
+        rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
+        cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
       ),
       matrixButtonGroup("hypothesesMatrix")
     ), # end Hypotheses Tab
@@ -34,12 +36,14 @@ headingPanel(
       h4("Set Transition Weights"),
       p("Transitions between non-existing hypotheses will not influence graph output."),
       matrixInput("trwtMatrix",
-                  value = as.matrix(data.frame(cbind(From = paste0("H", c(1, 2, 3, 4)),
-                                                     To = paste0("H", c(2, 3, 4, 1)),
-                                                     Weight = rep(1, 4)))),
-                  class = "character",
-                  rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
-                  cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
+        value = as.matrix(data.frame(cbind(
+          From = paste0("H", c(1, 2, 3, 4)),
+          To = paste0("H", c(2, 3, 4, 1)),
+          Weight = rep(1, 4)
+        ))),
+        class = "character",
+        rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
+        cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
       ),
       matrixButtonGroup("trwtMatrix"),
       br(),
@@ -61,8 +65,8 @@ headingPanel(
           textInput("wchar", "Significance Level Symbol", "\u03b1"),
           br(),
           h4("Set the Positions"),
-            uiOutput("initnodepos"),
-            matrixButtonGroup("nodeposMatrix")
+          uiOutput("initnodepos"),
+          matrixButtonGroup("nodeposMatrix")
         ), # end Ellipses subtab
 
         tabPanel(
@@ -80,15 +84,26 @@ headingPanel(
         tabPanel(
           "Color and Legend",
           br(),
-            selectInput("pal_name", "Color Palette", c("d3--category20", "d3--category20b", "d3--category20c", "Grey", "Merck", "Okabe-Ito"), selected = "Grey"),
-            sliderInput("pal_alpha", "Color Transparency", 0.1, 1, 0.6, .01),
-
-            selectInput("legendPosition", label = "Legend Position", choices = c("none", "left", "right", "bottom", "top"), selected = "bottom", multiple = FALSE),
-             conditionalPanel(
-               condition = "input.legendPosition != 'none'",
-                textInput("legend.name", label = "Legend Name", value = "Group Name"),
-                numericInput("legend.textsize", "Legend Text Size", 20, 6, 14, 1)
-              ) # end Show Legend conditional panel
+          selectInput(
+            "pal_name",
+            label = "Color Palette",
+            choices = c(
+              "gray",
+              "Okabe-Ito",
+              "d3.category10",
+              "d3.category20",
+              "d3.category20b",
+              "d3.category20c",
+              "Teal"
+            ), selected = "gray"
+          ),
+          sliderInput("pal_alpha", label = "Color Transparency", min = 0.1, max = 1, value = 0.6, step = 0.01),
+          selectInput("legendPosition", label = "Legend Position", choices = c("none", "left", "right", "bottom", "top"), selected = "bottom", multiple = FALSE),
+          conditionalPanel(
+            condition = "input.legendPosition != 'none'",
+            textInput("legend.name", label = "Legend Name", value = "Group Name"),
+            numericInput("legend.textsize", "Legend Text Size", 20, 6, 14, 1)
+          ) # end Show Legend conditional panel
         ) # end Color and Legend subtab
       ) # end tabsetPanel (subtabs)
     ) # end Format tab

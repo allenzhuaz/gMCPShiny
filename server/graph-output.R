@@ -10,7 +10,7 @@ output$initnodepos <- renderUI({
                 "Node position matrix",
                 helpPopover(
                   "nodeposMatrix",
-                  "The hypothesis input uses the plotmath syntax. See ?grDevices::plotmath for details. Use \\n to add a line break.
+                  "The text input supports Unicode escape sequence like \\uABCD. Use \\n to add a line break.
                             The x, y coordinates are for the relative position of the hypothesis ellipses."
                 )
               ),
@@ -39,12 +39,12 @@ plotInput <- reactive({
 
   gMCPmini::hGraph(
     nHypotheses = nrow(input$hypothesesMatrix),
-    nameHypotheses = input$hypothesesMatrix[,"Name"],
+    nameHypotheses = stringi::stri_unescape_unicode(input$hypothesesMatrix[,"Name"]),
     alphaHypotheses = as.numeric(input$hypothesesMatrix[,"Alpha"]),
     m = m,
     fill = input$hypothesesMatrix[,"Group"],
     palette = hgraph_palette(pal_name = input$pal_name, n = length(unique(input$hypothesesMatrix[,"Group"])), alpha = input$pal_alpha),
-    labels = input$hypothesesMatrix[,"Group"],
+    labels = stringi::stri_unescape_unicode(input$hypothesesMatrix[,"Group"]),
     legend.name = input$legend.name,
     legend.position = input$legendPosition,
     halfWid = input$width,

@@ -14,7 +14,7 @@ headingPanel(
           "Hypotheses matrix",
           helpPopover(
             "hypothesesMatrix",
-            "Name and Group need text input, and Alpha needs numeric input. The text inputs support Unicode escape sequence like \\uABCD. Use \\n to add a line break."
+            "Name and Group need text input, and Alpha needs numeric input. The text inputs support Unicode escape sequence, like \\uABCD for special symbols and \\n for adding a line break. See `?Quotes` for details"
           )
         ),
         value = as.matrix(data.frame(cbind(

@@ -62,7 +62,7 @@ headingPanel(
           sliderInput("height", "Ellipsis Height", 0, 1, .5, .01),
           numericInput("size", "Hypothesis Text Size", 8, 1, 10, 1),
           numericInput("digits", "# Digits for Significance Level", 3, 1, 6, 1),
-          textInput("wchar", "Significance Level Symbol", "\u03b1"),
+          textInput("wchar", "Significance Level Symbol", "\\u03b1"),
           br(),
           h4("Set the Positions"),
           uiOutput("initnodepos"),

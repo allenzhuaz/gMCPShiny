@@ -61,7 +61,7 @@ plotInput <- reactive({
     offset = input$offset,
     x = if(is.null(input$nodeposMatrix[,"x"]) | !setequal(input$nodeposMatrix[,"Hypothesis"], input$hypothesesMatrix[,"Name"])){NULL} else{as.numeric(input$nodeposMatrix[,"x"])},
     y = if(is.null(input$nodeposMatrix[,"y"]) | !setequal(input$nodeposMatrix[,"Hypothesis"], input$hypothesesMatrix[,"Name"])){NULL} else{as.numeric(input$nodeposMatrix[,"y"])},
-    wchar = input$wchar
+    wchar = stringi::stri_unescape_unicode(input$wchar)
   )
 
 

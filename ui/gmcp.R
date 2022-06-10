@@ -1,5 +1,5 @@
 tabPanel(
-  title = "Sequential Graphs",
+  title = "Sequential Graphs Update",
   icon = icon("hourglass-half"),
   fluidRow(
     column(

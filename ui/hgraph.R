@@ -8,7 +8,7 @@ tabPanel(
       fluidRow(
         column(
           width = 4,
-          span("Create Design", style = "font-size:1.5rem;")
+          span("Create Multiplicity Graph", style = "font-size:1.5rem;")
         ),
         column(
           width = 8,

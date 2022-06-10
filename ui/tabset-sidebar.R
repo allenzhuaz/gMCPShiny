@@ -7,22 +7,24 @@ headingPanel(
 
     tabPanel(
       "Hypotheses",
-      h4("Set the # of Hypotheses"),
-      p("(Both name and group must be updated.)"),
+      h4("Set Hypotheses"),
+      br(),
       matrixInput("hypothesesMatrix",
-                  label = tagList(
-                    "Hypotheses matrix",
-                    helpPopover(
-                      "hypothesesMatrix",
-                      "The text input uses the plotmath syntax. See ?grDevices::plotmath for details. Use \\n to add a line break."
-                    )
-                  ),
-                  value = as.matrix(data.frame(cbind(Name = paste0("H", 1:4),
-                                                     Alpha = rep(0.025/4, 4),
-                                                     Group = LETTERS[1:4]))),
-                  class = "character",
-                  rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
-                  cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
+        label = tagList(
+          "Hypotheses matrix",
+          helpPopover(
+            "hypothesesMatrix",
+            "Name and Group need text input, and Alpha need numeric input. The text input uses the plotmath syntax. See ?grDevices::plotmath for details. Use \\n to add a line break."
+          )
+        ),
+        value = as.matrix(data.frame(cbind(
+          Name = paste0("H", 1:4),
+          Alpha = rep(0.025 / 4, 4),
+          Group = LETTERS[1:4]
+        ))),
+        class = "character",
+        rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
+        cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
       ),
       matrixButtonGroup("hypothesesMatrix")
     ), # end Hypotheses Tab
@@ -31,20 +33,20 @@ headingPanel(
 
     tabPanel(
       "Transitions",
-      h4("Input Data Frame"),
+      h4("Set Transition Weights"),
       p("Transitions between non-existing hypotheses will not influence graph output."),
-#      rHandsontableOutput("hotTransitions"),
       matrixInput("trwtMatrix",
-                  value = as.matrix(data.frame(cbind(From = paste0("H", c(1, 2, 3, 4)),
-                                                     To = paste0("H", c(2, 3, 4, 1)),
-                                                     Weight = rep(1, 4)))),
-                  class = "character",
-                  rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
-                  cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
+        value = as.matrix(data.frame(cbind(
+          From = paste0("H", c(1, 2, 3, 4)),
+          To = paste0("H", c(2, 3, 4, 1)),
+          Weight = rep(1, 4)
+        ))),
+        class = "character",
+        rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
+        cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
       ),
       matrixButtonGroup("trwtMatrix"),
       br(),
-#      actionButton("updateEdges", label = "Update Edges", class = "btn btn-outline-primary", icon = icon("sync"))
     ), # end Transitions Tab
 
     # Format Tab -----
@@ -55,19 +57,16 @@ headingPanel(
         type = "tabs",
         tabPanel(
           "Ellipses",
-          h4("Change the Shape and Text Format"),
-          sliderInput("width", "Set the ellipsis width:", 0, 1, .75, .01),
-          sliderInput("height", "Set the ellipsis height:", 0, 1, .5, .01),
+          br(),
+          sliderInput("width", "Ellipsis Width", 0, 1, .75, .01),
+          sliderInput("height", "Ellipsis Height", 0, 1, .5, .01),
           numericInput("size", "Hypothesis Text Size", 8, 1, 10, 1),
-          numericInput("digits", "# Digits for weight/alpha", 3, 1, 6, 1),
-          sliderInput("rotation", "Set the rotation", -1, 1, 0, .005),
+          numericInput("digits", "# Digits for Significance Level", 3, 1, 6, 1),
+          textInput("wchar", "Significance Level Symbol", "\u03b1"),
           br(),
           h4("Set the Positions"),
-          p("By default, any custom positioning data will be lost if you add hypotheses or set the rotation (hypotheses will become equally spaced again).
-                  Check the box below to keep custom positions, place all new hypotheses at position (0,0), and maintain current spacing when rotating."),
-          checkboxInput("chkCustomPositions", label = "Keep Custom Positions", value = FALSE),
-          rHandsontableOutput("hotPositions"),
-          actionButton("updatePositions", label = "Update Custom Positions", class = "btn btn-outline-primary", icon = icon("sync"))
+          uiOutput("initnodepos"),
+          matrixButtonGroup("nodeposMatrix")
         ), # end Ellipses subtab
 
         tabPanel(
@@ -76,31 +75,36 @@ headingPanel(
           numericInput("boxtextsize", "Transition Text Size", 6, 1, 10, 1),
           numericInput("trhw", "Transition Box Width", .13, .05, .3, .01),
           numericInput("trhh", "Transition Box Height", .1, .05, .3, .01),
-          numericInput("trdigits", "# Digits for transitions", 2, 1, 6, 1),
-          sliderInput("trprop", "Transition positioning", .05, .95, .33, .01),
+          numericInput("trdigits", "# Digits for Transition Weight", 2, 1, 6, 1),
+          sliderInput("trprop", "Transition Positioning", .05, .95, .33, .01),
           numericInput("arrowsize", "Arrow Size", .035, .005, .6, .005),
-          numericInput("offset", "Space between Neighbor Arrows", .01, pi, .6, pi/4)
+          numericInput("offset", "Space between Neighbor Arrows", .15, 0.01, 1, 0.01)
         ), # end Connections subtab
 
         tabPanel(
-          "Colors",
+          "Color and Legend",
           br(),
-          checkboxInput("chkAddColors", label = "Add Colors", value = TRUE),
+          selectInput(
+            "pal_name",
+            label = "Color Palette",
+            choices = c(
+              "gray",
+              "Okabe-Ito",
+              "d3.category10",
+              "d3.category20",
+              "d3.category20b",
+              "d3.category20c",
+              "Teal"
+            ), selected = "gray"
+          ),
+          sliderInput("pal_alpha", label = "Color Transparency", min = 0.1, max = 1, value = 0.6, step = 0.01),
+          selectInput("legendPosition", label = "Legend Position", choices = c("none", "left", "right", "bottom", "top"), selected = "bottom", multiple = FALSE),
           conditionalPanel(
-            condition = "input.chkAddColors == true",
-            h4("Set the Colors"),
-            selectInput("palette", "Select the Color Palette:", c("Dark2", "Greyscale", "Color Blind", "All Colors")),
-            uiOutput("colorSet")
-          ), # end Add Colors conditional panel
-
-          checkboxInput("chkLegend", label = "Show Legend", value = TRUE),
-          conditionalPanel(
-            condition = "input.chkLegend == true",
-            textInput("txtLegendName", label = "Legend Name:", value = "Group Name"),
-            selectInput("legend.position", label = "Legend Position", choices = c("none", "left", "right", "bottom", "top"), selected = "bottom", multiple = FALSE),
-            numericInput("legendtextsize", "Legend text size", 20, 6, 14, 1)
+            condition = "input.legendPosition != 'none'",
+            textInput("legend.name", label = "Legend Name", value = "Group Name"),
+            numericInput("legend.textsize", "Legend Text Size", 20, 6, 14, 1)
           ) # end Show Legend conditional panel
-        ) # end Colors subtab
+        ) # end Color and Legend subtab
       ) # end tabsetPanel (subtabs)
     ) # end Format tab
   ) # end tabsetPanel (maintabs)

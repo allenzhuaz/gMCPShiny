@@ -1,9 +1,5 @@
 headingPanel(
   "Outputs",
-
-  # Custom HTML to trigger JS which downloads image from DOM
-  # HTML('<a href="#" role="button" class="btn btn-default" onclick="prepHref(this)" download><i class="fa fa-download"></i>Download Image</a>'),
-
   tabsetPanel(
     tabPanel(
       "Graph",

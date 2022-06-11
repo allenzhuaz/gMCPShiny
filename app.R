@@ -5,6 +5,7 @@ library(shinyjs)
 library(markdown)
 library(gMCPmini)
 library(shinyMatrix)
+library(ragg)
 
 # Global modules and functions -------------------------------------------------
 
@@ -19,6 +20,11 @@ source("modules/sanitize-filename.R")
 source("modules/df2graph.R")
 source("modules/adaptive-palette.R")
 
+# Use `ragg::agg_png()` for plot outputs to make them cross-platform consistent.
+# Importantly, this makes ellipse edges look smooth with proper anti-aliasing.
+# Note this is experimental in shiny and may be superseded in the future.
+# See <https://github.com/rstudio/shiny/blob/main/R/imageutils.R>
+options(shiny.useragg = TRUE)
 
 # UI ---------------------------------------------------------------------------
 

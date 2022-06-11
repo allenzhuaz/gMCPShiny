@@ -22,8 +22,6 @@ navbarPageCustom(
   header = tags$head(
     tags$link(rel = "shortcut icon", type = "image/png", href = "images/favicon.png"),
     tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
-    # Custom JS to enable downloading PNG from DOM
-    tags$script(src = "js/download-plot.js"),
     tags$script(src = "js/help-popover.js")
   ),
   source("ui/hgraph.R", local = TRUE)$value,

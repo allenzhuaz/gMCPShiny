@@ -3,7 +3,9 @@ headingPanel(
   tabsetPanel(
     tabPanel(
       "Graph",
-      plotOutput("thePlot")
+      plotOutput("thePlot"),
+      hr(),
+      p("Right click the above graph, then select ", em("Copy image "), "or ", em("Save image as... "), "to copy or download it."),
     ),
     tabPanel(
       "Code",

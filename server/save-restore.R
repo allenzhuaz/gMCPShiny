@@ -63,4 +63,17 @@ observeEvent(input$btn_design_restore, {
     function(x) updateMatrixInput(session, inputId = x, value = hgraph_inputs[[x]])
   )
 
+  # Restore Node Position parameters with a progress delay
+  # Otherwise the execution timing of `renderUI()` will
+  # make it impossible to restore these values
+  shinyjs::delay(500, {
+    lapply(
+      c("nodeposMatrix"),
+      function(x) session$sendInputMessage(x, list(value = hgraph_inputs[[x]]))
+    )
+  })
 })
+
+
+
+

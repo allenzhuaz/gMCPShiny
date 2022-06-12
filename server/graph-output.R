@@ -7,11 +7,11 @@ output$initnodepos <- renderUI({
 
   matrixInput("nodeposMatrix",
               label = tagList(
-                "Node position matrix",
+                "Customize Node Position",
                 helpPopover(
-                  "nodeposMatrix",
-                  "The text input supports Unicode escape sequence like \\uABCD. Use \\n to add a line break.
-                            The x, y coordinates are for the relative position of the hypothesis ellipses."
+                  "Node Position Matrix",
+                  "The \"Hypotheses\" text inputs support Unicode escape sequence, like `\\uABCD` for a special symbol and `\\n` for adding a line break. See `?Quotes` for details.
+                  The \"x\", \"y\" numeric inputs are coordinates for the relative position of the hypothesis ellipses."
                 )
               ),
               value = as.matrix(data.frame(cbind(Hypothesis = input$hypothesesMatrix[,"Name"],

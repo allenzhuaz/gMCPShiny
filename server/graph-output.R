@@ -23,6 +23,7 @@ output$initnodepos <- renderUI({
               cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
   )
 })
+outputOptions(output, name = "initnodepos", suspendWhenHidden = FALSE)
 
 
 # Create plot ------------------------------------------------------------------

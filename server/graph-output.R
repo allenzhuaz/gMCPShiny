@@ -1,3 +1,4 @@
+options(scipen = 999) #Enforce disabling scientific notation
 
 # Initial node position uioutput
 output$initnodepos <- renderUI({

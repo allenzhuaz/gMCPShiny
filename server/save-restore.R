@@ -67,10 +67,7 @@ observeEvent(input$btn_design_restore, {
   # Otherwise the execution timing of `renderUI()` will
   # make it impossible to restore these values
   shinyjs::delay(500, {
-    lapply(
-      c("nodeposMatrix"),
-      function(x) session$sendInputMessage(x, list(value = hgraph_inputs[[x]]))
-    )
+      updateMatrixInput(session, inputId = "nodeposMatrix", value = hgraph_inputs[["nodeposMatrix"]])
   })
 })
 

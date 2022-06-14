@@ -43,13 +43,6 @@ observeEvent(input$btn_trwtMatrix_reset, {
 })
 
 # Node position
-observeEvent(input$btn_nodeposMatrix_addrow, {
-  updateMatrixInput(session, inputId = "nodeposMatrix", value = addMatrixRow(input$nodeposMatrix))
-})
-
-observeEvent(input$btn_nodeposMatrix_delrow, {
-  updateMatrixInput(session, inputId = "nodeposMatrix", value = delMatrixRow(input$nodeposMatrix))
-})
 
 observeEvent(input$btn_nodeposMatrix_reset, {
   radianStart <- if((nrow(input$hypothesesMatrix))%%2 != 0) {

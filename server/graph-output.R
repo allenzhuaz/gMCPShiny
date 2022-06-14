@@ -1,31 +1,5 @@
 options(scipen = 999) #Enforce disabling scientific notation
 
-# Initial node position uioutput
-output$initnodepos <- renderUI({
-  radianStart <- if((nrow(input$hypothesesMatrix))%%2 != 0) {
-    pi * (1/2 + 1/nrow(input$hypothesesMatrix)) } else {
-      pi * (1 + 2/nrow(input$hypothesesMatrix))/2 }
-
-  matrixInput("nodeposMatrix",
-              label = tagList(
-                "Customize Node Position",
-                helpPopover(
-                  "Node Position Matrix",
-                  "The \"Hypotheses\" text inputs support Unicode escape sequence, like `\\uABCD` for a special symbol and `\\n` for adding a line break. See `?Quotes` for details.
-                  The \"x\", \"y\" numeric inputs are coordinates for the relative position of the hypothesis ellipses."
-                )
-              ),
-              value = as.matrix(data.frame(cbind(Hypothesis = input$hypothesesMatrix[,"Name"],
-                                                 x = round(2 * cos((radianStart - (0:(nrow(input$hypothesesMatrix)-1))/nrow(input$hypothesesMatrix)*2*pi) %% (2*pi)), 6),
-                                                 y = round(2 * sin((radianStart - (0:(nrow(input$hypothesesMatrix)-1))/nrow(input$hypothesesMatrix)*2*pi) %% (2*pi)), 6)
-              ))),
-              class = "character",
-              rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
-              cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
-  )
-})
-outputOptions(output, name = "initnodepos", suspendWhenHidden = FALSE)
-
 
 # Create plot ------------------------------------------------------------------
 

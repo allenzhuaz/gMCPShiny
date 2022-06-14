@@ -69,8 +69,31 @@ headingPanel(
           numericInput("digits", "# Digits for Significance Level", 5, 1, 12, 1),
           textInput("wchar", "Significance Level Symbol", "\\u03b1"),
 
-          uiOutput("initnodepos"),
-          matrixButtonGroup("nodeposMatrix")
+          matrixInput("nodeposMatrix",
+                      label = tagList(
+                        "Customize Node Position",
+                        helpPopover(
+                          "Node Position Matrix",
+                          "The \"Hypotheses\" text inputs support Unicode escape sequence, like `\\uABCD` for a special symbol and `\\n` for adding a line break. See `?Quotes` for details.
+                  The \"x\", \"y\" numeric inputs are coordinates for the relative position of the hypothesis ellipses."
+                        )
+                      ),
+                      value = as.matrix(data.frame(cbind(Hypothesis = paste0("H", 1:4),
+                                                         x = c(-1, 1, 1, -1),
+                                                         y = c(1, 1, -1, -1)
+                      ))),
+                      class = "character",
+                      rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
+                      cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
+          ),
+          actionButton(
+            "btn_nodeposMatrix_reset",
+            label = "",
+            icon = icon("undo"),
+            width = "100%",
+            class = "btn btn-block btn-outline-primary"
+          ),
+          p(icon("exclamation-triangle"), "Press the", icon("undo"),  "button will recover to default circular layout"),
         ), # end Ellipses subtab
 
         tabPanel(

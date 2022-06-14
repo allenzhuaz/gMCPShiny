@@ -43,11 +43,11 @@ observeEvent(input$btn_trwtMatrix_reset, {
 })
 
 # Node position
-observeEvent(input$btn_nodeposMatrix_addrow, {
+observeEvent(input$btn_hypothesesMatrix_addrow, {
   updateMatrixInput(session, inputId = "nodeposMatrix", value = addMatrixRow(input$nodeposMatrix))
 })
 
-observeEvent(input$btn_nodeposMatrix_delrow, {
+observeEvent(input$btn_hypothesesMatrix_delrow, {
   updateMatrixInput(session, inputId = "nodeposMatrix", value = delMatrixRow(input$nodeposMatrix))
 })
 

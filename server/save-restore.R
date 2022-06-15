@@ -32,8 +32,13 @@ output$btn_design_save <- downloadHandler(
       names(hgraph_inputs)
     ))] <- NULL
 
+    # Get reactive values
+    node_settings <- list("rv_nodes" = isolate(reactiveValuesToList(rv_nodes)))
+    edge_settings <- list("rv_edges" = isolate(reactiveValuesToList(rv_edges)))
+
+
     # Save to file
-    lst <- list("hgraph_inputs" = hgraph_inputs)
+    lst <- list("hgraph_inputs" = hgraph_inputs, "node_settings" = node_settings, "edge_settings" = edge_settings)
     saveRDS(lst, file = con)
   }
 )
@@ -63,12 +68,33 @@ observeEvent(input$btn_design_restore, {
     function(x) updateMatrixInput(session, inputId = x, value = hgraph_inputs[[x]])
   )
 
+  # Restore global reactive values
+  node_settings <- lst$node_settings
+
+  rv_nodes$wchar <- node_settings$rv_nodes$wchar
+  rv_nodes$digits <- node_settings$rv_nodes$digits
+  rv_nodes$width <- node_settings$rv_nodes$width
+  rv_nodes$height <- node_settings$rv_nodes$height
+  rv_nodes$size <- node_settings$rv_nodes$size
+  rv_nodes$pal_name <- node_settings$rv_nodes$pal_name
+  rv_nodes$pal_alpha <- node_settings$rv_nodes$pal_alpha
+
+  edge_settings <- lst$edge_settings
+
+  rv_edges$trhw <- edge_settings$rv_edges$trhw
+  rv_edges$trhh <- edge_settings$rv_edges$trhh
+  rv_edges$trdigits <- edge_settings$rv_edges$trdigits
+  rv_edges$boxtextsize <- edge_settings$rv_edges$boxtextsize
+  rv_edges$trprop <- edge_settings$rv_edges$trprop
+  rv_edges$arrowsize <- edge_settings$rv_edges$arrowsize
+  rv_edges$offset <- edge_settings$rv_edges$offset
+
   # Restore Node Position parameters with a progress delay
   # Otherwise the execution timing of `renderUI()` will
   # make it impossible to restore these values
-  shinyjs::delay(500, {
-      updateMatrixInput(session, inputId = "nodeposMatrix", value = hgraph_inputs[["nodeposMatrix"]])
-  })
+  # shinyjs::delay(500, {
+  #     updateMatrixInput(session, inputId = "nodeposMatrix", value = hgraph_inputs[["nodeposMatrix"]])
+  # })
 })
 
 

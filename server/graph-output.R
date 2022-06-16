@@ -10,7 +10,7 @@ plotInput <- reactive({
   keepTransRows <-  (Trans[,1] %in% input$hypothesesMatrix[,1]) & (Trans[,2] %in% input$hypothesesMatrix[,1])
   transitions <- Trans[keepTransRows,]
 
-  m <- df2graph(namesH = unique(input$hypothesesMatrix[,1]), df = transitions)
+  m <- df2graph(namesH = input$hypothesesMatrix[,1], df = transitions)
 
 
   gMCPmini::hGraph(
@@ -18,9 +18,10 @@ plotInput <- reactive({
     nameHypotheses = stringi::stri_unescape_unicode(input$hypothesesMatrix[,"Name"]),
     alphaHypotheses = as.numeric(input$hypothesesMatrix[,"Alpha"]),
     m = m,
-    fill = as.factor(input$hypothesesMatrix[,"Group"]),
+    fill = factor(stringi::stri_unescape_unicode(input$hypothesesMatrix[,"Group"]),
+                  levels=unique(stringi::stri_unescape_unicode(input$hypothesesMatrix[,"Group"]))),
     palette = hgraph_palette(pal_name = rv_nodes$pal_name, n = length(unique(input$hypothesesMatrix[,"Group"])), alpha = rv_nodes$pal_alpha),
-    labels = stringi::stri_unescape_unicode(levels(as.factor(input$hypothesesMatrix[,"Group"]))),
+    labels = unique(stringi::stri_unescape_unicode(input$hypothesesMatrix[,"Group"])),
     legend.name = input$legend.name,
     legend.position = input$legendPosition,
     halfWid = rv_nodes$width,

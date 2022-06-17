@@ -51,6 +51,22 @@ observeEvent(input$btn_hypothesesMatrix_delrow, {
   updateMatrixInput(session, inputId = "nodeposMatrix", value = delMatrixRow(input$nodeposMatrix))
 })
 
+observeEvent(input$btn_nodeposMatrix_reset_init, {
+  showModal(modalDialog(
+    title = p("Attention", icon("exclamation-triangle")),
+
+    p("Press ", icon("sync"),  " will sync the hypothesis name in this table, but reset the graph layout to default circular layout, i.e. you will lose the current customized node position."),
+
+    p("Do you still want to proceed?"),
+
+    easyClose = TRUE,
+    footer = tagList(
+      actionButton("btn_nodeposMatrix_reset", label = "Yes", class = "btn-primary"),
+      modalButton("No")
+    )))
+})
+
+
 observeEvent(input$btn_nodeposMatrix_reset, {
   radianStart <- if((nrow(input$hypothesesMatrix))%%2 != 0) {
     pi * (1/2 + 1/nrow(input$hypothesesMatrix)) } else {
@@ -60,5 +76,6 @@ observeEvent(input$btn_nodeposMatrix_reset, {
                                                                                            x = round(2 * cos((radianStart - (0:(nrow(input$hypothesesMatrix)-1))/nrow(input$hypothesesMatrix)*2*pi) %% (2*pi)), 6),
                                                                                            y = round(2 * sin((radianStart - (0:(nrow(input$hypothesesMatrix)-1))/nrow(input$hypothesesMatrix)*2*pi) %% (2*pi)), 6)
 ))))
+  removeModal()
 })
 

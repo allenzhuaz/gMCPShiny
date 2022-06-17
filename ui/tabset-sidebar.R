@@ -47,13 +47,16 @@ headingPanel(
                   cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
       ),
       actionButton(
-        "btn_nodeposMatrix_reset",
+        "btn_nodeposMatrix_reset_init",
         label = "",
-        icon = icon("undo"),
+        icon = icon("sync"),
         width = "100%",
         class = "btn btn-block btn-outline-primary"
       ),
-      p(icon("exclamation-triangle"), "Press the", icon("undo"),  "button will recover to default circular layout"),
+
+      br(),
+      br(),
+
       selectInput("legendPosition",
                   label = tagList(
                     "Legend Position",
@@ -69,6 +72,9 @@ headingPanel(
         numericInput("legend.textsize", "Legend Text Size", 20, 6, 50, 1)
 
     ),
+
+    hr(),
+
     actionButton("btn_node_setting_modal", label = "More Node Settings", class = "btn btn-outline-primary", icon = icon("cog"), width =  "100%")
     ), # end Hypotheses Tab
 
@@ -95,7 +101,7 @@ headingPanel(
         cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
       ),
       matrixButtonGroup("trwtMatrix"),
-      br(),
+      hr(),
       actionButton("btn_edge_setting_modal", label = "More Edge Settings", class = "btn btn-outline-primary", icon = icon("cog"), width =  "100%")
 
     ) # end Transitions Tab

@@ -34,14 +34,15 @@ observeEvent(input$btn_show_example, {
     FUN = function(x) "matrix" %in% x
   ))
 
-  lapply(
-    names(hgraph_inputs)[!is_matrix_input],
-    function(x) session$sendInputMessage(x, list(value = hgraph_inputs[[x]]))
-  )
 
   lapply(
     names(hgraph_inputs)[is_matrix_input],
     function(x) updateMatrixInput(session, inputId = x, value = hgraph_inputs[[x]])
+  )
+
+  lapply(
+    names(hgraph_inputs)[!is_matrix_input],
+    function(x) session$sendInputMessage(x, list(value = hgraph_inputs[[x]]))
   )
 
   # Restore global reactive values

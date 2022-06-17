@@ -59,14 +59,15 @@ observeEvent(input$btn_design_restore, {
   ))
 
   lapply(
+    names(hgraph_inputs)[is_matrix_input],
+    function(x) updateMatrixInput(session, inputId = x, value = hgraph_inputs[[x]])
+  )
+
+  lapply(
     names(hgraph_inputs)[!is_matrix_input],
     function(x) session$sendInputMessage(x, list(value = hgraph_inputs[[x]]))
   )
 
-  lapply(
-    names(hgraph_inputs)[is_matrix_input],
-    function(x) updateMatrixInput(session, inputId = x, value = hgraph_inputs[[x]])
-  )
 
   # Restore global reactive values
   node_settings <- lst$node_settings

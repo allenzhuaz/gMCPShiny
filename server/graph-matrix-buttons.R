@@ -8,9 +8,14 @@ observeEvent(input$btn_hypothesesMatrix_delrow, {
 })
 
 observeEvent(input$btn_hypothesesMatrix_reset, {
-  updateMatrixInput(session, inputId = "hypothesesMatrix", value = as.matrix(data.frame(cbind(Name = paste0("H", 1:4),
-                                                                                              Alpha = rep(0.025/4, 4),
-                                                                                              Group = LETTERS[1:4]))))
+  updateMatrixInput(
+    session,
+    inputId = "hypothesesMatrix", value = as.matrix(data.frame(cbind(
+      Name = paste0("H", 1:4),
+      Alpha = rep(0.025 / 4, 4),
+      Group = LETTERS[1:4]
+    )))
+  )
 })
 
 # group
@@ -23,8 +28,14 @@ observeEvent(input$btn_groupMatrix_delrow, {
 })
 
 observeEvent(input$btn_groupMatrix_reset, {
-  updateMatrixInput(session, inputId = "groupMatrix", value = as.matrix(data.frame(cbind(Group = LETTERS[1:4],
-                                                                                         GroupName = paste0("Group ", LETTERS[1:4])))))
+  updateMatrixInput(
+    session,
+    inputId = "groupMatrix",
+    value = as.matrix(data.frame(cbind(
+      Group = LETTERS[1:4],
+      GroupName = paste0("Group ", LETTERS[1:4])
+    )))
+  )
 })
 
 # Edge: Transition Matrix (original m*m Matrix or From-To weight)
@@ -37,9 +48,15 @@ observeEvent(input$btn_trwtMatrix_delrow, {
 })
 
 observeEvent(input$btn_trwtMatrix_reset, {
-  updateMatrixInput(session, inputId = "trwtMatrix", value = as.matrix(data.frame(cbind(From = paste0("H", c(1, 2, 3, 4)),
-                                                                                          To = paste0("H", c(2, 3, 4, 1)),
-                                                                                          Weight = rep(1, 4)))))
+  updateMatrixInput(
+    session,
+    inputId = "trwtMatrix",
+    value = as.matrix(data.frame(cbind(
+      From = paste0("H", c(1, 2, 3, 4)),
+      To = paste0("H", c(2, 3, 4, 1)),
+      Weight = rep(1, 4)
+    )))
+  )
 })
 
 # Node position
@@ -53,29 +70,38 @@ observeEvent(input$btn_hypothesesMatrix_delrow, {
 
 observeEvent(input$btn_nodeposMatrix_reset_init, {
   showModal(modalDialog(
-    title = p("Attention", icon("exclamation-triangle")),
-
-    p("Press ", icon("sync"),  " will sync the hypothesis name in this table, but reset the graph layout to default circular layout, i.e. you will lose the current customized node position."),
-
+    title = p(icon("exclamation-triangle"), "Attention"),
+    p(
+      paste(
+        "This will sync the hypotheses names in this table,",
+        "but will also reset the graph layout to the default circular layout,",
+        "i.e., you will lose the current customized node position."
+      )
+    ),
     p("Do you still want to proceed?"),
-
     easyClose = TRUE,
     footer = tagList(
-      actionButton("btn_nodeposMatrix_reset", label = "Yes", class = "btn-primary"),
-      modalButton("No")
-    )))
+      actionButton("btn_nodeposMatrix_reset", label = "Confirm Sync", class = "btn-primary", icon = icon("check-circle")),
+      modalButton("Cancel")
+    )
+  ))
 })
-
 
 observeEvent(input$btn_nodeposMatrix_reset, {
-  radianStart <- if((nrow(input$hypothesesMatrix))%%2 != 0) {
-    pi * (1/2 + 1/nrow(input$hypothesesMatrix)) } else {
-      pi * (1 + 2/nrow(input$hypothesesMatrix))/2 }
+  radianStart <- if ((nrow(input$hypothesesMatrix)) %% 2 != 0) {
+    pi * (1 / 2 + 1 / nrow(input$hypothesesMatrix))
+  } else {
+    pi * (1 + 2 / nrow(input$hypothesesMatrix)) / 2
+  }
 
-  updateMatrixInput(session, inputId = "nodeposMatrix", value = as.matrix(data.frame(cbind(Hypothesis = input$hypothesesMatrix[,"Name"],
-                                                                                           x = round(2 * cos((radianStart - (0:(nrow(input$hypothesesMatrix)-1))/nrow(input$hypothesesMatrix)*2*pi) %% (2*pi)), 6),
-                                                                                           y = round(2 * sin((radianStart - (0:(nrow(input$hypothesesMatrix)-1))/nrow(input$hypothesesMatrix)*2*pi) %% (2*pi)), 6)
-))))
+  updateMatrixInput(
+    session,
+    inputId = "nodeposMatrix",
+    value = as.matrix(data.frame(cbind(
+      Hypothesis = input$hypothesesMatrix[, "Name"],
+      x = round(2 * cos((radianStart - (0:(nrow(input$hypothesesMatrix) - 1)) / nrow(input$hypothesesMatrix) * 2 * pi) %% (2 * pi)), 6),
+      y = round(2 * sin((radianStart - (0:(nrow(input$hypothesesMatrix) - 1)) / nrow(input$hypothesesMatrix) * 2 * pi) %% (2 * pi)), 6)
+    )))
+  )
   removeModal()
 })
-

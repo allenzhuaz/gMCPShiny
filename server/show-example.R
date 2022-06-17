@@ -3,14 +3,21 @@
 # Display settings modal (from Hypothesis tab)
 observeEvent(input$btn_hgraph_example_modal, {
   showModal(modalDialog(
-    title = "Choose an Example hGraph",
+    title = "Choose Example",
 
-    selectInput(inputId = "example_hgraph", label = "", choices = list.files("./data"), width = "100%"),
+    selectInput(
+      inputId = "example_hgraph",
+      label = "",
+      choices = c(
+        "Example 1: 8 hypotheses, 3 groups" = "example1_8hypo_3grp.rds",
+        "Example 2: 6 hypotheses, 3 groups" = "example2_6hypo_3grp.rds"
+      ),
+      width = "100%"
+    ),
 
     easyClose = TRUE,
     footer = tagList(
-      actionButton("btn_show_example", label = "Show Graph", class = "btn-primary", icon = icon("magic"))
-     # modalButton("Close")
+      actionButton("btn_show_example", label = "Load Example", class = "btn-primary", icon = icon("magic"))
     )
   ))
 })
@@ -18,7 +25,7 @@ observeEvent(input$btn_hgraph_example_modal, {
 observeEvent(input$btn_show_example, {
   # rds <- input$btn_design_restore
   # req(rds)
-  lst <- readRDS(file = file.path("./data", input$example_hgraph))
+  lst <- readRDS(file = file.path("data/", input$example_hgraph))
   hgraph_inputs <- lst$hgraph_inputs
 
   # Restore regular inputs and matrix inputs separately

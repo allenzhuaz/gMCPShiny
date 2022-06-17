@@ -22,7 +22,8 @@ navbarPageCustom(
   header = tags$head(
     tags$link(rel = "shortcut icon", type = "image/png", href = "images/favicon.png"),
     tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
-    tags$script(src = "js/help-popover.js")
+    tags$script(src = "js/help-popover.js"),
+    tags$script(src = "js/beforeunload.js")
   ),
   source("ui/hgraph.R", local = TRUE)$value,
   source("ui/gmcp.R", local = TRUE)$value,

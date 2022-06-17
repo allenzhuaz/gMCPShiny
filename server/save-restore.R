@@ -2,7 +2,7 @@
 observeEvent(input$btn_design_save_modal, {
   showModal(modalDialog(
     title = "Save Graph Design",
-    textInputAddonRight("filename_rds_design", label = "Name the hgraph design:", value = "hgraph_design", addon = ".rds", width = "100%"),
+    textInputAddonRight("filename_rds_design", label = "Name the hgraph design:", value = "hgraph", addon = ".rds", width = "100%"),
     easyClose = TRUE,
     footer = tagList(
       downloadButton("btn_design_save", label = "Save Graph Design", class = "btn-primary", icon = icon("download")),

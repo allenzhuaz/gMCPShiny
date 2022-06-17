@@ -15,8 +15,9 @@ tabPanel(
           tags$style("#btn_group_design { float:right; }"),
           div(
             id = "btn_group_design",
-            actionButton("btn_design_save_modal", label = "Save hgraph Design", class = "btn btn-outline-primary", icon = icon("download")),
-            fileButtonInput("btn_design_restore", label = NULL, buttonLabel = "Restore hgraph", multiple = FALSE, accept = ".rds", width = "50%")
+            actionButton("btn_design_save_modal", label = "Save hgraph", class = "btn btn-outline-primary", icon = icon("download")),
+            fileButtonInput("btn_design_restore", label = NULL, buttonLabel = "Restore hgraph", multiple = FALSE, accept = ".rds", width = "50%"),
+            actionButton("btn_hgraph_example_modal", label = "Load Example", class = "btn btn-outline-primary", icon = icon("chart-bar"))
           )
         )
       ),

@@ -45,7 +45,8 @@ plotInput <- reactive({
 })
 
 output$thePlot <- renderPlot({
-  print(plotInput())
+        print(plotInput())
+
 })
 outputOptions(output, "thePlot", suspendWhenHidden = FALSE) # thePlot runs even when not visible
 

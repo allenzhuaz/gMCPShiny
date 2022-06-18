@@ -43,6 +43,7 @@ hr {
 /* popover icon */
 a.help-popover {
     color: #6c757d;
+    text-decoration: none;
 }
 
 a.help-popover:hover,

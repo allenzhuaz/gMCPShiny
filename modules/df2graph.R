@@ -9,7 +9,8 @@ df2graph <- function(namesH,df) {
   for (i in 1:nrow(df)){
     row.index <- which(namesH%in%df$From[i])
     col.index <- which(namesH%in%df$To[i])
-    m[row.index,col.index] <- as.numeric(df$Weight[i])
+    w_numeric <- try(eval(parse(text=df$Weight[i])), silent = TRUE)
+    m[row.index,col.index] <- ifelse(class(w_numeric) == "try-error", NA, w_numeric)
   }
   m
 }

@@ -1,87 +1,137 @@
 # Create a reactive value object to maintain the settings globally
-rv_nodes <- reactiveValues("wchar" = "\\u03b1", "digits" = 5, "width" = .75, "height" = .5, "size" = 8, "pal_name" = "gray", "pal_alpha" = 0.6,  "trdigits" = 4)
+rv_nodes <- reactiveValues(
+  "wchar" = "\\u03b1",
+  "digits" = 5,
+  "width" = .75,
+  "height" = .5,
+  "size" = 8,
+  "pal_name" = "gray",
+  "pal_alpha" = 0.6,
+  "trdigits" = 4
+)
 
 # Display settings modal (from Hypothesis tab)
 observeEvent(input$btn_node_setting_modal, {
   showModal(modalDialog(
     title = "Node Display Settings",
-
-    h5("Node Shape and Text Format", style = "margin-top: 0;"),
+    h5("Node shape and text format", style = "margin-top: 0.5rem;"),
     hr(),
-
     fluidRow(
       column(
         width = 3,
-    numericInput("width", "Width: ", min = 0, max = 1, value = rv_nodes$width, step = .01)),
-
+        numericInput(
+          "width",
+          label = tagList(
+            "Width:",
+            helpPopover(
+              "halfWid",
+              "Half width of ellipses."
+            )
+          ),
+          value = rv_nodes$width, min = 0, max = 1, step = .01
+        )
+      ),
       column(
         width = 3,
-    numericInput("height", "Height: ", min = 0, max = 1, value = rv_nodes$height, step = .01)),
-
-    column(
-      width = 3,
-      numericInput("digits",
-                   label = tagList(
-                     "Digits: ",
-                     helpPopover(
-                       "digits",
-                       "Number of digits past the decimal for siginificance level in the hypothesis nodes"
-                     )
-                   ), value = rv_nodes$digits, min = 1, max = 12, step = 1, width = "100%"
-      )),
-
-    column(
-      width = 3,
-    numericInput("size", "Text Size: ", value = rv_nodes$size, min = 1, max = 20, step = 1))),
-
-    h5("Node Symbol and Color", style = "margin-top: 0;"),
+        numericInput(
+          "height",
+          label = tagList(
+            "Height:",
+            helpPopover(
+              "halfHgt",
+              "Half height of ellipses."
+            )
+          ),
+          value = rv_nodes$height, min = 0, max = 1, step = .01
+        )
+      ),
+      column(
+        width = 3,
+        numericInput(
+          "digits",
+          label = tagList(
+            "Digits:",
+            helpPopover(
+              "digits",
+              "Number of digits past the decimal for siginificance level in the hypothesis nodes."
+            )
+          ),
+          value = rv_nodes$digits, min = 1, max = 12, step = 1, width = "100%"
+        )
+      ),
+      column(
+        width = 3,
+        numericInput(
+          "size",
+          label = tagList(
+            "Text size:",
+            helpPopover(
+              "size",
+              "Text size in ellipses."
+            )
+          ),
+          value = rv_nodes$size, min = 1, max = 20, step = 1
+        )
+      )
+    ),
+    h5("Node symbol and colors", style = "margin-top: 1rem;"),
     hr(),
     fluidRow(
-
       column(
-        width = 6,
-        textInput("wchar",
-                  label = tagList(
-                    "Symbol: ",
-                    helpPopover(
-                      "wchar",
-                      "Symbol character to be shown for significance level in the hypothesis nodes.
-                  Input \\unicode for Greek letters, for example \\u03b1 for alpha.
-                  For full dictionary, please refer to http://kestrel.nmt.edu/~raymond/software/howtos/greekscape.xhtml"
-                    )
-                  ), value = rv_nodes$wchar, width = "100%"
-        )),
-
+        width = 4,
+        textInput(
+          "wchar",
+          label = tagList(
+            "Symbol:",
+            helpPopover(
+              "wchar",
+              "Symbol character representing significance level in the hypothesis nodes.
+                  Use Unicode characters for Greek letters, for example, \\u03b1 for alpha.
+                  Click the second icon for a more comprehensive character list."
+            ),
+            HTML('&nbsp;'),
+            helpLink("https://en.wikipedia.org/wiki/List_of_Unicode_characters")
+          ),
+          value = rv_nodes$wchar, width = "100%"
+        )
+      ),
       column(
-        width = 6,
-    selectInput(
-      "pal_name",
-      label = "Palette: ",
-      choices = c(
-        "gray",
-        "Okabe-Ito",
-        "d3.category10",
-        "d3.category20",
-        "d3.category20b",
-        "d3.category20c",
-        "Teal"
-      ), selected = rv_nodes$pal_name
-    ))),
-
-  fluidRow(
-    column(
-      width = 12,
-    sliderInput("pal_alpha",
-                label = tagList(
-                  "Transparency: ",
-                  helpPopover(
-                    "Color Transparency",
-                    "Values range from 0 to 1 , with lower values corresponding to more transparent colors"
-                  )
-                ),
-                min = 0.1, max = 1, value = rv_nodes$pal_alpha, step = 0.01, width = "100%"))),
-
-
+        width = 4,
+        selectInput(
+          "pal_name",
+          label = tagList(
+            "Palette:",
+            helpPopover(
+              "palette",
+              "Colors for groups."
+            )
+          ),
+          choices = c(
+            "gray",
+            "Okabe-Ito",
+            "d3.category10",
+            "d3.category20",
+            "d3.category20b",
+            "d3.category20c",
+            "Teal"
+          ), selected = rv_nodes$pal_name
+        )
+      ),
+      column(
+        width = 4,
+        numericInput(
+          "pal_alpha",
+          label = tagList(
+            "Transparency:",
+            helpPopover(
+              "Color transparency",
+              "Number ranging from 0 to 1, with lower values corresponding to more transparent colors."
+            )
+          ),
+          value = rv_nodes$pal_alpha, min = 0, max = 1, step = 0.01, width = "100%"
+        )
+      )
+    ),
     easyClose = FALSE,
     footer = tagList(
       actionButton("btn_node_settings_save", label = "Save Settings", class = "btn-primary", icon = icon("save")),
@@ -103,89 +153,141 @@ observeEvent(input$btn_node_settings_save, {
 
 
 # Create a reactive value object to maintain the settings globally
-rv_edges <- reactiveValues("trhw" = .13, "trhh" = .1, "trdigits" = 4, "boxtextsize" = 6, "trprop" = .33, "arrowsize" = .035, "offset" = .15)
+rv_edges <- reactiveValues(
+  "trhw" = .13,
+  "trhh" = .1,
+  "trdigits" = 4,
+  "boxtextsize" = 6,
+  "trprop" = .33,
+  "arrowsize" = .035,
+  "offset" = .15
+)
 
 # Display settings modal (from Transition tab)
 observeEvent(input$btn_edge_setting_modal, {
   showModal(modalDialog(
     title = "Edge Display Settings",
-    h5("Transition Box Shape and Text Format", style = "margin-top: 0;"),
+    h5("Transition box shape and text format", style = "margin-top: 0.5rem;"),
     hr(),
     fluidRow(
       column(
         width = 3,
-    numericInput("trhw", "Width", rv_edges$trhw, 0, 1, .01)),
-
-    column(
-      width = 3,
-    numericInput("trhh", "Height", rv_edges$trhh, 0, 1, .01)),
-
-
-    column(
-      width = 3,
-    numericInput("trdigits",
-             label = tagList(
-               "Digits:",
-               helpPopover(
-                 "Digits for Transition Weights",
-                 "Number of digits past the decimal for transition weight in the transition box"
-               )
-             ), value = rv_edges$trdigits, min = 1, max = 10, step = 1, width = "100%"
-      )),
-
-    column(
-      width = 3,
-    numericInput("boxtextsize", "Text Size", rv_edges$boxtextsize, 1, 20, 1))),
-
-    h5("Edge Layout", style = "margin-top: 0;"),
-    hr(),
-
-    fluidRow(
-     column(
-      width = 6,
-    numericInput("arrowsize", "Arrow Size: ", rv_edges$arrowsize, .005, .6, .005)),
-
-    column(
-      width = 6,
-    numericInput("offset", label = tagList(
-      "Offset:",
-      helpPopover(
-        "offset",
-        "Rotational offset in radians for transition edges, can control space between neighbor edges"
+        numericInput(
+          "trhw",
+          label = tagList(
+            "Width:",
+            helpPopover(
+              "trhw",
+              "Transition box width."
+            )
+          ),
+          value = rv_edges$trhw, min = 0, max = 1, step = .01
+        )
+      ),
+      column(
+        width = 3,
+        numericInput(
+          "trhh",
+          label = tagList(
+            "Height:",
+            helpPopover(
+              "trhh",
+              "Transition box height."
+            )
+          ),
+          value = rv_edges$trhh, min = 0, max = 1, step = .01
+        )
+      ),
+      column(
+        width = 3,
+        numericInput(
+          "trdigits",
+          label = tagList(
+            "Digits:",
+            helpPopover(
+              "trdigits",
+              "Number of digits past the decimal for transition weights in the transition box."
+            )
+          ),
+          value = rv_edges$trdigits, min = 1, max = 10, step = 1, width = "100%"
+        )
+      ),
+      column(
+        width = 3,
+        numericInput(
+          "boxtextsize",
+          label = tagList(
+            "Text size:",
+            helpPopover(
+              "boxtextsize",
+              "Transition text size."
+            )
+          ),
+          value = rv_edges$boxtextsize, min = 1, max = 20, step = 1
+        )
       )
-    ), rv_edges$offset, 0.01, 1, 0.01))),
-
+    ),
+    h5("Edge layout", style = "margin-top: 1rem;"),
+    hr(),
     fluidRow(
       column(
-        width = 12,
-        sliderInput("trprop", label = tagList(
-          "Box Position:",
-          helpPopover(
-            "trprop",
-            "Transition box's position proportional to edge length (relative to the edge starting point), value can be set between 0 and 1"
-          )
-        ), min = .05, max = .95, value = rv_edges$trprop, step = .01, width = "100%"))
+        width = 4,
+        numericInput(
+          "arrowsize",
+          label = tagList(
+            "Arrow size:",
+            helpPopover(
+              "arrowsize",
+              "Size of arrowhead for transition arrows."
+            )
+          ),
+          value = rv_edges$arrowsize, min = .005, max = .6, step = .005
+        )
+      ),
+      column(
+        width = 4,
+        numericInput(
+          "offset",
+          label = tagList(
+            "Offset:",
+            helpPopover(
+              "offset",
+              "Rotational offset in radians for transition edges,
+            can control space between neighbor edges."
+            )
+          ), value = rv_edges$offset, min = 0.01, max = 1, step = 0.01
+        )
+      ),
+      column(
+        width = 4,
+        numericInput(
+          "trprop",
+          label = tagList(
+            "Box position:",
+            helpPopover(
+              "trprop",
+              "Transition box's position proportional to edge length
+            (relative to the edge starting point), value can be set between 0 and 1."
+            )
+          ), value = rv_edges$trprop, min = 0, max = 1, step = 0.01, width = "100%"
+        )
+      )
     ),
+    easyClose = FALSE,
+    footer = tagList(
+      actionButton("btn_edge_settings_save", label = "Save Settings", class = "btn-primary", icon = icon("save")),
+      modalButton("Cancel")
+    )
+  ))
+})
 
-  easyClose = FALSE,
-  footer = tagList(
-    actionButton("btn_edge_settings_save", label = "Save Settings", class = "btn-primary", icon = icon("save")),
-    modalButton("Cancel")
-  )
-    ))
-  })
-
-  observeEvent(input$btn_edge_settings_save, {
-    rv_edges$trhw <- input$trhw
-    rv_edges$trhh <- input$trhh
-    rv_edges$trdigits <- input$trdigits
-    rv_edges$boxtextsize <- input$boxtextsize
-    rv_edges$trprop <- input$trprop
-    rv_edges$arrowsize <- input$arrowsize
-    rv_edges$offset <- input$offset
-    removeModal()
-  })
-
-
-
-
+observeEvent(input$btn_edge_settings_save, {
+  rv_edges$trhw <- input$trhw
+  rv_edges$trhh <- input$trhh
+  rv_edges$trdigits <- input$trdigits
+  rv_edges$boxtextsize <- input$boxtextsize
+  rv_edges$trprop <- input$trprop
+  rv_edges$arrowsize <- input$arrowsize
+  rv_edges$offset <- input$offset
+  removeModal()
+})

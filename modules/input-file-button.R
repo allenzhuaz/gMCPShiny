@@ -20,7 +20,7 @@ fileButtonInput <- function(inputId, label, multiple = FALSE, accept = NULL, wid
     inputTag$attribs$accept <- paste(accept, collapse = ",")
   }
   div(
-    style = "display: inline-block; width: 10rem; margin-bottom: -2rem;", # not super elegant but works
+    style = "display: inline-block; width: 10rem; margin-bottom: -2rem; margin-right: -3px;", # not super elegant but works
     div(
       class = "form-group shiny-input-container", style = if (!is.null(width)) {
         paste0("width: ", validateCssUnit(width), ";")

@@ -10,3 +10,12 @@ helpPopover <- function(title, content) {
     shiny::icon("question-circle")
   )
 }
+
+helpLink <- function(href) {
+  tags$a(
+    href = href,
+    target = "_blank",
+    class = "help-popover",
+    shiny::icon("external-link-alt")
+  )
+}

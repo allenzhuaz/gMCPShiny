@@ -114,8 +114,8 @@ headingPanel(
           "Set transition weights:",
           helpPopover(
             "Transition weights matrix",
-            "\"From\" and \"To\" need text input, shoud match hypotheses names,
-            \"Weight\" needs numeric input, should be between 0 and 1.
+            "\"From\" and \"To\" requires text input, shoud match hypotheses names.
+            \"Weight\" supports numeric input and arithmetic expressions, should range between 0 and 1.
               Transitions between non-existing hypotheses will not affect graph output."
           )
         ),

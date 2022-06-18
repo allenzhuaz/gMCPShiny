@@ -89,6 +89,7 @@ observeEvent(input$btn_node_setting_modal, {
                   Use Unicode characters for Greek letters, for example, \\u03b1 for alpha.
                   Click the second icon for a more comprehensive character list."
             ),
+            HTML('&nbsp;'),
             helpLink("https://en.wikipedia.org/wiki/List_of_Unicode_characters")
           ),
           value = rv_nodes$wchar, width = "100%"

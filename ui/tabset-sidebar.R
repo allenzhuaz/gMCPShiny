@@ -15,6 +15,7 @@ headingPanel(
             special characters. Click the second icon for a more comprehensive character list.
             Use `\\n` to add a line break. See `?Quotes` for details."
           ),
+          HTML('&nbsp;'),
           helpLink("https://en.wikipedia.org/wiki/List_of_Unicode_characters")
         ),
         value = as.matrix(data.frame(cbind(

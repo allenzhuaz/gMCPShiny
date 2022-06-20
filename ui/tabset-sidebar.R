@@ -10,7 +10,7 @@ headingPanel(
           "Set hypotheses:",
           helpPopover(
             "Hypotheses matrix",
-            "\"Name\" and \"Group\" need text input, \"Alpha\" needs numeric input.
+            "\"Name\" and \"Group\" require text input, \"Alpha\" requires numeric input.
             The text inputs support Unicode escape sequence like `\\uABCD` for
             special characters. Click the second icon for a more comprehensive character list.
             Use `\\n` to add a line break. See `?Quotes` for details."
@@ -35,9 +35,7 @@ headingPanel(
           "Customize node position:",
           helpPopover(
             "Node position matrix",
-            "The \"Hypotheses\" text inputs support Unicode escape sequence,
-            like `\\uABCD` for a special symbol and `\\n` for adding a line break.
-            See `?Quotes` for details.
+            "The \"Hypotheses\" requires text input, shoud match hypotheses names.
             The \"x\", \"y\" numeric inputs are coordinates for the
             relative position of the hypothesis ellipses."
           )

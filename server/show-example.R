@@ -11,7 +11,7 @@ observeEvent(input$btn_hgraph_example_modal, {
       choices = gsub(".rds", "",
                 gsub("_", " ",
                 gsub("-", ": ",
-                gsub("\\+", ", ", gtools::mixedsort(list.files("data/")))))),
+                gsub("\\+", ", ", stringi::stri_sort(list.files("data/"), numeric = TRUE))))),
       width = "100%"
     ),
 

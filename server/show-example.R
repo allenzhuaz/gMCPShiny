@@ -8,10 +8,10 @@ observeEvent(input$btn_hgraph_example_modal, {
     selectInput(
       inputId = "example_hgraph",
       label = "",
-      choices = c(
-        "Example 1: 8 hypotheses, 3 groups" = "example1_8hypo_3grp.rds",
-        "Example 2: 6 hypotheses, 3 groups" = "example2_6hypo_3grp.rds"
-      ),
+      choices = gsub(".rds", "",
+                gsub("_", " ",
+                gsub("-", ": ",
+                gsub("\\+", ", ", list.files("data/"))))),
       width = "100%"
     ),
 
@@ -25,7 +25,9 @@ observeEvent(input$btn_hgraph_example_modal, {
 observeEvent(input$btn_show_example, {
   # rds <- input$btn_design_restore
   # req(rds)
-  lst <- readRDS(file = file.path("data/", input$example_hgraph))
+  lst <- readRDS(file = file.path("data/", paste0(gsub(" ", "_",
+                                                  gsub(": ", "-",
+                                                  gsub(", ", "\\+", input$example_hgraph))), ".rds")))
   hgraph_inputs <- lst$hgraph_inputs
 
   # Restore regular inputs and matrix inputs separately

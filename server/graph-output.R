@@ -16,7 +16,7 @@ plotInput <- reactive({
   gMCPmini::hGraph(
     nHypotheses = nrow(input$hypothesesMatrix),
     nameHypotheses = stringi::stri_unescape_unicode(input$hypothesesMatrix[,"Name"]),
-    alphaHypotheses = as.numeric(input$hypothesesMatrix[,"Alpha"]),
+    alphaHypotheses = sapply(input$hypothesesMatrix[,"Alpha"], arithmetic_to_numeric),
     m = m,
     fill = factor(stringi::stri_unescape_unicode(input$hypothesesMatrix[,"Group"]),
                   levels=unique(stringi::stri_unescape_unicode(input$hypothesesMatrix[,"Group"]))),

@@ -27,4 +27,4 @@ h <- hGraph(
   wchar           = <%=paste0("\"", rv_nodes$wchar, "\"")%>
 )
 
-plot(h)
+grid.arrange(h, <%=input$titlePosition%>=textGrob(<%=paste0("\"", input$title.name, "\"")%>, gp=gpar(fontsize=<%=input$title.textsize%>)))

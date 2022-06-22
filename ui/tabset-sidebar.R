@@ -96,6 +96,48 @@ headingPanel(
           value = 20, min = 6, max = 50, step = 1
         )
       ),
+
+      br(),
+      selectInput(
+        "titlePosition",
+        label = tagList(
+          "Title position:",
+          helpPopover(
+            "title.position",
+            "Select \"none\" to turn off title"
+          )
+        ),
+        choices = c("none", "bottom", "top"),
+        selected = "none",
+        multiple = FALSE
+      ),
+      conditionalPanel(
+        condition = "input.titlePosition != 'none'",
+        textInput(
+          "title.name",
+          label = tagList(
+            "Title:",
+            helpPopover(
+              "title.name",
+              "Text for title"
+            )
+          ),
+          value = ""
+        ),
+        numericInput(
+          "title.textsize",
+          label = tagList(
+            "Title text size:",
+            helpPopover(
+              "title.textsize",
+              "Title text size"
+            )
+          ),
+          value = 30, min = 6, max = 50, step = 1
+        )
+      ),
+
+
       hr(),
       actionButton(
         "btn_node_setting_modal",

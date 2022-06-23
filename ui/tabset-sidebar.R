@@ -15,7 +15,7 @@ headingPanel(
             special characters. Click the second icon for a more comprehensive character list.
             Use `\\n` to add a line break. See `?Quotes` for details."
           ),
-          HTML('&nbsp;'),
+          HTML("&nbsp;"),
           helpLink("https://en.wikipedia.org/wiki/List_of_Unicode_characters")
         ),
         value = as.matrix(data.frame(cbind(
@@ -95,6 +95,17 @@ headingPanel(
           ),
           value = 20, min = 6, max = 50, step = 1
         )
+      ),
+      textInput(
+        "plot.title",
+        label = tagList(
+          "Plot title:",
+          helpPopover(
+            "plot.title",
+            "Title of the plot (optional)"
+          )
+        ),
+        value = ""
       ),
       hr(),
       actionButton(

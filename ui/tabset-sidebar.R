@@ -57,7 +57,48 @@ headingPanel(
         class = "btn btn-block btn-outline-primary"
       ),
       br(),
-      br(),
+      hr(),
+      actionButton(
+        "btn_node_setting_modal",
+        label = "More Node Settings",
+        class = "btn btn-outline-primary",
+        icon = icon("cog"),
+        width = "100%"
+      )
+    ),
+    tabPanel(
+      "Transitions",
+      matrixInput("trwtMatrix",
+        label = tagList(
+          "Set transition weights:",
+          helpPopover(
+            "Transition weights matrix",
+            "\"From\" and \"To\" requires text input, shoud match hypotheses names.
+            \"Weight\" supports numeric input and arithmetic expressions, should range between 0 and 1.
+              Transitions between non-existing hypotheses will not affect graph output."
+          )
+        ),
+        value = as.matrix(data.frame(cbind(
+          From = paste0("H", c(1, 2, 3, 4)),
+          To = paste0("H", c(2, 3, 4, 1)),
+          Weight = rep(1, 4)
+        ))),
+        class = "character",
+        rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
+        cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
+      ),
+      matrixButtonGroup("trwtMatrix"),
+      hr(),
+      actionButton(
+        "btn_edge_setting_modal",
+        label = "More Edge Settings",
+        class = "btn btn-outline-primary",
+        icon = icon("cog"),
+        width = "100%"
+      )
+    ),
+    tabPanel(
+      "Labels",
       selectInput(
         "legendPosition",
         label = tagList(
@@ -107,44 +148,16 @@ headingPanel(
         ),
         value = ""
       ),
-      hr(),
-      actionButton(
-        "btn_node_setting_modal",
-        label = "More Node Settings",
-        class = "btn btn-outline-primary",
-        icon = icon("cog"),
-        width = "100%"
-      )
-    ),
-    tabPanel(
-      "Transitions",
-      matrixInput("trwtMatrix",
+      numericInput(
+        "title.textsize",
         label = tagList(
-          "Set transition weights:",
+          "Plot title text size:",
           helpPopover(
-            "Transition weights matrix",
-            "\"From\" and \"To\" requires text input, shoud match hypotheses names.
-            \"Weight\" supports numeric input and arithmetic expressions, should range between 0 and 1.
-              Transitions between non-existing hypotheses will not affect graph output."
+            "title.textsize",
+            "Title text size"
           )
         ),
-        value = as.matrix(data.frame(cbind(
-          From = paste0("H", c(1, 2, 3, 4)),
-          To = paste0("H", c(2, 3, 4, 1)),
-          Weight = rep(1, 4)
-        ))),
-        class = "character",
-        rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
-        cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
-      ),
-      matrixButtonGroup("trwtMatrix"),
-      hr(),
-      actionButton(
-        "btn_edge_setting_modal",
-        label = "More Edge Settings",
-        class = "btn btn-outline-primary",
-        icon = icon("cog"),
-        width = "100%"
+        value = 20, min = 6, max = 200, step = 1
       )
     )
   )

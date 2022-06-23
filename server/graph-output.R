@@ -22,7 +22,7 @@ plotInput <- reactive({
                   levels=unique(stringi::stri_unescape_unicode(input$hypothesesMatrix[,"Group"]))),
     palette = hgraph_palette(pal_name = rv_nodes$pal_name, n = length(unique(input$hypothesesMatrix[,"Group"])), alpha = rv_nodes$pal_alpha),
     labels = unique(stringi::stri_unescape_unicode(input$hypothesesMatrix[,"Group"])),
-    legend.name = input$legend.name,
+    legend.name = stringi::stri_unescape_unicode(input$legend.name),
     legend.position = input$legendPosition,
     halfWid = rv_nodes$width,
     halfHgt = rv_nodes$height,

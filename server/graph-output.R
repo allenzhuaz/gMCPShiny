@@ -40,9 +40,14 @@ plotInput <- reactive({
     y = if(is.null(input$nodeposMatrix[,"y"]) | !setequal(input$nodeposMatrix[,"Hypothesis"], input$hypothesesMatrix[,"Name"])){NULL} else{as.numeric(input$nodeposMatrix[,"y"])},
     wchar = stringi::stri_unescape_unicode(rv_nodes$wchar)
   )
-    if (input$plot.title=="") {h + theme_nothing()}
-        else {h + ggplot2::labs(title = stringi::stri_unescape_unicode(input$plot.title)) + theme(plot.title = element_text(size = input$title.textsize, hjust=0.5))}
 
+  if (input$plot.title == "") {
+    h
+  } else {
+    h +
+      ggplot2::labs(title = stringi::stri_unescape_unicode(input$plot.title)) +
+      ggplot2::theme(plot.title = ggplot2::element_text(size = input$title.textsize, hjust = 0.5))
+  }
 })
 
 output$thePlot <- renderPlot({

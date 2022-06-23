@@ -98,7 +98,7 @@ headingPanel(
       )
     ),
     tabPanel(
-      "Title and Legend",
+      "Labels",
       selectInput(
         "legendPosition",
         label = tagList(
@@ -151,13 +151,13 @@ headingPanel(
       numericInput(
         "title.textsize",
         label = tagList(
-          "Title text size:",
+          "Plot title text size:",
           helpPopover(
             "title.textsize",
             "Title text size"
           )
         ),
-        value = NULL, min = 6, max = 50, step = 1
+        value = 20, min = 6, max = 200, step = 1
       )
     )
   )

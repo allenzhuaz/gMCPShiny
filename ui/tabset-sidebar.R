@@ -15,7 +15,7 @@ headingPanel(
             special characters. Click the second icon for a more comprehensive character list.
             Use `\\n` to add a line break. See `?Quotes` for details."
           ),
-          HTML('&nbsp;'),
+          HTML("&nbsp;"),
           helpLink("https://en.wikipedia.org/wiki/List_of_Unicode_characters")
         ),
         value = as.matrix(data.frame(cbind(
@@ -96,48 +96,17 @@ headingPanel(
           value = 20, min = 6, max = 50, step = 1
         )
       ),
-
-      br(),
-      selectInput(
-        "titlePosition",
+      textInput(
+        "plot.title",
         label = tagList(
-          "Title position:",
+          "Plot title:",
           helpPopover(
-            "title.position",
-            "Select \"none\" to turn off title"
+            "plot.title",
+            "Title of the plot (optional)"
           )
         ),
-        choices = c("none", "bottom", "top"),
-        selected = "none",
-        multiple = FALSE
+        value = ""
       ),
-      conditionalPanel(
-        condition = "input.titlePosition != 'none'",
-        textInput(
-          "title.name",
-          label = tagList(
-            "Title:",
-            helpPopover(
-              "title.name",
-              "Text for title"
-            )
-          ),
-          value = ""
-        ),
-        numericInput(
-          "title.textsize",
-          label = tagList(
-            "Title text size:",
-            helpPopover(
-              "title.textsize",
-              "Title text size"
-            )
-          ),
-          value = 30, min = 6, max = 50, step = 1
-        )
-      ),
-
-
       hr(),
       actionButton(
         "btn_node_setting_modal",

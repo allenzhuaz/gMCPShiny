@@ -25,6 +25,6 @@ h <- hGraph(
   x               = <%=if(is.null(input$nodeposMatrix[,"x"]) | !setequal(input$nodeposMatrix[,"Hypothesis"], input$hypothesesMatrix[,"Name"])){"NULL"} else{paste0("c(", paste0(as.numeric(input$nodeposMatrix[,"x"]), collapse = ", "), ")")}%>,
   y               = <%=if(is.null(input$nodeposMatrix[,"y"]) | !setequal(input$nodeposMatrix[,"Hypothesis"], input$hypothesesMatrix[,"Name"])){"NULL"} else{paste0("c(", paste0(as.numeric(input$nodeposMatrix[,"y"]), collapse = ", "), ")")}%>,
   wchar           = <%=paste0("\"", rv_nodes$wchar, "\"")%>
-)
+)<%= if (input$plot.title != "") paste0(" +\n  labs(title = \"", input$plot.title, "\")") %>
 
-grid.arrange(h, <%=input$titlePosition%>=textGrob(<%=paste0("\"", input$title.name, "\"")%>, gp=gpar(fontsize=<%=input$title.textsize%>)))
+plot(h)

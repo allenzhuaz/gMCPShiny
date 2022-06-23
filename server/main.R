@@ -1,4 +1,4 @@
-# Graph output
+# Initial graph output
 source("server/graph-output.R", local = TRUE)$value
 
 # Graph matrix input buttons
@@ -12,3 +12,6 @@ source("server/display-settings.R", local = TRUE)$value
 
 # Example graphs button
 source("server/show-example.R", local = TRUE)$value
+
+# Sequential graph output
+source("server/sequential-graph-output.R", local = TRUE)$value

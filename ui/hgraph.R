@@ -25,11 +25,11 @@ tabPanel(
       fluidRow(
         column(
           width = 4,
-          source("ui/tabset-sidebar.R", local = TRUE)$value
+          source("ui/initial/tabset-sidebar.R", local = TRUE)$value
         ),
         column(
           width = 8,
-          source("ui/tabset-main.R", local = TRUE)$value
+          source("ui/initial/tabset-main.R", local = TRUE)$value
         )
       )
     )

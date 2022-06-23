@@ -105,7 +105,7 @@ headingPanel(
           "Legend position:",
           helpPopover(
             "legend.position",
-            "Select \"none\" to turn off legend."
+            "Select legend position, select \"none\" to turn off legend."
           )
         ),
         choices = c("none", "left", "right", "bottom", "top"),
@@ -117,10 +117,10 @@ headingPanel(
         textInput(
           "legend.name",
           label = tagList(
-            "Legend title:",
+            "Legend name:",
             helpPopover(
               "legend.name",
-              "Text for legend title"
+              "Text for legend name"
             )
           ),
           value = "Group Name"
@@ -138,27 +138,46 @@ headingPanel(
         )
       ),
       textInput(
-        "plot.title",
+        "plotTitle",
         label = tagList(
-          "Plot title:",
+          "Title:",
           helpPopover(
-            "plot.title",
+            "plotTitle",
             "Title of the plot (optional)"
           )
         ),
         value = ""
       ),
-      numericInput(
-        "title.textsize",
+
+  conditionalPanel(
+    condition = "input.plotTitle != ''",
+
+      selectInput(
+        "title.position",
         label = tagList(
-          "Plot title text size:",
+          "Title position:",
           helpPopover(
-            "title.textsize",
-            "Title text size"
+            "title.position",
+            "Select title position"
           )
         ),
-        value = 20, min = 6, max = 200, step = 1
-      )
+        choices = c("top left-aligned", "top center-aligned", "top right-aligned", "bottom left-aligned", "bottom center-aligned", "bottom right-aligned"),
+        selected = "top center-aligned",
+        multiple = FALSE
+      ),
+
+    numericInput(
+      "title.textsize",
+      label = tagList(
+        "Title text size:",
+        helpPopover(
+          "title.textsize",
+          "Title text size"
+        )
+      ),
+      value = 20, min = 6, max = 200, step = 1
+    )
+  ) # END conditional panel
     )
   )
 )

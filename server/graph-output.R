@@ -40,13 +40,39 @@ plotInput <- reactive({
     y = if(is.null(input$nodeposMatrix[,"y"]) | !setequal(input$nodeposMatrix[,"Hypothesis"], input$hypothesesMatrix[,"Name"])){NULL} else{as.numeric(input$nodeposMatrix[,"y"])},
     wchar = stringi::stri_unescape_unicode(rv_nodes$wchar)
   )
-
-  if (input$plot.title == "") {
+  if (input$plotTitle == ""){
     h
-  } else {
-    h +
-      ggplot2::labs(title = stringi::stri_unescape_unicode(input$plot.title)) +
-      ggplot2::theme(plot.title = ggplot2::element_text(size = input$title.textsize, hjust = 0.5))
+  } else{
+      if (input$title.position=="top left-aligned") {
+        h +
+          ggplot2::labs(title = stringi::stri_unescape_unicode(input$plotTitle)) +
+          ggplot2::theme(plot.title = ggplot2::element_text(size = input$title.textsize, hjust = 0))
+      }
+      else if (input$title.position=="top center-aligned") {
+        h +
+          ggplot2::labs(title = stringi::stri_unescape_unicode(input$plotTitle)) +
+          ggplot2::theme(plot.title = ggplot2::element_text(size = input$title.textsize, hjust = 0.5))
+      }
+      else if (input$title.position=="top right-aligned") {
+        h +
+          ggplot2::labs(title = stringi::stri_unescape_unicode(input$plotTitle)) +
+          ggplot2::theme(plot.title = ggplot2::element_text(size = input$title.textsize, hjust = 1))
+      }
+      else if (input$title.position=="bottom left-aligned") {
+        h +
+          ggplot2::labs(caption = stringi::stri_unescape_unicode(input$plotTitle)) +
+          ggplot2::theme(plot.caption = ggplot2::element_text(size = input$title.textsize, hjust = 0))
+      }
+      else if (input$title.position=="bottom center-aligned") {
+        h +
+          ggplot2::labs(caption = stringi::stri_unescape_unicode(input$plotTitle)) +
+          ggplot2::theme(plot.caption = ggplot2::element_text(size = input$title.textsize, hjust = 0.5))
+      }
+      else if (input$title.position=="bottom right-aligned") {
+        h +
+          ggplot2::labs(caption = stringi::stri_unescape_unicode(input$plotTitle)) +
+          ggplot2::theme(plot.caption = ggplot2::element_text(size = input$title.textsize, hjust = 1))
+      }
   }
 })
 

@@ -148,36 +148,33 @@ headingPanel(
         ),
         value = ""
       ),
-
-  conditionalPanel(
-    condition = "input.plotTitle != ''",
-
-      selectInput(
-        "title.position",
-        label = tagList(
-          "Title position:",
-          helpPopover(
-            "title.position",
-            "Select title position"
-          )
+      conditionalPanel(
+        condition = "input.plotTitle != ''",
+        selectInput(
+          "title.position",
+          label = tagList(
+            "Title position:",
+            helpPopover(
+              "title.position",
+              "Position of the plot title"
+            )
+          ),
+          choices = c("top left", "top center", "top right", "bottom left", "bottom center", "bottom right"),
+          selected = "top center",
+          multiple = FALSE
         ),
-        choices = c("top left-aligned", "top center-aligned", "top right-aligned", "bottom left-aligned", "bottom center-aligned", "bottom right-aligned"),
-        selected = "top center-aligned",
-        multiple = FALSE
-      ),
-
-    numericInput(
-      "title.textsize",
-      label = tagList(
-        "Title text size:",
-        helpPopover(
+        numericInput(
           "title.textsize",
-          "Title text size"
+          label = tagList(
+            "Title text size:",
+            helpPopover(
+              "title.textsize",
+              "Text size of the plot title"
+            )
+          ),
+          value = 20, min = 6, max = 200, step = 1
         )
-      ),
-      value = 20, min = 6, max = 200, step = 1
-    )
-  ) # END conditional panel
+      )
     )
   )
 )

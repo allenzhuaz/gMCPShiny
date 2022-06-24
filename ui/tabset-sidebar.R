@@ -104,8 +104,8 @@ headingPanel(
         label = tagList(
           "Legend position:",
           helpPopover(
-            "legend.position",
-            "Select \"none\" to turn off legend."
+            "legendPosition",
+            "Select legend position, select \"none\" to turn off legend."
           )
         ),
         choices = c("none", "left", "right", "bottom", "top"),
@@ -117,10 +117,10 @@ headingPanel(
         textInput(
           "legend.name",
           label = tagList(
-            "Legend title:",
+            "Legend name:",
             helpPopover(
               "legend.name",
-              "Text for legend title"
+              "Text for legend name"
             )
           ),
           value = "Group Name"
@@ -138,26 +138,42 @@ headingPanel(
         )
       ),
       textInput(
-        "plot.title",
+        "plotTitle",
         label = tagList(
-          "Plot title:",
+          "Title:",
           helpPopover(
-            "plot.title",
+            "plotTitle",
             "Title of the plot (optional)"
           )
         ),
         value = ""
       ),
-      numericInput(
-        "title.textsize",
-        label = tagList(
-          "Plot title text size:",
-          helpPopover(
-            "title.textsize",
-            "Title text size"
-          )
+      conditionalPanel(
+        condition = "input.plotTitle != ''",
+        selectInput(
+          "title.position",
+          label = tagList(
+            "Title position:",
+            helpPopover(
+              "title.position",
+              "Position of the plot title"
+            )
+          ),
+          choices = c("top left", "top center", "top right", "bottom left", "bottom center", "bottom right"),
+          selected = "top center",
+          multiple = FALSE
         ),
-        value = 20, min = 6, max = 200, step = 1
+        numericInput(
+          "title.textsize",
+          label = tagList(
+            "Title text size:",
+            helpPopover(
+              "title.textsize",
+              "Text size of the plot title"
+            )
+          ),
+          value = 20, min = 6, max = 200, step = 1
+        )
       )
     )
   )

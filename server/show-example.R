@@ -1,4 +1,13 @@
-#rv_example <- reactiveValues("wchar" = "\\u03b1", "digits" = 5, "width" = .75, "height" = .5, "size" = 8, "pal_name" = "gray", "pal_alpha" = 0.6,  "trdigits" = 4)
+#' hGraph Example Data
+#'
+#' Illustrate the data file's naming convention and string replacement rule for displaying them in the shiny UI
+#'
+#' @format Use the naming convention "Example_##-##_hypotheses+##_groups_(method xyz)" for the file name
+#'
+#' @details Display the example names with regular expression replacement:
+#'  "_" is replaced by " ",
+#'  "-" is replaced by ": "
+#'  "+" is replace by ", "
 
 # Display settings modal (from Hypothesis tab)
 observeEvent(input$btn_hgraph_example_modal, {

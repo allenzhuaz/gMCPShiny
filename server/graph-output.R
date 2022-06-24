@@ -47,29 +47,12 @@ plotInput <- reactive({
       as.numeric(input$nodeposMatrix[, "y"])
     },
     wchar = stringi::stri_unescape_unicode(rv_nodes$wchar)
-  )
+  ) +
+    ggplot2::labs(title = stringi::stri_unescape_unicode(input$plotTitle),
+                  caption = stringi::stri_unescape_unicode(input$plotCaption)) +
+    ggplot2::theme(plot.title = ggplot2::element_text(size = input$title.textsize, hjust = input$title.position),
+                   plot.caption = ggplot2::element_text(size = input$caption.textsize, hjust = input$caption.position))
 
-  if (input$plotTitle != "") {
-    hjust <- switch(input$title.position,
-      "top left" = 0,
-      "top center" = 0.5,
-      "top right" = 1,
-      "bottom left" = 0,
-      "bottom center" = 0.5,
-      "bottom right" = 1
-    )
-    if (grepl(x = input$title.position, pattern = "top")) {
-      h <- h +
-        ggplot2::labs(title = stringi::stri_unescape_unicode(input$plotTitle)) +
-        ggplot2::theme(plot.title = ggplot2::element_text(size = input$title.textsize, hjust = hjust))
-    } else if (grepl(x = input$title.position, pattern = "bottom")) {
-      h <- h +
-        ggplot2::labs(caption = stringi::stri_unescape_unicode(input$plotTitle)) +
-        ggplot2::theme(plot.caption = ggplot2::element_text(size = input$title.textsize, hjust = hjust))
-    }
-  }
-
-  h
 })
 
 output$thePlot <- renderPlot({

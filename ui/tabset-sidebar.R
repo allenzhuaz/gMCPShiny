@@ -104,7 +104,7 @@ headingPanel(
         label = tagList(
           "Legend position:",
           helpPopover(
-            "legend.position",
+            "legendPosition",
             "Select legend position, select \"none\" to turn off legend."
           )
         ),

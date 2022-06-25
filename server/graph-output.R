@@ -11,8 +11,7 @@ plotInput <- reactive({
 
   m <- df2graph(namesH = input$hypothesesMatrix[, 1], df = transitions)
 
-
-  h <- gMCPmini::hGraph(
+  gMCPmini::hGraph(
     nHypotheses = nrow(input$hypothesesMatrix),
     nameHypotheses = stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Name"]),
     alphaHypotheses = sapply(input$hypothesesMatrix[, "Alpha"], arithmetic_to_numeric),
@@ -48,11 +47,14 @@ plotInput <- reactive({
     },
     wchar = stringi::stri_unescape_unicode(rv_nodes$wchar)
   ) +
-    ggplot2::labs(title = stringi::stri_unescape_unicode(input$plotTitle),
-                  caption = stringi::stri_unescape_unicode(input$plotCaption)) +
-    ggplot2::theme(plot.title = ggplot2::element_text(size = input$title.textsize, hjust = input$title.position),
-                   plot.caption = ggplot2::element_text(size = input$caption.textsize, hjust = input$caption.position))
-
+    ggplot2::labs(
+      title = stringi::stri_unescape_unicode(input$plotTitle),
+      caption = stringi::stri_unescape_unicode(input$plotCaption)
+    ) +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(size = input$title.textsize, hjust = input$title.position),
+      plot.caption = ggplot2::element_text(size = input$caption.textsize, hjust = input$caption.position)
+    )
 })
 
 output$thePlot <- renderPlot({

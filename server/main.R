@@ -12,3 +12,6 @@ source("server/display-settings.R", local = TRUE)$value
 
 # Example graphs button
 source("server/show-example.R", local = TRUE)$value
+
+# Save plot button
+source("server/graph-save.R", local = TRUE)$value

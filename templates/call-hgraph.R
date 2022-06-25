@@ -1,4 +1,5 @@
 library(gMCPmini)
+<%= if (input$plotTitle != "" | input$plotCaption != "") "library(ggplot2)\n" -%>
 
 h <- hGraph(
   nHypotheses     = <%=nrow(input$hypothesesMatrix)%>,
@@ -25,6 +26,7 @@ h <- hGraph(
   x               = <%=if(is.null(input$nodeposMatrix[,"x"]) | !setequal(input$nodeposMatrix[,"Hypothesis"], input$hypothesesMatrix[,"Name"])){"NULL"} else{paste0("c(", paste0(as.numeric(input$nodeposMatrix[,"x"]), collapse = ", "), ")")}%>,
   y               = <%=if(is.null(input$nodeposMatrix[,"y"]) | !setequal(input$nodeposMatrix[,"Hypothesis"], input$hypothesesMatrix[,"Name"])){"NULL"} else{paste0("c(", paste0(as.numeric(input$nodeposMatrix[,"y"]), collapse = ", "), ")")}%>,
   wchar           = <%=paste0("\"", rv_nodes$wchar, "\"")%>
-)<%= if (input$plotTitle != "") { hjust <- switch(input$title.position, "top left" = 0, "top center" = 0.5, "top right" = 1, "bottom left" = 0, "bottom center" = 0.5, "bottom right" = 1); if (grepl(x = input$title.position, pattern = "top")) { paste0(" +\n  ggplot2::labs(title = \"", input$plotTitle, "\") +", "\n  ggplot2::theme(plot.title = ggplot2::element_text(size = ", input$title.textsize, ", hjust = ", hjust, "))") } else if (grepl(x = input$title.position, pattern = "bottom")) { paste0(" +\n  ggplot2::labs(caption = \"", input$plotTitle, "\") +", "\n  ggplot2::theme(plot.caption = ggplot2::element_text(size = ", input$title.textsize, ", hjust = ", hjust, "))") } }%>
+)<%= if (input$plotTitle != "") { paste0(" +\n  labs(title = \"", input$plotTitle, "\") +", "\n  theme(plot.title = element_text(size = ", input$title.textsize, ", hjust = ", input$title.position, "))") } %><%= if (input$plotCaption != "") " +" -%>
+<%= if (input$plotCaption != "") { paste0("\n  labs(caption = \"", input$plotCaption, "\") +", "\n  theme(plot.caption = element_text(size = ", input$caption.textsize, ", hjust = ", input$caption.position, "))") } %>
 
 plot(h)

@@ -99,6 +99,8 @@ headingPanel(
     ),
     tabPanel(
       "Labels",
+
+      ## Legend UI
       selectInput(
         "legendPosition",
         label = tagList(
@@ -137,13 +139,15 @@ headingPanel(
           value = 20, min = 6, max = 50, step = 1
         )
       ),
+      hr(),
+      ## Title UI
       textInput(
         "plotTitle",
         label = tagList(
           "Title:",
           helpPopover(
             "plotTitle",
-            "Title of the plot (optional)"
+            "Title of the plot (optional), leave bank to turn off title"
           )
         ),
         value = ""
@@ -159,8 +163,8 @@ headingPanel(
               "Position of the plot title"
             )
           ),
-          choices = c("top left", "top center", "top right", "bottom left", "bottom center", "bottom right"),
-          selected = "top center",
+          choices = c("left" = 0, "center" = 0.5, "right" = 1),
+          selected = 0.5,
           multiple = FALSE
         ),
         numericInput(
@@ -174,7 +178,48 @@ headingPanel(
           ),
           value = 20, min = 6, max = 200, step = 1
         )
+      ),
+      hr(),
+      ## Caption UI
+      textInput(
+        "plotCaption",
+        label = tagList(
+          "Caption/footnote:",
+          helpPopover(
+            "plotCaption",
+            "Caption of the plot (optional), leave bank to turn off caption/footnote"
+          )
+        ),
+        value = ""
+      ),
+      conditionalPanel(
+        condition = "input.plotCaption != ''",
+        selectInput(
+          "caption.position",
+          label = tagList(
+            "Caption/footnote position:",
+            helpPopover(
+              "title.position",
+              "Position of the plot caption/footnote"
+            )
+          ),
+          choices = c("left" = 0, "center" = 0.5, "right" = 1),
+          selected = 0.5,
+          multiple = FALSE
+        ),
+        numericInput(
+          "caption.textsize",
+          label = tagList(
+            "Caption/footnote text size:",
+            helpPopover(
+              "caption.textsize",
+              "Text size of the plot caption/footnote"
+            )
+          ),
+          value = 20, min = 6, max = 200, step = 1
+        )
       )
+
     )
   )
 )

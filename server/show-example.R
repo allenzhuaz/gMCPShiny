@@ -1,23 +1,48 @@
-#rv_example <- reactiveValues("wchar" = "\\u03b1", "digits" = 5, "width" = .75, "height" = .5, "size" = 8, "pal_name" = "gray", "pal_alpha" = 0.6,  "trdigits" = 4)
+#' hGraph example data
+#'
+#' Illustrate the example data file's naming convention and string replacement
+#' rule for displaying them in the Shiny UI.
+#'
+#' @section File names:
+#' Use the naming convention "Example_##-##_hypotheses+##_groups_(method xyz)"
+#' for the example data files.
+#'
+#' @section Display text:
+#' Display the example names with regular expression replacement:
+#' - "_" is replaced by " ",
+#' - "-" is replaced by ": "
+#' - "+" is replace by ", "
+
+#' Convert file names to display text
+#' @param file File names.
+filename_to_text <- function(file) {
+  gsub(".rds", "", gsub("_", " ", gsub("-", ": ", gsub("\\+", ", ", file))))
+}
+
+#' Convert display text to file names
+#' @param x Character strings of display text.
+text_to_filename <- function(x) {
+  paste0(gsub(" ", "_", gsub(": ", "-", gsub(", ", "\\+", x))), ".rds")
+}
 
 # Display settings modal (from Hypothesis tab)
 observeEvent(input$btn_hgraph_example_modal, {
   showModal(modalDialog(
     title = "Choose Example",
-
     selectInput(
       inputId = "example_hgraph",
       label = "",
-      choices = gsub(".rds", "",
-                gsub("_", " ",
-                gsub("-", ": ",
-                gsub("\\+", ", ", stringi::stri_sort(list.files("data/"), numeric = TRUE))))),
+      choices = filename_to_text(stringi::stri_sort(list.files("data/"), numeric = TRUE)),
       width = "100%"
     ),
-
     easyClose = TRUE,
     footer = tagList(
-      actionButton("btn_show_example", label = "Load Example", class = "btn-primary", icon = icon("magic"))
+      actionButton(
+        "btn_show_example",
+        label = "Load Example",
+        class = "btn-primary",
+        icon = icon("magic")
+      )
     )
   ))
 })
@@ -25,9 +50,7 @@ observeEvent(input$btn_hgraph_example_modal, {
 observeEvent(input$btn_show_example, {
   # rds <- input$btn_design_restore
   # req(rds)
-  lst <- readRDS(file = file.path("data/", paste0(gsub(" ", "_",
-                                                  gsub(": ", "-",
-                                                  gsub(", ", "\\+", input$example_hgraph))), ".rds")))
+  lst <- readRDS(file = file.path("data/", text_to_filename(input$example_hgraph)))
   hgraph_inputs <- lst$hgraph_inputs
 
   # Restore regular inputs and matrix inputs separately
@@ -69,7 +92,4 @@ observeEvent(input$btn_show_example, {
   rv_edges$offset <- edge_settings$rv_edges$offset
 
   removeModal()
-
-
 })
-

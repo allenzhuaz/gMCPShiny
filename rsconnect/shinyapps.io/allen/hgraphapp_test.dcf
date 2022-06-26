@@ -1,0 +1,13 @@
+name: hgraphapp_test
+title: hgraphapp_test
+username:
+account: allen
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6482397
+bundleId: 6004034
+url: https://allen.shinyapps.io/hgraphapp_test/
+when: 1655147401.07792
+lastSyncTime: 1655147401.07797
+asMultiple: FALSE
+asStatic: FALSE

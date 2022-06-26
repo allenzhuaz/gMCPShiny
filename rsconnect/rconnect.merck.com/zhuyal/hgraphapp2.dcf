@@ -1,0 +1,13 @@
+name: hgraphapp2
+title: hgraphapp
+username: zhuyal
+account: zhuyal
+server: rconnect.merck.com
+hostUrl: https://rconnect.merck.com:3939/__api__
+appId: 657
+bundleId: 4162
+url: https://rconnect.merck.com:3939/content/b9f05a86-5656-4b5c-8a4c-f88b2a5331a9/
+when: 1654744708.54545
+lastSyncTime: 1654744708.54547
+asMultiple: FALSE
+asStatic: FALSE

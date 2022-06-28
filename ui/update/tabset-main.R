@@ -2,7 +2,7 @@ headingPanel(
   "Outputs",
   tabsetPanel(
     tabPanel(
-      "Sequential Graph",
+      "Iterative Graph",
       plotOutput("theSeqPlot"),
       br(),
       hr(),

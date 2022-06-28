@@ -1,5 +1,5 @@
 tabPanel(
-  title = "Sequential Graphs Update",
+  title = "Iterative Graphs Update",
   icon = icon("hourglass-half"),
   fluidRow(
     column(
@@ -7,7 +7,7 @@ tabPanel(
       fluidRow(
         column(
           width = 12,
-          span("Update Sequential Graphs", style = "font-size:1.5rem;")
+          span("Update Itervative Graphs", style = "font-size:1.5rem;")
         )
       ),
       hr(),

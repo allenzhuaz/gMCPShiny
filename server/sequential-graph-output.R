@@ -4,25 +4,21 @@ output$pval_update_ui <- renderUI({
       numericInput(
         inputId = paste0("pval_", i),
         label = tagList(
-          paste0("Observed p-values for hypothesis ", input$hypothesesMatrix[,"Name"][i])
+          paste0("Observed p-values for hypothesis ", input$hypothesesMatrix[, "Name"][i])
         ),
         min = 0, max = 1, step = .00001, value = 1
       )
     )
   })
 })
-
 outputOptions(output, name = "pval_update_ui", suspendWhenHidden = FALSE)
-
 
 output$reject_update_ui <- renderUI({
   lapply(seq_len(nrow(input$hypothesesMatrix)), function(i) {
     tagList(
       checkboxInput(
-        inputId = paste0("reject_", i), # still use pval as inputID, so it can be directly used for GetPval()
-        label = tagList(
-          paste0("Reject hypothesis ", input$hypothesesMatrix[,"Name"][i])
-        )
+        inputId = paste0("reject_", i),
+        label = paste0("Reject hypothesis ", input$hypothesesMatrix[, "Name"][i])
       )
     )
   })
@@ -31,49 +27,42 @@ outputOptions(output, name = "reject_update_ui", suspendWhenHidden = FALSE)
 
 GetPval <- reactive({
   n_hypo <- nrow(input$hypothesesMatrix)
-  # Since pval_i is generated with renderUI(), it is
-  # missing for initial table so we `req()` it here.
-  if(input$knowpval == "yes"){
-    req(as.numeric(input[[paste0("pval_", n_hypo)]]))
-    sapply(
-      seq_len(n_hypo), function(i) {
-        input[[paste0("pval_", i)]]
-      }
-    )
-  } else if(input$knowpval == "no"){
-    req(as.numeric(input[[paste0("reject_", n_hypo)]]))
-    sapply(
-      seq_len(n_hypo), function(i) {
-        1-as.numeric(input[[paste0("reject_", i)]]) # rejection decision is reversed
-      }
-    )
-  }
+  sapply(seq_len(n_hypo), function(i) input[[paste0("pval_", i)]])
+})
+
+GetReject <- reactive({
+  n_hypo <- nrow(input$hypothesesMatrix)
+  sapply(
+    seq_len(n_hypo), function(i) {
+      1 - as.numeric(input[[paste0("reject_", i)]]) # rejection decision is reversed
+    }
+  )
 })
 
 SeqPlotInput <- reactive({
-
   Trans <- data.frame(input$trwtMatrix)
-  keepTransRows <-  (Trans[,1] %in% input$hypothesesMatrix[,1]) & (Trans[,2] %in% input$hypothesesMatrix[,1])
-  transitions <- Trans[keepTransRows,]
+  keepTransRows <- (Trans[, 1] %in% input$hypothesesMatrix[, 1]) & (Trans[, 2] %in% input$hypothesesMatrix[, 1])
+  transitions <- Trans[keepTransRows, ]
 
-  m <- df2graph(namesH = input$hypothesesMatrix[,1], df = transitions)
+  m <- df2graph(namesH = input$hypothesesMatrix[, 1], df = transitions)
 
-
-  FWER <- sum(as.numeric(input$hypothesesMatrix[,"Alpha"]))
-  SeqGraph <- gMCPmini::setWeights(object = gMCPmini::matrix2graph(m), weights = as.numeric(input$hypothesesMatrix[,"Alpha"])/FWER)
-  SeqResult <- gMCPmini::gMCP(graph = SeqGraph, pvalues = GetPval(), alpha = FWER)
+  FWER <- sum(as.numeric(input$hypothesesMatrix[, "Alpha"]))
+  SeqGraph <- gMCPmini::setWeights(object = gMCPmini::matrix2graph(m), weights = as.numeric(input$hypothesesMatrix[, "Alpha"]) / FWER)
+  pval <- if (input$knowpval == "yes") GetPval() else GetReject()
+  SeqResult <- gMCPmini::gMCP(graph = SeqGraph, pvalues = pval, alpha = FWER)
 
   ngraphs <- length(SeqResult@graphs)
 
   gMCPmini::hGraph(
     nHypotheses = nrow(input$hypothesesMatrix),
-    nameHypotheses = stringi::stri_unescape_unicode(input$hypothesesMatrix[,"Name"]),
+    nameHypotheses = stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Name"]),
     alphaHypotheses = SeqResult@graphs[[ngraphs]]@weights * FWER,
     m = SeqResult@graphs[[ngraphs]]@m,
-    fill = factor(stringi::stri_unescape_unicode(input$hypothesesMatrix[,"Group"]),
-                  levels=unique(stringi::stri_unescape_unicode(input$hypothesesMatrix[,"Group"]))),
-    palette = hgraph_palette(pal_name = rv_nodes$pal_name, n = length(unique(input$hypothesesMatrix[,"Group"])), alpha = rv_nodes$pal_alpha),
-    labels = unique(stringi::stri_unescape_unicode(input$hypothesesMatrix[,"Group"])),
+    fill = factor(stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Group"]),
+      levels = unique(stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Group"]))
+    ),
+    palette = hgraph_palette(pal_name = rv_nodes$pal_name, n = length(unique(input$hypothesesMatrix[, "Group"])), alpha = rv_nodes$pal_alpha),
+    labels = unique(stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Group"])),
     legend.name = input$legend.name,
     legend.position = input$legendPosition,
     halfWid = rv_nodes$width,
@@ -88,19 +77,20 @@ SeqPlotInput <- reactive({
     legend.textsize = input$legend.textsize,
     arrowsize = rv_edges$arrowsize,
     offset = rv_edges$offset,
-    x = if(is.null(input$nodeposMatrix[,"x"]) | !setequal(input$nodeposMatrix[,"Hypothesis"], input$hypothesesMatrix[,"Name"])){NULL} else{as.numeric(input$nodeposMatrix[,"x"])},
-    y = if(is.null(input$nodeposMatrix[,"y"]) | !setequal(input$nodeposMatrix[,"Hypothesis"], input$hypothesesMatrix[,"Name"])){NULL} else{as.numeric(input$nodeposMatrix[,"y"])},
+    x = if (is.null(input$nodeposMatrix[, "x"]) | !setequal(input$nodeposMatrix[, "Hypothesis"], input$hypothesesMatrix[, "Name"])) {
+      NULL
+    } else {
+      as.numeric(input$nodeposMatrix[, "x"])
+    },
+    y = if (is.null(input$nodeposMatrix[, "y"]) | !setequal(input$nodeposMatrix[, "Hypothesis"], input$hypothesesMatrix[, "Name"])) {
+      NULL
+    } else {
+      as.numeric(input$nodeposMatrix[, "y"])
+    },
     wchar = stringi::stri_unescape_unicode(rv_nodes$wchar)
   )
-
-
 })
-
 
 output$theSeqPlot <- renderPlot({
-  print(SeqPlotInput())
-
+  SeqPlotInput()
 })
-outputOptions(output, "theSeqPlot", suspendWhenHidden = FALSE) # theSeqPlot runs even when not visible
-
-

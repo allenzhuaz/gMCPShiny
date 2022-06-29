@@ -2,14 +2,19 @@ headingPanel(
   "Outputs",
   tabsetPanel(
     tabPanel(
-      "Iterative Graph",
+      "Graph",
       plotOutput("theSeqPlot"),
       br(),
       hr(),
-      p("To copy or download plot:", "right click the plot, select ", em("Copy image "), "or ", em("Save image as... ")),
+      actionButton("btn_modal_save_seq_png", label = "Download Plot", class = "btn btn-outline-primary", icon = icon("download"))
+    ),
+    tabPanel(
+      "Design",
+      "WIP"
     ),
     tabPanel(
       "Report",
+      "WIP"
     )
   )
 )

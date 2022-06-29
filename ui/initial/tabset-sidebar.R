@@ -15,7 +15,7 @@ headingPanel(
             special characters. Click the second icon for a more comprehensive character list.
             Use `\\n` to add a line break. See `?Quotes` for details."
           ),
-          HTML('&nbsp;'),
+          HTML("&nbsp;"),
           helpLink("https://en.wikipedia.org/wiki/List_of_Unicode_characters")
         ),
         value = as.matrix(data.frame(cbind(
@@ -57,45 +57,6 @@ headingPanel(
         class = "btn btn-block btn-outline-primary"
       ),
       br(),
-      br(),
-      selectInput(
-        "legendPosition",
-        label = tagList(
-          "Legend position:",
-          helpPopover(
-            "legend.position",
-            "Select \"none\" to turn off legend."
-          )
-        ),
-        choices = c("none", "left", "right", "bottom", "top"),
-        selected = "bottom",
-        multiple = FALSE
-      ),
-      conditionalPanel(
-        condition = "input.legendPosition != 'none'",
-        textInput(
-          "legend.name",
-          label = tagList(
-            "Legend title:",
-            helpPopover(
-              "legend.name",
-              "Text for legend title"
-            )
-          ),
-          value = "Group Name"
-        ),
-        numericInput(
-          "legend.textsize",
-          label = tagList(
-            "Legend text size:",
-            helpPopover(
-              "legend.textsize",
-              "Legend text size"
-            )
-          ),
-          value = 20, min = 6, max = 50, step = 1
-        )
-      ),
       hr(),
       actionButton(
         "btn_node_setting_modal",
@@ -135,6 +96,130 @@ headingPanel(
         icon = icon("cog"),
         width = "100%"
       )
+    ),
+    tabPanel(
+      "Labels",
+
+      ## Legend UI
+      selectInput(
+        "legendPosition",
+        label = tagList(
+          "Legend position:",
+          helpPopover(
+            "legendPosition",
+            "Select legend position, select \"none\" to turn off legend."
+          )
+        ),
+        choices = c("none", "left", "right", "bottom", "top"),
+        selected = "bottom",
+        multiple = FALSE
+      ),
+      conditionalPanel(
+        condition = "input.legendPosition != 'none'",
+        textInput(
+          "legend.name",
+          label = tagList(
+            "Legend name:",
+            helpPopover(
+              "legend.name",
+              "Text for legend name"
+            )
+          ),
+          value = "Group Name"
+        ),
+        numericInput(
+          "legend.textsize",
+          label = tagList(
+            "Legend text size:",
+            helpPopover(
+              "legend.textsize",
+              "Legend text size"
+            )
+          ),
+          value = 20, min = 6, max = 50, step = 1
+        )
+      ),
+      hr(),
+      ## Title UI
+      textInput(
+        "plotTitle",
+        label = tagList(
+          "Title:",
+          helpPopover(
+            "plotTitle",
+            "Title of the plot (optional), leave bank to turn off title"
+          )
+        ),
+        value = ""
+      ),
+      conditionalPanel(
+        condition = "input.plotTitle != ''",
+        selectInput(
+          "title.position",
+          label = tagList(
+            "Title position:",
+            helpPopover(
+              "title.position",
+              "Position of the plot title"
+            )
+          ),
+          choices = c("left" = 0, "center" = 0.5, "right" = 1),
+          selected = 0.5,
+          multiple = FALSE
+        ),
+        numericInput(
+          "title.textsize",
+          label = tagList(
+            "Title text size:",
+            helpPopover(
+              "title.textsize",
+              "Text size of the plot title"
+            )
+          ),
+          value = 20, min = 6, max = 200, step = 1
+        )
+      ),
+      hr(),
+      ## Caption UI
+      textInput(
+        "plotCaption",
+        label = tagList(
+          "Caption/footnote:",
+          helpPopover(
+            "plotCaption",
+            "Caption of the plot (optional), leave bank to turn off caption/footnote"
+          )
+        ),
+        value = ""
+      ),
+      conditionalPanel(
+        condition = "input.plotCaption != ''",
+        selectInput(
+          "caption.position",
+          label = tagList(
+            "Caption/footnote position:",
+            helpPopover(
+              "title.position",
+              "Position of the plot caption/footnote"
+            )
+          ),
+          choices = c("left" = 0, "center" = 0.5, "right" = 1),
+          selected = 0.5,
+          multiple = FALSE
+        ),
+        numericInput(
+          "caption.textsize",
+          label = tagList(
+            "Caption/footnote text size:",
+            helpPopover(
+              "caption.textsize",
+              "Text size of the plot caption/footnote"
+            )
+          ),
+          value = 20, min = 6, max = 200, step = 1
+        )
+      )
+
     )
   )
 )

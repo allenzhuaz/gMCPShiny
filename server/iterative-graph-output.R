@@ -44,10 +44,12 @@ SeqPlotInput <- reactive({
   keepTransRows <- (Trans[, 1] %in% input$hypothesesMatrix[, 1]) & (Trans[, 2] %in% input$hypothesesMatrix[, 1])
   transitions <- Trans[keepTransRows, ]
 
+  ## Ensure m and alphaHypotheses converted from different types to numeric
   m <- df2graph(namesH = input$hypothesesMatrix[, 1], df = transitions)
+  alphaHypotheses <- sapply(input$hypothesesMatrix[, "Alpha"], arithmetic_to_numeric)
 
-  FWER <- sum(as.numeric(input$hypothesesMatrix[, "Alpha"]))
-  SeqGraph <- gMCPmini::setWeights(object = gMCPmini::matrix2graph(m), weights = as.numeric(input$hypothesesMatrix[, "Alpha"]) / FWER)
+  FWER <- sum(alphaHypotheses)
+  SeqGraph <- gMCPmini::setWeights(object = gMCPmini::matrix2graph(m), weights = alphaHypotheses / FWER)
   pval <- if (input$knowpval == "yes") GetPval() else GetReject()
   SeqResult <- gMCPmini::gMCP(graph = SeqGraph, pvalues = pval, alpha = FWER)
 
@@ -88,7 +90,15 @@ SeqPlotInput <- reactive({
       as.numeric(input$nodeposMatrix[, "y"])
     },
     wchar = stringi::stri_unescape_unicode(rv_nodes$wchar)
-  )
+  ) +
+    ggplot2::labs(
+      title = stringi::stri_unescape_unicode(input$plotTitle),
+      caption = stringi::stri_unescape_unicode(input$plotCaption)
+    ) +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(size = input$title.textsize, hjust = input$title.position),
+      plot.caption = ggplot2::element_text(size = input$caption.textsize, hjust = input$caption.position)
+    )
 })
 
 output$theSeqPlot <- renderPlot({

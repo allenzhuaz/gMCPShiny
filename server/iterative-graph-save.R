@@ -1,6 +1,6 @@
 observeEvent(input$btn_modal_save_seq_png, {
   showModal(modalDialog(
-    title = "Dowload Plot",
+    title = "Download Plot",
     textInputAddonRight(
       "filename_png",
       label = tagList(

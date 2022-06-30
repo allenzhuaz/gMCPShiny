@@ -4,7 +4,20 @@ headingPanel(
     type = "tabs",
     tabPanel(
       "Testing",
-      selectInput(inputId = "knowpval", label = "How to update graph", choices = c("Directly reject hypotheses and pass \u03b1" = "no", "Reject hypotheses based on observed p-values" = "yes")),
+      selectInput(
+        inputId = "knowpval",
+        label = tagList(
+          "Graph update strategy:",
+          helpPopover(
+            "knowpval",
+            "Select graph update strategy based on whether observed p-values are used."
+          )
+        ),
+        choices = c(
+          "Reject hypotheses directly and pass \u03b1" = "no",
+          "Reject hypotheses based on observed p-values" = "yes"
+        )
+      ),
       conditionalPanel(
         condition = "input.knowpval == 'no'",
         uiOutput("reject_update_ui")
@@ -13,7 +26,6 @@ headingPanel(
         condition = "input.knowpval == 'yes'",
         uiOutput("pval_update_ui")
       )
-
     )
   )
 )

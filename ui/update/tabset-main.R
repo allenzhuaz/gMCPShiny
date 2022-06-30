@@ -1,0 +1,20 @@
+headingPanel(
+  "Outputs",
+  tabsetPanel(
+    tabPanel(
+      "Graph",
+      plotOutput("theSeqPlot"),
+      br(),
+      hr(),
+      actionButton("btn_modal_save_seq_png", label = "Download Plot", class = "btn btn-outline-primary", icon = icon("download"))
+    ),
+    tabPanel(
+      "Design",
+      "WIP"
+    ),
+    tabPanel(
+      "Report",
+      "WIP"
+    )
+  )
+)

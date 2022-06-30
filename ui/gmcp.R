@@ -1,5 +1,5 @@
 tabPanel(
-  title = "Sequential Graphs Update",
+  title = "Iterative Graphs Update",
   icon = icon("hourglass-half"),
   fluidRow(
     column(
@@ -7,13 +7,19 @@ tabPanel(
       fluidRow(
         column(
           width = 12,
-          span("Sequential Graphs", style = "font-size:1.5rem;")
+          span("Update Itervative Graphs", style = "font-size:1.5rem;")
         )
       ),
       hr(),
-      headingPanel(
-        "Inputs",
-        p("WIP")
+      fluidRow(
+        column(
+          width = 4,
+          source("ui/update/tabset-sidebar.R", local = TRUE)$value
+        ),
+        column(
+          width = 8,
+          source("ui/update/tabset-main.R", local = TRUE)$value
+        )
       )
     )
   )

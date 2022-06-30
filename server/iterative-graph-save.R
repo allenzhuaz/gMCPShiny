@@ -1,4 +1,4 @@
-observeEvent(input$btn_modal_save_png, {
+observeEvent(input$btn_modal_save_seq_png, {
   showModal(modalDialog(
     title = "Download Plot",
     textInputAddonRight(
@@ -10,7 +10,7 @@ observeEvent(input$btn_modal_save_png, {
           "PNG file name."
         )
       ),
-      value = "hgraph",
+      value = "iterative-hgraph",
       addon = ".png",
       width = "100%"
     ),
@@ -80,19 +80,19 @@ observeEvent(input$btn_modal_save_png, {
     ),
     easyClose = TRUE,
     footer = tagList(
-      downloadButton("btn_save_png", label = "Download Plot", class = "btn-primary", icon = icon("download")),
+      downloadButton("btn_save_seq_png", label = "Download Plot", class = "btn-primary", icon = icon("download")),
       modalButton("Cancel")
     )
   ))
 })
 
-output$btn_save_png <- downloadHandler(
+output$btn_save_seq_png <- downloadHandler(
   filename = function() {
     x <- input$filename_png
     # sanitize from input
-    fn0 <- if (x == "") "hgraph" else sanitize_filename(x)
+    fn0 <- if (x == "") "iterative-hgraph" else sanitize_filename(x)
     # sanitize again
-    fn <- if (fn0 == "") "hgraph" else fn0
+    fn <- if (fn0 == "") "iterative-hgraph" else fn0
     paste0(fn, ".png")
   },
   content = function(con) {
@@ -104,7 +104,7 @@ output$btn_save_png <- downloadHandler(
       res = input$dpi_png,
       scaling = input$scale_png
     )
-    print(plotInput())
+    print(SeqPlotInput())
     dev.off()
   }
 )

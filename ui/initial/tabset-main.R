@@ -6,7 +6,7 @@ headingPanel(
       plotOutput("thePlot"),
       br(),
       hr(),
-      actionButton("btn_modal_save_png", label = "Dowload Plot", class = "btn btn-outline-primary", icon = icon("download"))
+      actionButton("btn_modal_save_png", label = "Download Plot", class = "btn btn-outline-primary", icon = icon("download"))
     ),
     tabPanel(
       "Code",

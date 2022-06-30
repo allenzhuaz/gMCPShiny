@@ -1,10 +1,45 @@
-options(scipen = 999) # Enforce disabling scientific notation
+output$pval_update_ui <- renderUI({
+  lapply(seq_len(nrow(input$hypothesesMatrix)), function(i) {
+    tagList(
+      numericInput(
+        inputId = paste0("pval_", i),
+        label = tagList(
+          paste0("Observed p-values for hypothesis ", input$hypothesesMatrix[, "Name"][i])
+        ),
+        min = 0, max = 1, step = .00001, value = 1
+      )
+    )
+  })
+})
+outputOptions(output, name = "pval_update_ui", suspendWhenHidden = FALSE)
 
+output$reject_update_ui <- renderUI({
+  lapply(seq_len(nrow(input$hypothesesMatrix)), function(i) {
+    tagList(
+      checkboxInput(
+        inputId = paste0("reject_", i),
+        label = paste0("Reject hypothesis ", input$hypothesesMatrix[, "Name"][i])
+      )
+    )
+  })
+})
+outputOptions(output, name = "reject_update_ui", suspendWhenHidden = FALSE)
 
-# Create plot ------------------------------------------------------------------
+GetPval <- reactive({
+  n_hypo <- nrow(input$hypothesesMatrix)
+  sapply(seq_len(n_hypo), function(i) input[[paste0("pval_", i)]])
+})
 
+GetReject <- reactive({
+  n_hypo <- nrow(input$hypothesesMatrix)
+  sapply(
+    seq_len(n_hypo), function(i) {
+      1 - as.numeric(input[[paste0("reject_", i)]]) # rejection decision is reversed
+    }
+  )
+})
 
-plotInput <- reactive({
+SeqPlotInput <- reactive({
   Trans <- data.frame(input$trwtMatrix)
   keepTransRows <- (Trans[, 1] %in% input$hypothesesMatrix[, 1]) & (Trans[, 2] %in% input$hypothesesMatrix[, 1])
   transitions <- Trans[keepTransRows, ]
@@ -13,17 +48,24 @@ plotInput <- reactive({
   m <- df2graph(namesH = input$hypothesesMatrix[, 1], df = transitions)
   alphaHypotheses <- sapply(input$hypothesesMatrix[, "Alpha"], arithmetic_to_numeric)
 
+  FWER <- sum(alphaHypotheses)
+  SeqGraph <- gMCPmini::setWeights(object = gMCPmini::matrix2graph(m), weights = alphaHypotheses / FWER)
+  pval <- if (input$knowpval == "yes") GetPval() else GetReject()
+  SeqResult <- gMCPmini::gMCP(graph = SeqGraph, pvalues = pval, alpha = FWER)
+
+  ngraphs <- length(SeqResult@graphs)
+
   gMCPmini::hGraph(
     nHypotheses = nrow(input$hypothesesMatrix),
     nameHypotheses = stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Name"]),
-    alphaHypotheses = alphaHypotheses,
-    m = m,
+    alphaHypotheses = SeqResult@graphs[[ngraphs]]@weights * FWER,
+    m = SeqResult@graphs[[ngraphs]]@m,
     fill = factor(stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Group"]),
       levels = unique(stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Group"]))
     ),
     palette = hgraph_palette(pal_name = rv_nodes$pal_name, n = length(unique(input$hypothesesMatrix[, "Group"])), alpha = rv_nodes$pal_alpha),
     labels = unique(stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Group"])),
-    legend.name = stringi::stri_unescape_unicode(input$legend.name),
+    legend.name = input$legend.name,
     legend.position = input$legendPosition,
     halfWid = rv_nodes$width,
     halfHgt = rv_nodes$height,
@@ -59,26 +101,6 @@ plotInput <- reactive({
     )
 })
 
-output$thePlot <- renderPlot({
-  print(plotInput())
+output$theSeqPlot <- renderPlot({
+  SeqPlotInput()
 })
-outputOptions(output, "thePlot", suspendWhenHidden = FALSE) # thePlot runs even when not visible
-
-# Output for graph code that changes based on user inputs
-getChangingCode <- reactive({
-  report <- tempfile(fileext = ".R")
-  brew::brew("templates/call-hgraph.R", output = report)
-  paste0(readLines(report), collapse = "\n")
-})
-
-output$changingCode <- renderRcode({
-  htmltools::htmlEscape(getChangingCode())
-})
-
-# Download graph code
-output$downloadCode <- downloadHandler(
-  filename = "hgraph.R",
-  content = function(file) {
-    write(getChangingCode(), file)
-  }
-)

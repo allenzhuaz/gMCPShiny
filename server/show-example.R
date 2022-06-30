@@ -27,12 +27,20 @@ text_to_filename <- function(x) {
 
 # Display settings modal (from Hypothesis tab)
 observeEvent(input$btn_hgraph_example_modal, {
+  example_name <- filename_to_text(stringi::stri_sort(list.files("data/"), numeric = TRUE))
   showModal(modalDialog(
     title = "Choose Example",
     selectInput(
       inputId = "example_hgraph",
       label = "",
-      choices = filename_to_text(stringi::stri_sort(list.files("data/"), numeric = TRUE)),
+      choices = list(
+        "Practical examples in clinical trial" = example_name[1:3],
+        "Unstructured hypotheses examples" = example_name[4:10],
+        "Structured hypotheses examples - 2 Primary & 2 Secondary" = example_name[11:17],
+        "Structured hypotheses examples - 3 Primary & 3 Secondary" = example_name[18:19],
+        "Structured hypotheses examples - 2 Primary & 2 Secondary & 2 Tertiary" = example_name[20:22]
+      ),
+      selectize = FALSE,
       width = "100%"
     ),
     easyClose = TRUE,

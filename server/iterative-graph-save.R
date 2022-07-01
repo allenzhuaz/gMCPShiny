@@ -1,6 +1,6 @@
 observeEvent(input$btn_modal_save_seq_png, {
   showModal(modalDialog(
-    title = "Download Plot",
+    title = "Save as PNG",
     textInputAddonRight(
       "filename_png",
       label = tagList(
@@ -80,7 +80,7 @@ observeEvent(input$btn_modal_save_seq_png, {
     ),
     easyClose = TRUE,
     footer = tagList(
-      downloadButton("btn_save_seq_png", label = "Download Plot", class = "btn-primary", icon = icon("download")),
+      downloadButton("btn_save_seq_png", label = "Save Plot", class = "btn-primary", icon = icon("download")),
       modalButton("Cancel")
     )
   ))
@@ -104,6 +104,91 @@ output$btn_save_seq_png <- downloadHandler(
       res = input$dpi_png,
       scaling = input$scale_png
     )
+    print(SeqPlotInput())
+    dev.off()
+  }
+)
+
+observeEvent(input$btn_modal_save_seq_pdf, {
+  showModal(modalDialog(
+    title = "Save as PDF",
+    textInputAddonRight(
+      "filename_pdf",
+      label = tagList(
+        "File name:",
+        helpPopover(
+          "filename",
+          "PDF file name."
+        )
+      ),
+      value = "iterative-hgraph",
+      addon = ".pdf",
+      width = "100%"
+    ),
+    fluidRow(
+      column(
+        6,
+        textInputAddonRight(
+          "width_pdf",
+          label = tagList(
+            "Width:",
+            helpPopover(
+              "width",
+              "Width of the PDF."
+            )
+          ),
+          value = 11.326, addon = "in", width = "100%"
+        )
+      ),
+      column(
+        6,
+        textInputAddonRight(
+          "height_pdf",
+          label = tagList(
+            "Height:",
+            helpPopover(
+              "height",
+              "Height of the PDF."
+            )
+          ),
+          value = 7, addon = "in", width = "100%"
+        )
+      )
+    ),
+    easyClose = TRUE,
+    footer = tagList(
+      downloadButton("btn_save_seq_pdf", label = "Save Plot", class = "btn-primary", icon = icon("download")),
+      modalButton("Cancel")
+    )
+  ))
+})
+
+output$btn_save_seq_pdf <- downloadHandler(
+  filename = function() {
+    x <- input$filename_pdf
+    # sanitize from input
+    fn0 <- if (x == "") "iterative-hgraph" else sanitize_filename(x)
+    # sanitize again
+    fn <- if (fn0 == "") "iterative-hgraph" else fn0
+    paste0(fn, ".pdf")
+  },
+  content = function(con) {
+    # Use grDevices::cairo_pdf() when possible
+    # for its better Unicode character support.
+    # Use pdf() as fallback.
+    if (capabilities("cairo")) {
+      grDevices::cairo_pdf(
+        filename = con,
+        width = min(50, as.numeric(input$width_pdf)),
+        height = min(50, as.numeric(input$height_pdf))
+      )
+    } else {
+      grDevices::pdf(
+        file = con,
+        width = min(50, as.numeric(input$width_pdf)),
+        height = min(50, as.numeric(input$height_pdf))
+      )
+    }
     print(SeqPlotInput())
     dev.off()
   }

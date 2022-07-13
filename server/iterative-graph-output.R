@@ -6,9 +6,12 @@ output$pval_update_ui <- renderUI({
 
       selectInput(
         inputId = paste0("design_type_", i),
-        label = "Type of Design:", choices = c("Fixed Design" = "fix",
-                                               "Group Sequential Design with Known IA and p-value Boundary" = "gs",
-                                               "Group Sequential Design by Uploading Design" = "gs_upload")
+        label = "Type of Design:", choices = list("Fixed Design" = c("Input observed p-value" = "fix"),
+                                                  "Group Sequential Design" = c("Input analysis, p-value boundary and observed p-value" = "gs",
+                                                                                "Upload design data and input observed p-value" = "gs_upload",
+                                                                                "Input sequential p-value" = "gs_seqp", ## directly input sequential p-value for gsDesign is similar to input observed p-value for fixed design
+                                                                                "Upload design data and input observed p-value to caluclate sequential p-value" = "gs_upload_seqp")),
+        selectize = FALSE
       ),
       conditionalPanel(
         condition = paste0("input.design_type_", i, " == 'gs_upload'"),
@@ -41,6 +44,14 @@ output$pval_update_ui <- renderUI({
       )
       ,
       conditionalPanel(
+        condition = paste0("input.design_type_", i, " == 'gs_seqp'"),
+        numericInput(
+          inputId = paste0("pval_", i),
+          label = "Sequential p-value:",
+          min = 0, max = 1, step = .00001, value = 1
+        )),
+
+      conditionalPanel(
         condition = paste0("input.design_type_", i, " == 'fix'"),
         numericInput(
         inputId = paste0("pval_", i),
@@ -68,12 +79,14 @@ outputOptions(output, name = "reject_update_ui", suspendWhenHidden = FALSE)
 GetPval <- reactive({
   n_hypo <- nrow(input$hypothesesMatrix)
   sapply(seq_len(n_hypo), function(i){
-    if (input[[paste0("design_type_", i)]] == "fix"){
+    if (input[[paste0("design_type_", i)]] %in% c("fix", "gs_seqp")){
     input[[paste0("pval_", i)]]
     } else if(input[[paste0("design_type_", i)]] == "gs"){
       # Bonferroni type testing
       1 - any(sapply(input[[paste0("pvalMatrix_", i)]][,"pvalueObserved"], arithmetic_to_numeric, USE.NAMES = FALSE) < sapply(input[[paste0("pvalMatrix_", i)]][,"pvalueBoundary"], arithmetic_to_numeric, USE.NAMES = FALSE))
     } else if(input[[paste0("design_type_", i)]] == "gs_upload"){
+      ## ToDo with uploaded gsDesign p-value boundary ##
+    } else if(input[[paste0("design_type_", i)]] == "gs_upload_seqp"){
       ## ToDo with uploaded gsDesign p-value boundary ##
     }
   })

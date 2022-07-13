@@ -6,6 +6,7 @@ library(markdown)
 library(gMCPmini)
 library(shinyMatrix)
 library(ragg)
+library(gsDesign)
 
 # Global modules and functions -------------------------------------------------
 

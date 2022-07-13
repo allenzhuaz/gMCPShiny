@@ -105,3 +105,28 @@ observeEvent(input$btn_nodeposMatrix_reset, {
   )
   removeModal()
 })
+
+# p-value Matrix for gsDesign
+observe({
+lapply(seq_len(nrow(input$hypothesesMatrix)), function(i){
+observeEvent(input[[paste0("btn_pvalMatrix_", i, "_addrow")]], {
+  updateMatrixInput(session, inputId = paste0("pvalMatrix_", i), value = addMatrixRow(input[[paste0("pvalMatrix_", i)]]))
+})
+
+observeEvent(input[[paste0("btn_pvalMatrix_", i, "_delrow")]], {
+  updateMatrixInput(session, inputId = paste0("pvalMatrix_", i), value = delMatrixRow(input[[paste0("pvalMatrix_", i)]]))
+})
+
+observeEvent(input[[paste0("btn_pvalMatrix_", i, "_reset")]], {
+  updateMatrixInput(
+    session,
+    inputId = paste0("pvalMatrix_", i),
+    value = as.matrix(data.frame(cbind(
+      Analysis = c("IA 1", "IA 2", "Final"),
+      pvalueBoundary = c(0.0031250, 0.0046875, 0.0059375),
+      pvalueObserved = rep(1, 3)
+    )))
+  )
+})
+})
+})

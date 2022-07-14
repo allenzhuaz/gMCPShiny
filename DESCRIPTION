@@ -6,6 +6,7 @@ Imports:
     brew,
     bslib,
     gMCPmini,
+    gsDesign,
     markdown,
     ragg,
     shiny,

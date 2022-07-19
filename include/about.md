@@ -4,29 +4,27 @@ This is a web interface to the open-source R package <a href="https://cran.r-pro
 
 **Create an initial multiplicity graph**
 
-- Designs for multiple endpoint types: time-to-event, binomial, normal, as well as the ability to extend a fixed design sample size to a group sequential design.
-- Information-based design.
-- Flexible timing and number of interim analyses.
-- Spending function boundaries with a variety of flexible spending functions.
-- For time-to-event (proportional hazards) designs, users can specify various enrollment rates, dropout rates, and event rates. Based on these inputs, expected calendar times for analyses are available.
-- Tabular output, which can be copied into a word processor, is supplied as well as a brief textual summary of a design.
-- Several plots describing designs are available.
-- R code that allows you to save hGraph code that can be re-run to reproduce your multiplicity graph at a later date.
+- Designs for create a multiplicity graph with `ggplot2` visualization 
+- Flexible customization options for hypothesis node, transition edge and labels.
+- Example gallery include typical and advanced graph examples.
+- R code that allows you to save `gMCPLite::hGraph` and `ggplot2` code that can be re-run to reproduce your multiplicity graph at a later date.
 
-**Iterative graphs update**
+**Iterative graphs update (WIP)** 
 
-- Update bounds at time of analysis.
-- Flexibile number of total analyses.
-- Alpha spending strategies for the final analysis and interim analyses.
-- Tabular output and report generator.
+- Allow users to choose updating strategy, including reject hypothesis directly or based on actual observed p-value (non-parametric method) 
+- Each hypothesis can be fixed design or group sequential design
+- Group sequential design can compare nominal p-value with p-value boundary for each IA, or compare sequential p-value with available alpha.
+- Manually input p-value boundary/sequential p-value or upload gsDesign data to obtain them automatically.
+- tabular design output for group sequential design (if applicable) and rmarkdown report for graphs update code.
 
-**Save and restore design**
+**Save and restore graphs**
 
-- Save and restore all parameters when creating the design or updating the bounds.
+- Save and restore all parameters when creating the initial graph or updating iterative graphs.
+- Save graph output as PNG or PDF format. 
 
 ### Contributors
 
-Creator & Project Manager & Maintainer
+Creator & Maintainer
 
 - Yalin Zhu, PhD \<yalin.zhu at merck.com\>
 

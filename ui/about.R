@@ -13,7 +13,7 @@ tabPanel(
       hr(),
       tags$style("#panel_about { padding: 32px 32px; }"),
       headingPanel(
-        "About hgraph app",
+        "About gMCPShiny",
         id = "panel_about",
         includeMarkdown("include/about.md")
       )

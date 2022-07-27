@@ -41,7 +41,7 @@ safe_eval_str <- function(x) {
 #' arithmetic_to_numeric("log(2)")
 #' arithmetic_to_numeric("exp((-3^2)/2)/sqrt(2*pi)")
 #'
-#' # retrun to NA if containing non-arithmetic string
+#' # return to NA if containing non-arithmetic string
 #' arithmetic_to_numeric("1/3a")
 arithmetic_to_numeric <- function(x){
   w_numeric <- try(safe_eval_str(as.character(x)), silent = TRUE)

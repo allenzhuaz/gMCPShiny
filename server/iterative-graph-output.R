@@ -10,7 +10,7 @@ output$pval_update_ui <- renderUI({
                                                   "Group Sequential Design" = c("Input analysis, p-value boundary and observed p-value" = "gs",
                                                                                 "Upload design data and input observed p-value" = "gs_upload",
                                                                                 "Input sequential p-value" = "gs_seqp", ## directly input sequential p-value for gsDesign is similar to input observed p-value for fixed design
-                                                                                "Upload design data and input observed p-value to caluclate sequential p-value" = "gs_upload_seqp")),
+                                                                                "Upload design data and input observed p-value to calculate sequential p-value" = "gs_upload_seqp")),
         selectize = FALSE
       ),
       conditionalPanel(

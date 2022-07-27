@@ -7,7 +7,7 @@ tabPanel(
       fluidRow(
         column(
           width = 12,
-          span("Update Itervative Graphs", style = "font-size:1.5rem;")
+          span("Update Iterative Graphs", style = "font-size:1.5rem;")
         )
       ),
       hr(),

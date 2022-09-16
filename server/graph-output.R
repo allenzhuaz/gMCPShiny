@@ -13,7 +13,7 @@ plotInput <- reactive({
   m <- df2graph(namesH = input$hypothesesMatrix[, 1], df = transitions)
   alphaHypotheses <- sapply(input$hypothesesMatrix[, "Alpha"], arithmetic_to_numeric)
 
-  gMCPmini::hGraph(
+  gMCPLite::hGraph(
     nHypotheses = nrow(input$hypothesesMatrix),
     nameHypotheses = stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Name"]),
     alphaHypotheses = alphaHypotheses,

@@ -1,11 +1,11 @@
 Package: gMCPShiny
 Title: gMCP Shiny App
 Type: Shiny
-Version: 2022.07.0
+Version: 2022.09.0
 Imports:
     brew,
     bslib,
-    gMCPmini,
+    gMCPLite,
     gsDesign,
     markdown,
     ragg,

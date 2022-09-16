@@ -1,4 +1,4 @@
-library(gMCPmini)
+library(gMCPLite)
 <%= if (input$plotTitle != "" | input$plotCaption != "") "library(ggplot2)\n" -%>
 
 h <- hGraph(

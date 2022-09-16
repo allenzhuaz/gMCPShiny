@@ -117,13 +117,13 @@ SeqPlotInput <- reactive({
   alphaHypotheses <- sapply(input$hypothesesMatrix[, "Alpha"], arithmetic_to_numeric)
 
   FWER <- sum(alphaHypotheses)
-  SeqGraph <- gMCPmini::setWeights(object = gMCPmini::matrix2graph(m), weights = alphaHypotheses / FWER)
+  SeqGraph <- gMCPLite::setWeights(object = gMCPLite::matrix2graph(m), weights = alphaHypotheses / FWER)
   pval <- if (input$knowpval == "yes") GetPval() else GetReject()
-  SeqResult <- gMCPmini::gMCP(graph = SeqGraph, pvalues = pval, alpha = FWER)
+  SeqResult <- gMCPLite::gMCP(graph = SeqGraph, pvalues = pval, alpha = FWER)
 
   ngraphs <- length(SeqResult@graphs)
 
-  gMCPmini::hGraph(
+  gMCPLite::hGraph(
     nHypotheses = nrow(input$hypothesesMatrix),
     nameHypotheses = stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Name"]),
     alphaHypotheses = SeqResult@graphs[[ngraphs]]@weights * FWER,

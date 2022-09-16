@@ -5,7 +5,7 @@ Modularized development will allow open source version with Merck approaches con
 1. Initial features for initial graph setup (release 1)
    - Refactor Shiny code for extensibility (modularization)
    - Replace unstable dependency `rhandsontable` with `shinyMatrix` for more robust performance, allowing to add/delete/reset rows
-   - Ensure the core graph output and code template directly depends on `gMCPmini::hGraph()`
+   - Ensure the core graph output and code template directly depends on `gMCPLite::hGraph()`
    - Save and reload .rds file for a single hGraph output
    
 1. Add features to refine UI

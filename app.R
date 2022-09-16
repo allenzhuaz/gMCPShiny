@@ -3,7 +3,7 @@
 library(shiny)
 library(shinyjs)
 library(markdown)
-library(gMCPmini)
+library(gMCPLite)
 library(shinyMatrix)
 library(ragg)
 library(gsDesign)

@@ -1,3 +1,4 @@
+#------------------------------- Node Settings ---------------------------------
 # Create a reactive value object to maintain the settings globally
 rv_nodes <- reactiveValues(
   "wchar" = "\\u03b1",
@@ -7,7 +8,8 @@ rv_nodes <- reactiveValues(
   "size" = 8,
   "pal_name" = "gray",
   "pal_alpha" = 0.6,
-  "trdigits" = 4
+  "trdigits" = 4,
+  "set_nodepos" = FALSE
 )
 
 # Display settings modal (from Hypothesis tab)
@@ -134,7 +136,7 @@ observeEvent(input$btn_node_setting_modal, {
     ),
     h5("Node position", style = "margin-top: 1rem;"),
     hr(),
-    checkboxInput("setNodepos", label = "Customize Node Position", value = rv_nodes$setNodpos, width = "100%"),
+    checkboxInput("set_nodepos", label = "Customize Node Position", value = rv_nodes$set_nodepos, width = "100%"),
     easyClose = FALSE,
     footer = tagList(
       actionButton("btn_node_settings_save", label = "Save Settings", class = "btn-primary", icon = icon("save")),
@@ -151,11 +153,46 @@ observeEvent(input$btn_node_settings_save, {
   rv_nodes$size <- input$size
   rv_nodes$pal_name <- input$pal_name
   rv_nodes$pal_alpha <- input$pal_alpha
-  rv_nodes$setNodepos <- input$setNodepos
+  rv_nodes$set_nodepos <- input$set_nodepos
   removeModal()
 })
+#------------------------------- Dynamic UI for Node position ------------------
 
+output$setNodepos <- renderUI({
+  if (rv_nodes$set_nodepos) {
+    tagList(
+      br(),
+      matrixInput(
+        "nodeposMatrix",
+        label = tagList(
+          "Customize node position:",
+          helpPopover(
+            "Node position matrix",
+            "The \"Hypotheses\" requires text input, shoud match hypotheses names.
+                  The \"x\", \"y\" numeric inputs are coordinates for the
+                  relative position of the hypothesis ellipses."
+          )
+        ),
+        value = as.matrix(data.frame(cbind(
+          Hypothesis = paste0("H", 1:4),
+          x = c(-1, 1, 1, -1),
+          y = c(1, 1, -1, -1)
+        ))),
+        class = "character",
+        rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
+        cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
+      ),
+      actionButton(
+        "btn_nodeposMatrix_reset_init",
+        label = "Sync and Reset",
+        icon = icon("sync"),
+        width = "100%",
+        class = "btn btn-block btn-outline-primary"
+      )
+  )}
+})
 
+#------------------------------- Edge Settings ---------------------------------
 # Create a reactive value object to maintain the settings globally
 rv_edges <- reactiveValues(
   "trhw" = .13,

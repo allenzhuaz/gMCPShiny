@@ -4,7 +4,7 @@ headingPanel(
     type = "tabs",
     tabPanel(
       "Hypotheses",
-      style = "overflow-y: scroll; overflow-x: hidden; max-height: 700px",
+      style = "overflow-y: auto; overflow-x: hidden; max-height: 700px",
       matrixInput(
         "hypothesesMatrix",
         label = tagList(
@@ -38,40 +38,11 @@ headingPanel(
         width = "100%"
       ),
       br(),
-    conditionalPanel(
-      condition = "input.setNodepos == true",
-      br(),
-      matrixInput(
-        "nodeposMatrix",
-        label = tagList(
-          "Customize node position:",
-          helpPopover(
-            "Node position matrix",
-            "The \"Hypotheses\" requires text input, shoud match hypotheses names.
-            The \"x\", \"y\" numeric inputs are coordinates for the
-            relative position of the hypothesis ellipses."
-          )
-        ),
-        value = as.matrix(data.frame(cbind(
-          Hypothesis = paste0("H", 1:4),
-          x = c(-1, 1, 1, -1),
-          y = c(1, 1, -1, -1)
-        ))),
-        class = "character",
-        rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
-        cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
-      ),
-      actionButton(
-        "btn_nodeposMatrix_reset_init",
-        label = "",
-        icon = icon("sync"),
-        width = "100%",
-        class = "btn btn-block btn-outline-primary"
-      ))
+      uiOutput("setNodepos")
     ),
     tabPanel(
       "Transitions",
-      style = "overflow-y: scroll; overflow-x: hidden; max-height: 700px",
+      style = "overflow-y: auto; overflow-x: hidden; max-height: 700px",
       matrixInput("trwtMatrix",
         label = tagList(
           "Set transition weights:",
@@ -93,7 +64,7 @@ headingPanel(
       ),
       actionButton(
         "btn_trwtMatrix_reset_init",
-        label = "",
+        label = "Sync and Reset",
         icon = icon("sync"),
         width = "100%",
         class = "btn btn-block btn-outline-primary"
@@ -109,7 +80,7 @@ headingPanel(
     ),
     tabPanel(
       "Labels",
-
+      style = "overflow-y: auto; overflow-x: hidden; max-height: 700px",
       ## Legend UI
       selectInput(
         "legendPosition",

@@ -38,7 +38,7 @@ observeEvent(input$btn_trwtMatrix_reset_init, {
         "i.e., you will lose the current customized transition weights."
       )
     ),
-    strong("We strongly recommend to finalize the hypotheses names update before click the confirm button."),
+    strong("We strongly recommend to finalize the hypotheses names update and save current hgraph, before click the confirm button."),
     p("Do you still want to proceed?"),
     easyClose = TRUE,
     footer = tagList(
@@ -85,7 +85,7 @@ observeEvent(input$btn_nodeposMatrix_reset_init, {
         "i.e., you will lose the current customized node position."
       )
     ),
-    strong("We strongly recommend to finalize the hypotheses names update before click the confirm button."),
+    strong("We strongly recommend to finalize the hypotheses names update and save current hgraph, before click the confirm button."),
     p("Do you still want to proceed?"),
     easyClose = TRUE,
     footer = tagList(

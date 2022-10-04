@@ -3,7 +3,7 @@ headingPanel(
   tabsetPanel(
     type = "tabs",
     tabPanel(
-      style = "overflow-y: scroll; overflow-x: hidden; max-height: 700px",
+      style = "overflow-y: auto; overflow-x: hidden; max-height: 700px",
       "Testing",
       selectInput(
         inputId = "knowpval",

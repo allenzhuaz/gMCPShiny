@@ -4,6 +4,7 @@ headingPanel(
     type = "tabs",
     tabPanel(
       "Hypotheses",
+      style = "overflow-y: scroll; overflow-x: hidden; max-height: 700px",
       matrixInput(
         "hypothesesMatrix",
         label = tagList(
@@ -28,6 +29,17 @@ headingPanel(
         cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
       ),
       matrixButtonGroup("hypothesesMatrix"),
+      hr(),
+      actionButton(
+        "btn_node_setting_modal",
+        label = "More Node Settings",
+        class = "btn btn-outline-primary",
+        icon = icon("cog"),
+        width = "100%"
+      ),
+      br(),
+    conditionalPanel(
+      condition = "input.setNodepos == true",
       br(),
       matrixInput(
         "nodeposMatrix",
@@ -55,19 +67,11 @@ headingPanel(
         icon = icon("sync"),
         width = "100%",
         class = "btn btn-block btn-outline-primary"
-      ),
-      br(),
-      hr(),
-      actionButton(
-        "btn_node_setting_modal",
-        label = "More Node Settings",
-        class = "btn btn-outline-primary",
-        icon = icon("cog"),
-        width = "100%"
-      )
+      ))
     ),
     tabPanel(
       "Transitions",
+      style = "overflow-y: scroll; overflow-x: hidden; max-height: 700px",
       matrixInput("trwtMatrix",
         label = tagList(
           "Set transition weights:",

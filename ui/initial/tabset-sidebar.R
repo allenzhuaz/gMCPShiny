@@ -87,7 +87,13 @@ headingPanel(
         rows = list(names = FALSE, editableNames = FALSE, extend = FALSE),
         cols = list(names = TRUE, editableNames = FALSE, extend = FALSE)
       ),
-      matrixButtonGroup("trwtMatrix"),
+      actionButton(
+        "btn_trwtMatrix_reset_init",
+        label = "",
+        icon = icon("sync"),
+        width = "100%",
+        class = "btn btn-block btn-outline-primary"
+      ),
       hr(),
       actionButton(
         "btn_edge_setting_modal",

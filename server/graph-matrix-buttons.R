@@ -18,55 +18,62 @@ observeEvent(input$btn_hypothesesMatrix_reset, {
   )
 })
 
-# group
-observeEvent(input$btn_groupMatrix_addrow, {
-  updateMatrixInput(session, inputId = "groupMatrix", value = addMatrixRow(input$groupMatrix))
-})
-
-observeEvent(input$btn_groupMatrix_delrow, {
-  updateMatrixInput(session, inputId = "groupMatrix", value = delMatrixRow(input$groupMatrix))
-})
-
-observeEvent(input$btn_groupMatrix_reset, {
-  updateMatrixInput(
-    session,
-    inputId = "groupMatrix",
-    value = as.matrix(data.frame(cbind(
-      Group = LETTERS[1:4],
-      GroupName = paste0("Group ", LETTERS[1:4])
-    )))
-  )
-})
-
 # Edge: Transition Matrix (original m*m Matrix or From-To weight)
-observeEvent(input$btn_trwtMatrix_addrow, {
-  updateMatrixInput(session, inputId = "trwtMatrix", value = addMatrixRow(input$trwtMatrix))
-})
 
-observeEvent(input$btn_trwtMatrix_delrow, {
-  updateMatrixInput(session, inputId = "trwtMatrix", value = delMatrixRow(input$trwtMatrix))
+# observeEvent(input$btn_trwtMatrix_addrow, {
+#   updateMatrixInput(session, inputId = "trwtMatrix", value = addMatrixRow(input$trwtMatrix))
+# })
+#
+# observeEvent(input$btn_trwtMatrix_delrow, {
+#   updateMatrixInput(session, inputId = "trwtMatrix", value = delMatrixRow(input$trwtMatrix))
+# })
+
+observeEvent(input$btn_trwtMatrix_reset_init, {
+  showModal(modalDialog(
+    title = p(icon("exclamation-triangle"), "Attention"),
+    p(
+      paste(
+        "This will sync the hypotheses names in this table (\"From\" and \"To\" columns),",
+        "but will also reset the weights as a pure step-down transition,",
+        "i.e., you will lose the current customized transition weights."
+      )
+    ),
+    strong("We strongly recommend to finalize the hypotheses names update before click the confirm button."),
+    p("Do you still want to proceed?"),
+    easyClose = TRUE,
+    footer = tagList(
+      actionButton("btn_trwtMatrix_reset", label = "Confirm Sync and Reset", class = "btn-primary", icon = icon("check-circle")),
+      modalButton("Cancel")
+    )
+  ))
 })
 
 observeEvent(input$btn_trwtMatrix_reset, {
+
+  ## Step 1: construct a completed From and To matrix, including self-transit rows, pay attention to columns' order trick
+  fromto_mat <- expand.grid(To = input$hypothesesMatrix[, "Name"], From = input$hypothesesMatrix[, "Name"])
+  ## Step 2: set default weight as a pure step-down way (set weight To adjacent next hypothesis as 1, until the last hypothesis)
+  fromto_mat$Weight = as.vector(t(cbind(rep(0, nrow(input$hypothesesMatrix)), diag(1, nrow(input$hypothesesMatrix), nrow(input$hypothesesMatrix)-1))))
+  ## Step 3: remove the self-transit rows (this is for typical graphical approach, maybe self-transit rows can be kept for more advanced graphical approach, i.e. entangle graph?)
+  trwt_mat <- fromto_mat[fromto_mat$From!=fromto_mat$To, c("From", "To", "Weight")]
+
   updateMatrixInput(
     session,
     inputId = "trwtMatrix",
-    value = as.matrix(data.frame(cbind(
-      From = paste0("H", c(1, 2, 3, 4)),
-      To = paste0("H", c(2, 3, 4, 1)),
-      Weight = rep(1, 4)
-    )))
+    value = as.matrix(trwt_mat)
   )
+  removeModal()
 })
 
 # Node position
-observeEvent(input$btn_hypothesesMatrix_addrow, {
-  updateMatrixInput(session, inputId = "nodeposMatrix", value = addMatrixRow(input$nodeposMatrix))
-})
 
-observeEvent(input$btn_hypothesesMatrix_delrow, {
-  updateMatrixInput(session, inputId = "nodeposMatrix", value = delMatrixRow(input$nodeposMatrix))
-})
+# observeEvent(input$btn_hypothesesMatrix_addrow, {
+#   updateMatrixInput(session, inputId = "nodeposMatrix", value = addMatrixRow(input$nodeposMatrix))
+# })
+#
+# observeEvent(input$btn_hypothesesMatrix_delrow, {
+#   updateMatrixInput(session, inputId = "nodeposMatrix", value = delMatrixRow(input$nodeposMatrix))
+# })
 
 observeEvent(input$btn_nodeposMatrix_reset_init, {
   showModal(modalDialog(
@@ -78,10 +85,11 @@ observeEvent(input$btn_nodeposMatrix_reset_init, {
         "i.e., you will lose the current customized node position."
       )
     ),
+    strong("We strongly recommend to finalize the hypotheses names update before click the confirm button."),
     p("Do you still want to proceed?"),
     easyClose = TRUE,
     footer = tagList(
-      actionButton("btn_nodeposMatrix_reset", label = "Confirm Sync", class = "btn-primary", icon = icon("check-circle")),
+      actionButton("btn_nodeposMatrix_reset", label = "Confirm Sync and Reset", class = "btn-primary", icon = icon("check-circle")),
       modalButton("Cancel")
     )
   ))

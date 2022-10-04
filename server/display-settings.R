@@ -132,6 +132,9 @@ observeEvent(input$btn_node_setting_modal, {
         )
       )
     ),
+    h5("Node position", style = "margin-top: 1rem;"),
+    hr(),
+    checkboxInput("setNodepos", label = "Customize Node Position", value = rv_nodes$setNodpos, width = "100%"),
     easyClose = FALSE,
     footer = tagList(
       actionButton("btn_node_settings_save", label = "Save Settings", class = "btn-primary", icon = icon("save")),
@@ -148,6 +151,7 @@ observeEvent(input$btn_node_settings_save, {
   rv_nodes$size <- input$size
   rv_nodes$pal_name <- input$pal_name
   rv_nodes$pal_alpha <- input$pal_alpha
+  rv_nodes$setNodepos <- input$setNodepos
   removeModal()
 })
 

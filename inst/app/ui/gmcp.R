@@ -1,6 +1,6 @@
 tabPanel(
   title = "Iterative Graphs Update",
-  icon = icon("hourglass-half"),
+  icon = icon("hourglass"),
   fluidRow(
     column(
       width = 10, offset = 1,

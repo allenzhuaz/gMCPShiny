@@ -26,7 +26,7 @@ matrixButtonGroup <- function(inputId) {
       actionButton(
         paste0("btn_", inputId, "_reset"),
         label = "",
-        icon = icon("undo"),
+        icon = icon("arrow-rotate-left"),
         width = "100%",
         class = "btn btn-block btn-outline-primary"
       )

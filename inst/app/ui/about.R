@@ -1,6 +1,6 @@
 tabPanel(
   title = "About",
-  icon = icon("info-circle"),
+  icon = icon("circle-info"),
   fluidRow(
     column(
       width = 10, offset = 1,

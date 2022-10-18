@@ -185,7 +185,7 @@ output$setNodepos <- renderUI({
       actionButton(
         "btn_nodeposMatrix_reset_init",
         label = "Sync and Reset",
-        icon = icon("sync"),
+        icon = icon("arrows-rotate"),
         width = "100%",
         class = "btn btn-block btn-outline-primary"
       )

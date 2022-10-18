@@ -34,7 +34,7 @@ headingPanel(
         "btn_node_setting_modal",
         label = "More Node Settings",
         class = "btn btn-outline-primary",
-        icon = icon("cog"),
+        icon = icon("gear"),
         width = "100%"
       ),
       br(),
@@ -65,7 +65,7 @@ headingPanel(
       actionButton(
         "btn_trwtMatrix_reset_init",
         label = "Sync and Reset",
-        icon = icon("sync"),
+        icon = icon("arrows-rotate"),
         width = "100%",
         class = "btn btn-block btn-outline-primary"
       ),
@@ -74,7 +74,7 @@ headingPanel(
         "btn_edge_setting_modal",
         label = "More Edge Settings",
         class = "btn btn-outline-primary",
-        icon = icon("cog"),
+        icon = icon("gear"),
         width = "100%"
       )
     ),

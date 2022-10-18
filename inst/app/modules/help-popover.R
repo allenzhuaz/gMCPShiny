@@ -7,7 +7,7 @@ helpPopover <- function(title, content) {
     `data-bs-content` = content,
     `data-bs-placement` = "right",
     class = "help-popover",
-    shiny::icon("question-circle")
+    shiny::icon("circle-question")
   )
 }
 
@@ -16,6 +16,6 @@ helpLink <- function(href) {
     href = href,
     target = "_blank",
     class = "help-popover",
-    shiny::icon("external-link-alt")
+    shiny::icon("arrow-up-right-from-square")
   )
 }

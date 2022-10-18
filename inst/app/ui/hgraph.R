@@ -1,6 +1,6 @@
 tabPanel(
   title = "Initial Graph Setup",
-  icon = icon("drafting-compass"),
+  icon = icon("compass-drafting"),
   useShinyjs(),
   fluidRow(
     column(

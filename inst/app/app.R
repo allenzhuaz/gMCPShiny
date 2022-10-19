@@ -3,10 +3,11 @@
 library(shiny)
 library(shinyjs)
 library(markdown)
-library(gMCPLite)
 library(shinyMatrix)
 library(ragg)
 library(gsDesign)
+library(gMCPLite)
+library(gMCPShiny)
 
 # Global modules and functions -------------------------------------------------
 
@@ -20,7 +21,6 @@ source("modules/input-text-addon.R")
 source("modules/sanitize-filename.R")
 source("modules/arith2numeric.R")
 source("modules/df2graph.R")
-source("modules/adaptive-palette.R")
 
 # Use `ragg::agg_png()` for plot outputs to make them cross-platform consistent.
 # Importantly, this makes ellipse edges look smooth with proper anti-aliasing.

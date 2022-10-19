@@ -1,4 +1,15 @@
-# File input but with only the button
+#' File input button
+#'
+#' File input but with only the button
+#'
+#' @inheritParams shiny::fileInput
+#'
+#' @return TBA
+#'
+#' @export fileButtonInput
+#'
+#' @examples
+#' NULL
 fileButtonInput <- function(inputId, label, multiple = FALSE, accept = NULL, width = NULL,
                             buttonLabel = "Browse...", placeholder = "No file selected") {
   restoredValue <- restoreInput(id = inputId, default = NULL)

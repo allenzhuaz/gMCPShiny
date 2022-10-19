@@ -11,7 +11,6 @@ library(gMCPShiny)
 
 # Global modules and functions -------------------------------------------------
 
-source("modules/navbar-page-custom.R")
 source("modules/output-rcode.R")
 source("modules/help-popover.R")
 source("modules/arith2numeric.R")

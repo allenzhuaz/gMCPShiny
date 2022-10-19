@@ -1,4 +1,4 @@
-navbarPageCustom(
+navbarFluidPage(
   id = "hgraphnav",
   title = "Multiplicity Graphs for Hypothesis Testing",
   brand_image = "images/favicon.png",

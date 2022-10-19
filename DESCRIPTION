@@ -35,6 +35,7 @@ Imports:
     bslib,
     gMCPLite,
     gsDesign,
+    htmltools,
     markdown,
     ragg,
     shiny,

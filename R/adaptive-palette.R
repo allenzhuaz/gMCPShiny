@@ -6,6 +6,8 @@
 #'
 #' @param values Color values.
 #'
+#' @importFrom grDevices colorRampPalette
+#'
 #' @noRd
 pal_ramp <- function(values) {
   force(values)
@@ -28,6 +30,8 @@ pal_ramp <- function(values) {
 #' @details See `names(ggsci:::ggsci_db)` for all color palette names in ggsci.
 #' See `names(ggsci:::ggsci_db$"pal")` for available palette types under
 #' the palette `pal`.
+#'
+#' @importFrom grDevices col2rgb rgb
 #'
 #' @noRd
 pal_adaptive <- function(raw_cols, alpha = 1) {

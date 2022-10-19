@@ -13,9 +13,9 @@ addMatrixRow(x)
 delMatrixRow(x)
 }
 \arguments{
-\item{x}{TBA}
+\item{inputId}{TBA}
 
-\item{inputID}{TBA}
+\item{x}{TBA}
 }
 \value{
 TBA

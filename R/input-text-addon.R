@@ -8,6 +8,9 @@
 #'
 #' @return TBA
 #'
+#' @importFrom htmltools tags span
+#' @importFrom shiny validateCssUnit restoreInput
+#'
 #' @export textInputAddonRight
 #'
 #' @examples
@@ -24,10 +27,10 @@ textInputAddonRight <- function(inputId, label, value = "", width = NULL, placeh
     )
   }
 
-  value <- shiny::restoreInput(id = inputId, default = value)
+  value <- restoreInput(id = inputId, default = value)
   div(
     class = "form-group shiny-input-container",
-    style = htmltools::css(width = shiny::validateCssUnit(width)),
+    style = htmltools::css(width = validateCssUnit(width)),
     shinyInputLabel(inputId, label),
     div(
       class = "input-group",
@@ -38,7 +41,7 @@ textInputAddonRight <- function(inputId, label, value = "", width = NULL, placeh
         value = value,
         placeholder = placeholder
       ),
-      tags$span(addon, class = "input-group-text")
+      span(addon, class = "input-group-text")
     )
   )
 }

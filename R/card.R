@@ -7,21 +7,23 @@
 #'
 #' @return TBA
 #'
+#' @importFrom htmltools tags div
+#'
 #' @export headerCard
 #'
 #' @examples
 #' NULL
 headerCard <- function(title, ...) {
-  tags$div(
+  div(
     class = "card",
-    tags$div(
+    div(
       class = "card-header",
       tags$h5(
         class = "card-title",
         title
       )
     ),
-    tags$div(
+    div(
       class = "card-body",
       ...
     )

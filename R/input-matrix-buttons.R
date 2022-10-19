@@ -2,9 +2,11 @@
 #'
 #' Buttons to add/delete rows and reset a matrix input
 #'
-#' @param inputID TBA
+#' @param inputId TBA
 #'
 #' @return TBA
+#'
+#' @importFrom shiny fluidRow column actionButton icon
 #'
 #' @export matrixButtonGroup
 #'

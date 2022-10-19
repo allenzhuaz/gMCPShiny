@@ -13,7 +13,6 @@ library(gMCPShiny)
 
 source("modules/navbar-page-custom.R")
 source("modules/output-rcode.R")
-source("modules/input-matrix-buttons.R")
 source("modules/help-popover.R")
 source("modules/sanitize-filename.R")
 source("modules/arith2numeric.R")

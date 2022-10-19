@@ -12,7 +12,6 @@ library(gMCPShiny)
 # Global modules and functions -------------------------------------------------
 
 source("modules/navbar-page-custom.R")
-source("modules/heading-panel.R")
 source("modules/output-rcode.R")
 source("modules/input-matrix-buttons.R")
 source("modules/help-popover.R")

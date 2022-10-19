@@ -14,7 +14,6 @@ library(gMCPShiny)
 source("modules/navbar-page-custom.R")
 source("modules/output-rcode.R")
 source("modules/help-popover.R")
-source("modules/sanitize-filename.R")
 source("modules/arith2numeric.R")
 source("modules/df2graph.R")
 

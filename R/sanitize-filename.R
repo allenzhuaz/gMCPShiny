@@ -1,6 +1,14 @@
-#' Sanitizes filename (without the extension part)
+#' Sanitizes file name
 #'
-#' Ported and modified from fs::path_sanitize()
+#' Sanitizes file name (without the extension part).
+#' Ported and modified from `fs::path_sanitize()`.
+#'
+#' @param filename TBA
+#' @param replacement TBA
+#'
+#' @return TBA
+#'
+#' @export sanitize_filename
 #'
 #' @examples
 #' x <- " znul/zzz.z>z/\\z "

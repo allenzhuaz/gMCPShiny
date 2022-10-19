@@ -1,6 +1,17 @@
-#' Implements text input addon
+#' Text input addon
 #'
-#' From https://getbootstrap.com/docs/5.1/forms/input-group/
+#' Text input with addon on the right side.
+#' From <https://getbootstrap.com/docs/5.2/forms/input-group/>.
+#'
+#' @inheritParams shiny::textInput
+#' @param addon Addon text
+#'
+#' @return TBA
+#'
+#' @export textInputAddonRight
+#'
+#' @examples
+#' NULL
 textInputAddonRight <- function(inputId, label, value = "", width = NULL, placeholder = NULL, addon = NULL) {
   shinyInputLabel <- function(inputId, label = NULL) {
     tags$label(

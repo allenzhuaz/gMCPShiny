@@ -1,4 +1,16 @@
-
+#' df2graph
+#'
+#' Description TBA
+#'
+#' @param namesH TBA
+#' @param df TBA
+#'
+#' @return TBA
+#'
+#' @export df2graph
+#'
+#' @examples
+#' NULL
 df2graph <- function(namesH, df) {
   # Check to make sure the column names are present
   if (!any(names(df) %in% c("From", "To", "Weight"))) {

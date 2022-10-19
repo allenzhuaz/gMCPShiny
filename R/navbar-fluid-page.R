@@ -371,8 +371,7 @@ buildTabItem <- function(index, tabsetId, foundSelected, tabs = NULL,
   return(buildNavItem(divTag, tabsetId, index))
 }
 
-# This function is called internally by navbarPage, tabsetPanel
-# and navlistPanel
+# This function is called internally by navbarPage, tabsetPanel, and navlistPanel
 buildTabset <- function(..., ulClass, textFilter = NULL, id = NULL,
                         selected = NULL, foundSelected = FALSE) {
   tabs <- dropNulls(rlang::list2(...))

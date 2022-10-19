@@ -139,7 +139,7 @@ observeEvent(input$btn_node_setting_modal, {
     checkboxInput("set_nodepos", label = "Customize Node Position", value = rv_nodes$set_nodepos, width = "100%"),
     easyClose = FALSE,
     footer = tagList(
-      actionButton("btn_node_settings_save", label = "Save Settings", class = "btn-primary", icon = icon("save")),
+      actionButton("btn_node_settings_save", label = "Save Settings", class = "btn-primary", icon = icon("floppy-disk")),
       modalButton("Cancel")
     )
   ))
@@ -316,7 +316,7 @@ observeEvent(input$btn_edge_setting_modal, {
     ),
     easyClose = FALSE,
     footer = tagList(
-      actionButton("btn_edge_settings_save", label = "Save Settings", class = "btn-primary", icon = icon("save")),
+      actionButton("btn_edge_settings_save", label = "Save Settings", class = "btn-primary", icon = icon("floppy-disk")),
       modalButton("Cancel")
     )
   ))

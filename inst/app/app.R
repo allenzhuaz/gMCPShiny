@@ -9,9 +9,7 @@ library(gsDesign)
 library(gMCPLite)
 library(gMCPShiny)
 
-# Global modules and functions -------------------------------------------------
-
-source("modules/output-rcode.R")
+# Modules and global settings --------------------------------------------------
 
 # Use `ragg::agg_png()` for plot outputs to make them cross-platform consistent.
 # Importantly, this makes ellipse edges look smooth with proper anti-aliasing.

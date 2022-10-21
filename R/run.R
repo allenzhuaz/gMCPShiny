@@ -6,13 +6,13 @@
 #'
 #' @importFrom shiny shinyAppFile
 #'
-#' @export run
+#' @export run_app
 #'
 #' @examples
 #' \dontrun{
-#' gMCPShiny::run()
+#' gMCPShiny::run_app()
 #' }
-run <- function(port = getOption("shiny.port")) {
+run_app <- function(port = getOption("shiny.port")) {
   shiny::shinyAppFile(
     system.file("app", "app.R", package = "gMCPShiny"),
     options = list(port = port)

@@ -5,6 +5,10 @@
 #' Otherwise, use an interpolated color palette.
 #'
 #' @param values Color values.
+#'
+#' @importFrom grDevices colorRampPalette
+#'
+#' @noRd
 pal_ramp <- function(values) {
   force(values)
   function(n) {
@@ -26,6 +30,10 @@ pal_ramp <- function(values) {
 #' @details See `names(ggsci:::ggsci_db)` for all color palette names in ggsci.
 #' See `names(ggsci:::ggsci_db$"pal")` for available palette types under
 #' the palette `pal`.
+#'
+#' @importFrom grDevices col2rgb rgb
+#'
+#' @noRd
 pal_adaptive <- function(raw_cols, alpha = 1) {
   if (alpha > 1L | alpha <= 0L) stop("alpha must be in (0, 1]")
   raw_cols_rgb <- col2rgb(raw_cols)
@@ -78,6 +86,13 @@ hgraph_pal_hex <- list(
 #' @param pal_name Color palette name
 #' @param n How many different colors for the selected color palette
 #' @param alpha Transparency level, a real number in (0, 1].
+#'
+#' @return TBA
+#'
+#' @export hgraph_palette
+#'
+#' @examples
+#' NULL
 hgraph_palette <- function(pal_name = c(
                              "gray",
                              "Okabe-Ito",

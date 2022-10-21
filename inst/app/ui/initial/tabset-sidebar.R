@@ -1,4 +1,4 @@
-headingPanel(
+headerCard(
   "Inputs",
   tabsetPanel(
     type = "tabs",

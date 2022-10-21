@@ -1,12 +1,26 @@
-# This is slightly modified from shiny::navbarPage to support:
-# - navbar inside a fluid container instead of full width
-# - brand image before title
+#' Create a page with a top level navigation bar within a fluid container
+#'
+#' Slightly modified from shiny::navbarPage to support:
+#' * navbar inside a fluid container instead of full width
+#' * brand image before title.
+#'
+#' @inheritParams shiny::navbarPage
+#' @param brand_image TBA
+#' @param brand_image_width TBA
+#' @param brand_image_height TBA
+#'
+#' @return TBA
+#'
+#' @export navbarFluidPage
+#'
+#' @examples
+#' NULL
 
 # shiny and bslib versions:
 # https://github.com/rstudio/shiny/tree/9389160af06b2f26d3746fa06c6ac0df8e76c8dd
 # https://github.com/rstudio/bslib/tree/888fbe064491692deb56fd90dc23455052e31073
 
-navbarPageCustom <- function(title,
+navbarFluidPage <- function(title,
                              ...,
                              id = NULL,
                              selected = NULL,
@@ -56,6 +70,7 @@ find_characters <- function(x) {
   NULL
 }
 
+#' @importFrom bslib bs_theme
 page_navbar <- function(..., title = NULL, id = NULL, selected = NULL,
                         position = c("static-top", "fixed-top", "fixed-bottom"),
                         header = NULL, footer = NULL,
@@ -95,6 +110,8 @@ page_navbar <- function(..., title = NULL, id = NULL, selected = NULL,
   )
 }
 
+#' @importFrom htmltools css tagAppendAttributes
+#' @importFrom bslib bs_get_contrast
 navs_bar <- function(..., title = NULL, id = NULL, selected = NULL,
                      # TODO: add sticky-top as well?
                      position = c("static-top", "fixed-top", "fixed-bottom"),
@@ -134,6 +151,7 @@ navs_bar <- function(..., title = NULL, id = NULL, selected = NULL,
   as_fragment(navbar, page = page)
 }
 
+#' @importFrom bslib page_fluid
 as_fragment <- function(x, page = page_fluid) {
   stopifnot(is.function(page) && "theme" %in% names(formals(page)))
   attr(x, "bslib_page") <- page
@@ -164,6 +182,7 @@ isNavbarMenu <- function(x) {
   if (is.null(x)) y else x
 }
 
+#' @importFrom htmltools tagGetAttribute
 isTabPanel <- function(x) {
   if (!inherits(x, "shiny.tag")) {
     return(FALSE)
@@ -219,6 +238,7 @@ anyNamed <- function(x) {
   any(nzchar(nms))
 }
 
+#' @importFrom utils getFromNamespace
 p_randomInt <- function(...) {
   getFromNamespace("p_randomInt", "shiny")(...)
 }
@@ -312,17 +332,17 @@ buildTabItem <- function(index, tabsetId, foundSelected, tabs = NULL,
     tabset <- buildTabset(
       !!!divTag$tabs,
       ulClass = ulClass,
-      textFilter = navbarMenuTextFilter,
+      textFilter = bslib:::navbarMenuTextFilter,
       foundSelected = foundSelected
     )
-    return(buildDropdown(divTag, tabset))
+    return(bslib:::buildDropdown(divTag, tabset))
   }
 
   if (isTabPanel(divTag)) {
     return(buildNavItem(divTag, tabsetId, index))
   }
 
-  if (is_nav_item(divTag) || is_nav_spacer(divTag)) {
+  if (bslib:::is_nav_item(divTag) || bslib:::is_nav_spacer(divTag)) {
     return(
       list(liTag = divTag, divTag = NULL)
     )
@@ -351,8 +371,7 @@ buildTabItem <- function(index, tabsetId, foundSelected, tabs = NULL,
   return(buildNavItem(divTag, tabsetId, index))
 }
 
-# This function is called internally by navbarPage, tabsetPanel
-# and navlistPanel
+# This function is called internally by navbarPage, tabsetPanel, and navlistPanel
 buildTabset <- function(..., ulClass, textFilter = NULL, id = NULL,
                         selected = NULL, foundSelected = FALSE) {
   tabs <- dropNulls(rlang::list2(...))
@@ -395,6 +414,7 @@ buildTabset <- function(..., ulClass, textFilter = NULL, id = NULL,
 # 'Internal' tabset logic that was pulled directly from shiny/R/bootstrap.R
 #  (with minor modifications)
 # -----------------------------------------------------------------------
+#' @importFrom htmltools tagList tagAppendChild
 navbarPage_ <- function(title,
                         ...,
                         id = NULL,

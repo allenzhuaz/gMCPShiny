@@ -30,7 +30,7 @@ observeEvent(input$btn_hypothesesMatrix_reset, {
 
 observeEvent(input$btn_trwtMatrix_reset_init, {
   showModal(modalDialog(
-    title = p(icon("exclamation-triangle"), "Attention"),
+    title = p(icon("triangle-exclamation"), "Attention"),
     p(
       paste(
         "This will sync the hypotheses names in this table (\"From\" and \"To\" columns),",
@@ -42,7 +42,7 @@ observeEvent(input$btn_trwtMatrix_reset_init, {
     p("Do you still want to proceed?"),
     easyClose = TRUE,
     footer = tagList(
-      actionButton("btn_trwtMatrix_reset", label = "Confirm Sync and Reset", class = "btn-primary", icon = icon("check-circle")),
+      actionButton("btn_trwtMatrix_reset", label = "Confirm Sync and Reset", class = "btn-primary", icon = icon("circle-check")),
       modalButton("Cancel")
     )
   ))
@@ -77,7 +77,7 @@ observeEvent(input$btn_trwtMatrix_reset, {
 
 observeEvent(input$btn_nodeposMatrix_reset_init, {
   showModal(modalDialog(
-    title = p(icon("exclamation-triangle"), "Attention"),
+    title = p(icon("triangle-exclamation"), "Attention"),
     p(
       paste(
         "This will sync the hypotheses names in this table,",
@@ -89,7 +89,7 @@ observeEvent(input$btn_nodeposMatrix_reset_init, {
     p("Do you still want to proceed?"),
     easyClose = TRUE,
     footer = tagList(
-      actionButton("btn_nodeposMatrix_reset", label = "Confirm Sync and Reset", class = "btn-primary", icon = icon("check-circle")),
+      actionButton("btn_nodeposMatrix_reset", label = "Confirm Sync and Reset", class = "btn-primary", icon = icon("circle-check")),
       modalButton("Cancel")
     )
   ))

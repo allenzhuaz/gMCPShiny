@@ -1,4 +1,4 @@
-headingPanel(
+headerCard(
   "Outputs",
   tabsetPanel(
     tabPanel(

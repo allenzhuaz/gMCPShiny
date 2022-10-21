@@ -1,4 +1,17 @@
-# Buttons to add/delete rows and reset a matrix input
+#' Matrix buttons
+#'
+#' Buttons to add/delete rows and reset a matrix input
+#'
+#' @param inputId TBA
+#'
+#' @return TBA
+#'
+#' @importFrom shiny fluidRow column actionButton icon
+#'
+#' @export matrixButtonGroup
+#'
+#' @examples
+#' NULL
 matrixButtonGroup <- function(inputId) {
   fluidRow(
     column(
@@ -34,10 +47,20 @@ matrixButtonGroup <- function(inputId) {
   )
 }
 
+#' @rdname matrixButtonGroup
+#'
+#' @param x TBA
+#'
+#' @export addMatrixRow
 addMatrixRow <- function(x) {
   rbind(x, rep(NA, ncol(x)))
 }
 
+#' @rdname matrixButtonGroup
+#'
+#' @param x TBA
+#'
+#' @export delMatrixRow
 delMatrixRow <- function(x) {
   if (nrow(x) == 1L) {
     return(x)

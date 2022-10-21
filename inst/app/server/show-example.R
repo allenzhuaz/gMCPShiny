@@ -49,7 +49,7 @@ observeEvent(input$btn_hgraph_example_modal, {
         "btn_show_example",
         label = "Load Example",
         class = "btn-primary",
-        icon = icon("magic")
+        icon = icon("wand-magic-sparkles")
       )
     )
   ))

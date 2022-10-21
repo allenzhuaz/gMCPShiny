@@ -1,4 +1,4 @@
-navbarPageCustom(
+navbarFluidPage(
   id = "hgraphnav",
   title = "Multiplicity Graphs for Hypothesis Testing",
   brand_image = "images/favicon.png",
@@ -22,7 +22,6 @@ navbarPageCustom(
   header = tags$head(
     tags$link(rel = "shortcut icon", type = "image/png", href = "images/favicon.png"),
     tags$link(rel = "stylesheet", type = "text/css", href = "css/custom.css"),
-    tags$script(src = "js/help-popover.js"),
     tags$script(src = "js/beforeunload.js")
   ),
   source("ui/hgraph.R", local = TRUE)$value,

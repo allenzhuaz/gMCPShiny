@@ -1,4 +1,18 @@
-# File input but with only the button
+#' File input button
+#'
+#' File input but with only the button
+#'
+#' @inheritParams shiny::fileInput
+#'
+#' @return TBA
+#'
+#' @importFrom htmltools tags span
+#' @importFrom shiny validateCssUnit restoreInput
+#'
+#' @export fileButtonInput
+#'
+#' @examples
+#' NULL
 fileButtonInput <- function(inputId, label, multiple = FALSE, accept = NULL, width = NULL,
                             buttonLabel = "Browse...", placeholder = "No file selected") {
   restoredValue <- restoreInput(id = inputId, default = NULL)
@@ -7,7 +21,7 @@ fileButtonInput <- function(inputId, label, multiple = FALSE, accept = NULL, wid
     restoredValue <- NULL
   }
   if (!is.null(restoredValue)) {
-    restoredValue <- toJSON(restoredValue, strict_atomic = FALSE)
+    restoredValue <- shiny:::toJSON(restoredValue, strict_atomic = FALSE)
   }
   inputTag <- tags$input(
     id = inputId, name = inputId, type = "file",
@@ -33,7 +47,7 @@ fileButtonInput <- function(inputId, label, multiple = FALSE, accept = NULL, wid
           class = "input-group-prepend",
           span(
             class = "btn btn-outline-primary",
-            HTML('<i class="fa fa-upload"></i>'),
+            tags$i(class = "fa fa-upload"),
             buttonLabel,
             inputTag
           )

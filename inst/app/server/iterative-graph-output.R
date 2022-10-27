@@ -241,9 +241,6 @@ output$TestResultsHTML <- renderTable(
         bounds[[input$hypothesesMatrix[i,"Name"]]]<-paste0(input$hypothesesMatrix[i,"Name"],": Maximum alpha allocated: ",EOCtab$lastAlpha[i],", Nominal p-value for hypothesis test: ",input[[paste0("pval_", i)]])
       } else {
         ##Read in uploaded design
-        #rds <- parse(text=paste0("input$btn_gsdesign_",i))
-        #req(rds)
-        #design <- readRDS(rds$datapath)
         design <- readRDS('~/test/test.rds')
         ##get observed events from input
         obsEvents <- sapply(input[[paste0("pvalMatrix_", i)]][,"ObsEvents"], arithmetic_to_numeric, USE.NAMES = FALSE)

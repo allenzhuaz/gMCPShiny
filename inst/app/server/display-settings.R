@@ -8,7 +8,6 @@ rv_nodes <- reactiveValues(
   "size" = 8,
   "pal_name" = "gray",
   "pal_alpha" = 0.6,
-  "trdigits" = 4,
   "set_nodepos" = FALSE
 )
 

@@ -130,9 +130,9 @@ observeEvent(input[[paste0("btn_pvalMatrix_", i, "_reset")]], {
     session,
     inputId = paste0("pvalMatrix_", i),
     value = as.matrix(data.frame(cbind(
-      Analysis = c("IA 1", "IA 2", "Final"),
-      pvalueBoundary = c(0.0031250, 0.0046875, 0.0059375),
-      pvalueObserved = rep(1, 3)
+      Analysis = c("1", "2", "3"),
+      ObsEvents = c(120, 240, 360),
+      ObsPval = rep(1, 3)
     )))
   )
 })

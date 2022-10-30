@@ -13,7 +13,21 @@ output$pval_update_ui <- renderUI({
 
       conditionalPanel(
         condition = paste0("input.design_type_", i, " == 'gs_upload'"),
-        checkboxInput("minialpha", label = "With minimum alpha spending", value = FALSE, width = "100%"),
+        #checkboxInput("minialpha", label = "With minimum alpha spending", value = FALSE, width = "100%"),
+        selectInput(
+          "spending_interim",
+          label = tagList(
+            "Interim analysis alpha spending strategy",
+            helpPopover(
+              "spending_interim",
+              "Spend alpha at interim analyses based on?"
+            )
+          ),
+          choices = c(
+            "Actual information fraction" = "info",
+            "Minimum of planned and actual information fraction" = "pmin"
+          )
+        ),
         matrixInput(paste0("pvalMatrix_", i),
                     label = tagList(
                       "observed events and p-values:",
@@ -70,19 +84,18 @@ GetPval <- reactive({
       input[[paste0("pval_", i)]]
     } else if(input[[paste0("design_type_", i)]] == "gs_upload"){
       ##Read in uploaded design
-      #design <- readRDS('~/test/test.rds')
       rds <- input[[paste0("btn_gsdesign_",i)]]
       req(rds)
       design <- readRDS(rds$datapath)
       ##get observed events from input
       obsEvents <- sapply(input[[paste0("pvalMatrix_", i)]][,"ObsEvents"], arithmetic_to_numeric, USE.NAMES = FALSE)
-      ##spending time: minimum alpha spending or Lan DeMets OBF
-      if (input$minialpha==FALSE){
-        spendingTime <- ifelse(obsEvents/max(design$gs_object$n.I)>1,1,obsEvents/max(design$gs_object$n.I))
-      } else {
+      ##spending time
+      if (input$spending_interim == "info"){
+        spendingTime <- obsEvents/max(design$gs_object$n.I)
+      } else if (input$spending_interim == "pmin") {
         spendingTime <- apply(cbind(obsEvents,design$gs_object$n.I[1:length(obsEvents)]),1,min)/max(design$gs_object$n.I)
       }
-      spendingTime <- ifelse(spendingTime>1,1,spendingTime)
+      #spendingTime <- ifelse(spendingTime>1,1,spendingTime)
 
       gsDesign::sequentialPValue(
         gsD = design$gs_object, interval = c(.0001, .9999),
@@ -129,13 +142,12 @@ output$theSeqPlot <- renderUI({
   FWER <- sum(alphaHypotheses)
   ngraphs <- length(SeqPlotInput()@graphs)
 
-  lapply(1:ngraphs,function(k){
-    id<-paste0("Graph_",k)
-    plotOutput(id)
+  myGraph <- list()
+  for (k in 1:ngraphs){
     m = SeqPlotInput()@graphs[[k]]@m
     rownames(m)<-NULL
     colnames(m)<-NULL
-    output[[id]]<-renderPlot({
+    output[[paste0("graph",k)]]<-renderPlot({
       gMCPLite::hGraph(
         nHypotheses = nrow(input$hypothesesMatrix),
         nameHypotheses = stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Name"]),
@@ -180,14 +192,40 @@ output$theSeqPlot <- renderUI({
       #  plot.title = ggplot2::element_text(size = input$title.textsize, hjust = input$title.position),
       #  plot.caption = ggplot2::element_text(size = input$caption.textsize, hjust = input$caption.position)
       #)
-    })})
+    })
+    myGraph[[k]]<-tabPanel(title = paste0("Graph_",k),
+                           plotOutput(paste0("graph",k)))
+  }
+  do.call(tabsetPanel,myGraph)
 })
 
 
 
+# Initial Design output ---------------------------------------------------------------
+output$gsDesign <- renderUI({
+  if (input$knowpval == "yes"){
+    myDesign<-list()
+    for (i in 1:nrow(input$hypothesesMatrix)){
+      if (input[[paste0("design_type_", i)]] == "fix"){
+        myDesign[[i]]<-tabPanel(title = input$hypothesesMatrix[i,"Name"],
+                 h3(paste0(input$hypothesesMatrix[i,"Name"], " is fixed sample size design.")))
+    }
+      if (input[[paste0("design_type_", i)]] != "fix"){
+        rds <- input[[paste0("btn_gsdesign_",i)]]
+        req(rds)
+        design <- readRDS(rds$datapath)
+        output[[paste0("tmp",i)]]<-renderTable({
+          gsDesign::gsBoundSummary(design$gs_object)
+        },include.rownames=FALSE)
+        myDesign[[i]]<-tabPanel(title = input$hypothesesMatrix[i,"Name"],
+                                htmlOutput(paste0("tmp",i)))}
+    }
+    do.call(tabsetPanel,myDesign)
+  }
+})
 
-# Report output ---------------------------------------------------------------
-output$TestResultsHTML <- renderTable(
+# Tabular output ---------------------------------------------------------------
+output$TestResultsHTML <- renderUI(
   {
     ##sequntial pvalues to graphs comparison
     EOCtab <- data.frame(input$hypothesesMatrix[,c(1,3)])
@@ -228,8 +266,10 @@ output$TestResultsHTML <- renderTable(
     names(EOCtabx) <- c(
       "Name", "Group", "Sequential p",
       "Rejected", "Adjusted p", "Max alpha allocated", "Last Graph")
-    seqp <- EOCtabx %>% select(c(1:3, 6, 4:5, 7))
-
+    output$tmp_seqp <- renderTable({
+      EOCtabx %>% select(c(1:3, 6, 4:5, 7))
+    })
+    seqp <- htmlOutput('tmp_seqp')
 
     #Bounds at allocated alpha
     bounds<-list()
@@ -238,39 +278,30 @@ output$TestResultsHTML <- renderTable(
       if (input[[paste0("design_type_", i)]] %in% c("fix")){
         # If not group sequential for this hypothesis, print the max alpha allocated
         # and the nominal p-value
-        bounds[[input$hypothesesMatrix[i,"Name"]]]<-paste0(input$hypothesesMatrix[i,"Name"],": Maximum alpha allocated: ",EOCtab$lastAlpha[i],", Nominal p-value for hypothesis test: ",input[[paste0("pval_", i)]])
+        bounds[[i]]<-tabPanel(title = input$hypothesesMatrix[i,"Name"],
+                                                             h3(paste0(input$hypothesesMatrix[i,"Name"],": Maximum alpha allocated: ",EOCtab$lastAlpha[i],", Nominal p-value for hypothesis test: ",input[[paste0("pval_", i)]])))
       } else {
         ##Read in uploaded design
-        #rds <- parse(text=paste0("input$btn_gsdesign_",i))
-        #req(rds)
-        #design <- readRDS(rds$datapath)
-        design <- readRDS('~/test/test.rds')
+        rds <- input[[paste0("btn_gsdesign_",i)]]
+        req(rds)
+        design <- readRDS(rds$datapath)
         ##get observed events from input
         obsEvents <- sapply(input[[paste0("pvalMatrix_", i)]][,"ObsEvents"], arithmetic_to_numeric, USE.NAMES = FALSE)
-        ##spending time: minimum alpha spending or Lan DeMets OBF
-        if (input$minialpha==FALSE){
-          spendingTime <- ifelse(obsEvents/max(design$gs_object$n.I)>1,1,obsEvents/max(design$gs_object$n.I))
-        } else {
-          tmp <- apply(cbind(obsEvents,design$gs_object$n.I[1:length(obsEvents)]),1,min)/max(design$gs_object$n.I)
-          spendingTime <- ifelse(tmp>1,1,tmp)
+        ##spending time
+        if (input$spending_interim == "info"){
+          spendingTime <- obsEvents/max(design$gs_object$n.I)
+        } else if (input$spending_interim == "pmin"){
+          spendingTime <- apply(cbind(obsEvents,design$gs_object$n.I[1:length(obsEvents)]),1,min)/max(design$gs_object$n.I)
         }
+        #spendingTime <- ifelse(spendingTime>1,1,spendingTime)
 
         ##get observed events and pvals from input
-        nominalP = sapply(input[[paste0("pvalMatrix_", i)]][,"ObsPval"], arithmetic_to_numeric, USE.NAMES = FALSE)
-        events = obsEvents
-        Analysis =sapply(input[[paste0("pvalMatrix_", i)]][,"Analysis"], arithmetic_to_numeric, USE.NAMES = FALSE)
-        spendingTime=spendingTime
+        nominalP <- sapply(input[[paste0("pvalMatrix_", i)]][,"ObsPval"], arithmetic_to_numeric, USE.NAMES = FALSE)
+        events <- obsEvents
+        Analysis <- sapply(input[[paste0("pvalMatrix_", i)]][,"Analysis"], arithmetic_to_numeric, USE.NAMES = FALSE)
+        spendingTime <- spendingTime
 
-        # Print out max alpha allocated
-        xx <- paste("Max alpha allocated from above table: ",
-                    as.character(EOCtab$lastAlpha[i]),
-                    sep = ""
-        )
         d <- design$gs_object
-
-        # For group sequential tests, print max alpha allocated and
-        # corresponding group sequential bounds
-        #cat("Nominal p-values at each analysis for comparison to bounds in table below:",hresults$nominalP,"\n")
 
         # Get other info for current hypothesis
         length(events)<-d$k
@@ -281,7 +312,7 @@ output$TestResultsHTML <- renderTable(
         n.Iplan <- max(d$n.I)
         # If no alpha allocated, just print text line to note this along with the 0 alpha allocated
         if (EOCtab$lastAlpha[i] == 0) {
-          bounds[[paste0("hypothesis",i)]]<-paste0("Maximum alpha allocated: 0. No testing required.")
+          bounds[[i]]<-paste0("Maximum alpha allocated: 0. No testing required.")
         }
         if (EOCtab$lastAlpha[i] > 0) {
           dupdate <- gsDesign::gsDesign(
@@ -295,23 +326,24 @@ output$TestResultsHTML <- renderTable(
             sfu = d$upper$sf,
             sfupar = d$upper$param
           )
-          bounds[[input$hypothesesMatrix[i,"Name"]]] <- gsDesign::gsBoundSummary(dupdate,
-                                                                                 #Nname = "Events",
-                                                                                 exclude = c(
-                                                                                   "B-value", "CP", "CP H1", "Spending",
-                                                                                   "~delta at bound", "P(Cross) if delta=0",
-                                                                                   "PP", "P(Cross) if delta=1"
-                                                                                 )
-          )
-
+          output[[paste0("tmp_update",i)]]<-renderTable({
+            gsDesign::gsBoundSummary(dupdate,#Nname = "Events",
+                                     exclude = c(
+                                       "B-value", "CP", "CP H1", "Spending",
+                                       "~delta at bound", "P(Cross) if delta=0",
+                                       "PP", "P(Cross) if delta=1")
+            )
+          },include.rownames=FALSE)
+          bounds[[i]] <- tabPanel(title = input$hypothesesMatrix[i,"Name"],
+                                  htmlOutput(paste0("tmp_update",i)))
         }
       }
     }
 
     switch(input$TestResults,
            "Comparison of sequential p-values to graphs" = seqp,
-           "Bounds at final allocated alpha" = bounds
+           "Bounds at final allocated alpha" =do.call(tabsetPanel,bounds)
     )
-  },  include.rownames = FALSE
+  }
 )
 

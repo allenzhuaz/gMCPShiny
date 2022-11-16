@@ -21,7 +21,7 @@ fileButtonInput <- function(inputId, label, multiple = FALSE, accept = NULL, wid
     restoredValue <- NULL
   }
   if (!is.null(restoredValue)) {
-    restoredValue <- shiny:::toJSON(restoredValue, strict_atomic = FALSE)
+    restoredValue <- toJSON_(restoredValue, strict_atomic = FALSE)
   }
   inputTag <- tags$input(
     id = inputId, name = inputId, type = "file",
@@ -39,7 +39,7 @@ fileButtonInput <- function(inputId, label, multiple = FALSE, accept = NULL, wid
       class = "form-group shiny-input-container", style = if (!is.null(width)) {
         paste0("width: ", validateCssUnit(width), ";")
       },
-      shiny:::shinyInputLabel(inputId, label),
+      shinyInputLabel_(inputId, label),
       div(
         class = "input-group",
         style = "width: 10rem;",
@@ -54,5 +54,23 @@ fileButtonInput <- function(inputId, label, multiple = FALSE, accept = NULL, wid
         )
       )
     )
+  )
+}
+
+# Copy of shiny:::toJSON()
+toJSON_ <- function(x, ..., dataframe = "columns", null = "null", na = "null",
+                    auto_unbox = TRUE, digits = getOption("shiny.json.digits", 16),
+                    use_signif = TRUE, force = TRUE, POSIXt = "ISO8601", UTC = TRUE,
+                    rownames = FALSE, keep_vec_names = TRUE, strict_atomic = TRUE) {
+  if (strict_atomic) {
+    x <- I(x)
+  }
+
+  # I(x) is so that length-1 atomic vectors get put in [].
+  jsonlite::toJSON(x,
+    dataframe = dataframe, null = null, na = na,
+    auto_unbox = auto_unbox, digits = digits, use_signif = use_signif,
+    force = force, POSIXt = POSIXt, UTC = UTC, rownames = rownames,
+    keep_vec_names = keep_vec_names, json_verbatim = TRUE, ...
   )
 }

@@ -100,4 +100,6 @@ Slightly modified from shiny::navbarPage to support:
 }
 \examples{
 NULL
+
+
 }

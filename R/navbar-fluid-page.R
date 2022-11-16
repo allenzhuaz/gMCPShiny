@@ -15,27 +15,27 @@
 #'
 #' @examples
 #' NULL
-
+#'
 # shiny and bslib versions:
 # https://github.com/rstudio/shiny/tree/9389160af06b2f26d3746fa06c6ac0df8e76c8dd
 # https://github.com/rstudio/bslib/tree/888fbe064491692deb56fd90dc23455052e31073
-
+#'
 navbarFluidPage <- function(title,
-                             ...,
-                             id = NULL,
-                             selected = NULL,
-                             position = c("static-top", "fixed-top", "fixed-bottom"),
-                             header = NULL,
-                             footer = NULL,
-                             inverse = FALSE,
-                             collapsible = FALSE,
-                             fluid = TRUE,
-                             theme = NULL,
-                             windowTitle = NA,
-                             lang = NULL,
-                             brand_image,
-                             brand_image_width,
-                             brand_image_height) {
+                            ...,
+                            id = NULL,
+                            selected = NULL,
+                            position = c("static-top", "fixed-top", "fixed-bottom"),
+                            header = NULL,
+                            footer = NULL,
+                            inverse = FALSE,
+                            collapsible = FALSE,
+                            fluid = TRUE,
+                            theme = NULL,
+                            windowTitle = NA,
+                            lang = NULL,
+                            brand_image,
+                            brand_image_width,
+                            brand_image_height) {
   remove_first_class <- function(x) {
     class(x) <- class(x)[-1]
     x
@@ -82,7 +82,6 @@ page_navbar <- function(..., title = NULL, id = NULL, selected = NULL,
                         brand_image,
                         brand_image_width,
                         brand_image_height) {
-
   # https://github.com/rstudio/shiny/issues/2310
   if (!is.null(title) && isTRUE(is.na(window_title))) {
     window_title <- unlist(find_characters(title))
@@ -332,17 +331,17 @@ buildTabItem <- function(index, tabsetId, foundSelected, tabs = NULL,
     tabset <- buildTabset(
       !!!divTag$tabs,
       ulClass = ulClass,
-      textFilter = bslib:::navbarMenuTextFilter,
+      textFilter = navbarMenuTextFilter_,
       foundSelected = foundSelected
     )
-    return(bslib:::buildDropdown(divTag, tabset))
+    return(buildDropdown_(divTag, tabset))
   }
 
   if (isTabPanel(divTag)) {
     return(buildNavItem(divTag, tabsetId, index))
   }
 
-  if (bslib:::is_nav_item(divTag) || bslib:::is_nav_spacer(divTag)) {
+  if (is_nav_item_(divTag) || is_nav_spacer_(divTag)) {
     return(
       list(liTag = divTag, divTag = NULL)
     )
@@ -371,6 +370,50 @@ buildTabItem <- function(index, tabsetId, foundSelected, tabs = NULL,
   return(buildNavItem(divTag, tabsetId, index))
 }
 
+# Copy of bslib:::navbarMenuTextFilter()
+navbarMenuTextFilter_ <- function(text) {
+  if (grepl("^\\-+$", text)) {
+    tags$li(class = "divider")
+  } else {
+    tags$li(class = "dropdown-header", text)
+  }
+}
+
+# Copy of bslib:::buildDropdown()
+buildDropdown_ <- function(divTag, tabset) {
+  navList <- htmltools::tagAddRenderHook(tabset$navList, function(x) {
+    if (isTRUE(getCurrentThemeVersion() >= 4)) {
+      htmltools::tagQuery(x)$find(".nav-item")$removeClass("nav-item")$find(".nav-link")$removeClass("nav-link")$addClass("dropdown-item")$allTags()
+    } else {
+      x
+    }
+  })
+  active <- containsSelectedTab_(divTag$tabs)
+  dropdown <- tags$li(
+    class = "dropdown", tags$a(
+      href = "#",
+      class = "dropdown-toggle", `data-toggle` = "dropdown",
+      `data-bs-toggle` = "dropdown", `data-value` = divTag$menuName,
+      divTag$icon, divTag$title, tags$b(class = "caret")
+    ),
+    navList, .renderHook = function(x) {
+      if (isTRUE(getCurrentThemeVersion() >= 4)) {
+        htmltools::tagQuery(x)$addClass("nav-item")$find(".dropdown-toggle")$addClass("nav-link")$addClass(if (active) {
+          "active"
+        })$allTags()
+      } else {
+        tagAppendAttributes(x, class = if (active) {
+          "active"
+        })
+      }
+    }
+  )
+  list(divTag = tabset$content$children, liTag = dropdown)
+}
+
+# Copy of bslib:::containsSelectedTab()
+containsSelectedTab_ <- function(tabs) any(vapply(tabs, isTabSelected, logical(1)))
+
 # This function is called internally by navbarPage, tabsetPanel, and navlistPanel
 buildTabset <- function(..., ulClass, textFilter = NULL, id = NULL,
                         selected = NULL, foundSelected = FALSE) {
@@ -393,8 +436,8 @@ buildTabset <- function(..., ulClass, textFilter = NULL, id = NULL,
 
   tabsetId <- p_randomInt(1000, 10000)
   tabs <- lapply(seq_len(length(tabs)), buildTabItem,
-                 tabsetId = tabsetId, foundSelected = foundSelected,
-                 tabs = tabs, textFilter = textFilter
+    tabsetId = tabsetId, foundSelected = foundSelected,
+    tabs = tabs, textFilter = textFilter
   )
 
   tabNavList <- tags$ul(
@@ -408,6 +451,20 @@ buildTabset <- function(..., ulClass, textFilter = NULL, id = NULL,
   )
 
   list(navList = tabNavList, content = tabContent)
+}
+
+# Copy of bslib:::is_nav_item()
+is_nav_item_ <- function(x) tag_has_class_(x, "bslib-nav-item")
+
+# Copy of bslib:::is_nav_spacer()
+is_nav_spacer_ <- function(x) tag_has_class_(x, "bslib-nav-spacer")
+
+# Copy of bslib:::tag_has_class()
+tag_has_class_ <- function(x, class) {
+  if (!inherits(x, "shiny.tag")) {
+    return(FALSE)
+  }
+  htmltools::tagQuery(x)$hasClass(class)
 }
 
 # -----------------------------------------------------------------------
@@ -431,7 +488,6 @@ navbarPage_ <- function(title,
                         brand_image,
                         brand_image_width,
                         brand_image_height) {
-
   # alias title so we can avoid conflicts w/ title in withTags
   pageTitle <- title
 

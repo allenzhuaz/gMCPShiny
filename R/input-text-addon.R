@@ -16,22 +16,11 @@
 #' @examples
 #' NULL
 textInputAddonRight <- function(inputId, label, value = "", width = NULL, placeholder = NULL, addon = NULL) {
-  shinyInputLabel <- function(inputId, label = NULL) {
-    tags$label(
-      label,
-      class = "control-label",
-      class = if (is.null(label)) "shiny-label-null",
-      # `id` attribute is required for `aria-labelledby` used by screen readers:
-      id = paste0(inputId, "-label"),
-      `for` = inputId
-    )
-  }
-
   value <- restoreInput(id = inputId, default = value)
   div(
     class = "form-group shiny-input-container",
     style = htmltools::css(width = validateCssUnit(width)),
-    shinyInputLabel(inputId, label),
+    shinyInputLabel_(inputId, label),
     div(
       class = "input-group",
       tags$input(
@@ -43,5 +32,17 @@ textInputAddonRight <- function(inputId, label, value = "", width = NULL, placeh
       ),
       span(addon, class = "input-group-text")
     )
+  )
+}
+
+# Copy of shiny:::shinyInputLabel()
+shinyInputLabel_ <- function(inputId, label = NULL) {
+  tags$label(
+    label,
+    class = "control-label",
+    class = if (is.null(label)) "shiny-label-null",
+    # `id` attribute is required for `aria-labelledby` used by screen readers:
+    id = paste0(inputId, "-label"),
+    `for` = inputId
   )
 }

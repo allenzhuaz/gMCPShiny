@@ -79,6 +79,7 @@ observeEvent(input$btn_design_restore, {
   rv_nodes$size <- node_settings$rv_nodes$size
   rv_nodes$pal_name <- node_settings$rv_nodes$pal_name
   rv_nodes$pal_alpha <- node_settings$rv_nodes$pal_alpha
+  rv_nodes$set_nodepos <- node_settings$rv_nodes$set_nodepos
 
   edge_settings <- lst$edge_settings
 

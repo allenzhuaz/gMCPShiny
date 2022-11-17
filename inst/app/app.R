@@ -8,6 +8,7 @@ library(ragg)
 library(gsDesign)
 library(gMCPLite)
 library(gMCPShiny)
+library(dplyr)
 
 # Modules and global settings --------------------------------------------------
 

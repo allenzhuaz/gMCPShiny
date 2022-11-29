@@ -134,24 +134,43 @@ SeqPlotInput <- reactive({
   FWER <- sum(alphaHypotheses)
   SeqGraph <- gMCPLite::setWeights(object = gMCPLite::matrix2graph(m), weights = alphaHypotheses / FWER)
   pval <- if (input$knowpval == "yes") GetPval() else GetReject()
-  gMCPLite::gMCP(graph = SeqGraph, pvalues = pval, alpha = FWER)
+  return(gMCPLite::gMCP(graph = SeqGraph, pvalues = pval, alpha = FWER))
 })
 
-output$theSeqPlot <- renderUI({
+fwerInput <- reactive({
   alphaHypotheses <- sapply(input$hypothesesMatrix[, "Alpha"], arithmetic_to_numeric)
-  FWER <- sum(alphaHypotheses)
+  sum(alphaHypotheses)
+})
+
+# Create tabs
+output$theSeqPlot <- renderUI({
+
   ngraphs <- length(SeqPlotInput()@graphs)
 
-  myGraph <- list()
-  for (k in 1:ngraphs){
-    m = SeqPlotInput()@graphs[[k]]@m
-    rownames(m)<-NULL
-    colnames(m)<-NULL
-    output[[paste0("graph",k)]]<-renderPlot({
+  plot_tabs <- lapply(seq_len(ngraphs), function(i){
+    tabPanel(paste("Graph", i),
+             plotOutput(paste("graph", i)))
+  })
+
+  do.call(tabsetPanel, plot_tabs)
+})
+
+# Create plots
+observe(
+  lapply(seq_len(nrow(input$hypothesesMatrix)+1), function(i) {
+    output[[paste("graph", i)]] <- renderPlot({
+      if(i==nrow(input$hypothesesMatrix)+1){
+        m <- SeqPlotInput()@graphs[[nrow(input$hypothesesMatrix)]]@m
+      } else{
+        m <- SeqPlotInput()@graphs[[i]]@m
+      }
+      rownames(m) <- NULL
+      colnames(m) <- NULL
+
       gMCPLite::hGraph(
         nHypotheses = nrow(input$hypothesesMatrix),
         nameHypotheses = stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Name"]),
-        alphaHypotheses = SeqPlotInput()@graphs[[k]]@weights * FWER,
+        alphaHypotheses = SeqPlotInput()@graphs[[i]]@weights * fwerInput(),
         m = m,
         fill = factor(stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Group"]),
                       levels = unique(stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Group"]))
@@ -183,23 +202,18 @@ output$theSeqPlot <- renderUI({
           as.numeric(input$nodeposMatrix[, "y"])
         },
         wchar = stringi::stri_unescape_unicode(rv_nodes$wchar)
-      ) #+
-      #ggplot2::labs(
-      #  title = stringi::stri_unescape_unicode(input$plotTitle),
-      #  caption = stringi::stri_unescape_unicode(input$plotCaption)
-      #) +
-      #ggplot2::theme(
-      #  plot.title = ggplot2::element_text(size = input$title.textsize, hjust = input$title.position),
-      #  plot.caption = ggplot2::element_text(size = input$caption.textsize, hjust = input$caption.position)
-      #)
+      ) +
+      ggplot2::labs(
+       title = stringi::stri_unescape_unicode(input$plotTitle),
+       caption = stringi::stri_unescape_unicode(input$plotCaption)
+      ) +
+      ggplot2::theme(
+       plot.title = ggplot2::element_text(size = input$title.textsize, hjust = input$title.position),
+       plot.caption = ggplot2::element_text(size = input$caption.textsize, hjust = input$caption.position)
+      )
     })
-    myGraph[[k]]<-tabPanel(title = paste0("Graph_",k),
-                           plotOutput(paste0("graph",k)))
-  }
-  do.call(tabsetPanel,myGraph)
-})
-
-
+  })
+)
 
 # Initial Design output ---------------------------------------------------------------
 output$gsDesign <- renderUI({

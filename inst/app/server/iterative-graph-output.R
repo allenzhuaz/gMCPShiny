@@ -124,7 +124,7 @@ GetReject <- reactive({
   n_hypo <- nrow(input$hypothesesMatrix)
   sapply(
     seq_len(n_hypo), function(i) {
-      1 - ifelse(isTRUE(input[[paste0("reject_", i)]]),1,0)
+      1 - isTruthy(input[[paste0("reject_", i)]])
     }
   )
 })
@@ -146,20 +146,20 @@ SeqPlotInput <- reactive({
 
 
 output$theSeqPlot <- renderUI({
-  myGraph <- lapply(seq_len(length(SeqPlotInput()@graphs)),function(k){
-    tabPanel(title = paste0("Graph_",k),
-             plotOutput(paste0("graph",k)))
+  graph_tabs <- lapply(seq_len(length(SeqPlotInput()@graphs)),function(k){
+    tabPanel(title = paste("Graph",k),
+             plotOutput(paste("graph",k)))
   })
-  do.call(tabsetPanel,myGraph)
+  do.call(tabsetPanel, graph_tabs)
 })
 
 
 observe(
   lapply(seq_len(length(SeqPlotInput()@graphs)),function(k){
-    m = SeqPlotInput()@graphs[[k]]@m
-    rownames(m)<-NULL
-    colnames(m)<-NULL
-    output[[paste0("graph",k)]]<-renderPlot({
+    m <- SeqPlotInput()@graphs[[k]]@m
+    rownames(m) <- NULL
+    colnames(m) <- NULL
+    output[[paste("graph",k)]]<-renderPlot({
       gMCPLite::hGraph(
         nHypotheses = nrow(input$hypothesesMatrix),
         nameHypotheses = stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Name"]),
@@ -204,7 +204,7 @@ observe(
 
 # Initial Design output ---------------------------------------------------------------
 output$gsDesign <- renderUI({
-  myDesign <- lapply(1:nrow(input$hypothesesMatrix),function(i){
+  design_tabs <- lapply(1:nrow(input$hypothesesMatrix),function(i){
     if (input$knowpval=="yes"&input[[paste0("design_type_", i)]] == "fix"){
       tabPanel(title = input$hypothesesMatrix[i,"Name"],
                h3(paste0(input$hypothesesMatrix[i,"Name"], " is fixed sample size design.")))
@@ -212,7 +212,7 @@ output$gsDesign <- renderUI({
       tabPanel(title = input$hypothesesMatrix[i,"Name"],
                htmlOutput(paste0("tmp",i)))
     }})
-  do.call(tabsetPanel,myDesign)
+  do.call(tabsetPanel,design_tabs)
   })
 
 observe(lapply(1:nrow(input$hypothesesMatrix),function(i){

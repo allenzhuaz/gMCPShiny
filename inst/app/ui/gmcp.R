@@ -1,15 +1,23 @@
 tabPanel(
-  title = "Iterative Graphs Update",
+  title = "Iterative Graph Updates",
   icon = icon("hourglass"),
   fluidRow(
     column(
       width = 10, offset = 1,
       fluidRow(
         column(
-          width = 12,
-          span("Update Iterative Graphs", style = "font-size:1.5rem;")
+          width = 4,
+          span("Update Iterative Graph", style = "font-size:1.5rem;")
+        ),
+      column(
+        width = 8,
+        tags$style("#btn_group_gmcp { float:right; }"),
+        div(
+          id = "btn_group_gmcp",
+          actionButton("btn_gmcp_setting_modal", label = "Display Settings", class = "btn btn-outline-primary", icon = icon("cog")),
         )
-      ),
+      )
+    ),
       hr(),
       fluidRow(
         column(

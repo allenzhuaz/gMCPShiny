@@ -13,9 +13,8 @@ output$pval_update_ui <- renderUI({
 
       conditionalPanel(
         condition = paste0("input.design_type_", i, " == 'gs_upload'"),
-        #checkboxInput("minialpha", label = "With minimum alpha spending", value = FALSE, width = "100%"),
         selectInput(
-          "spending_interim",
+          inputId = paste0("spending_interim_", i),
           label = tagList(
             "Interim analysis alpha spending strategy",
             helpPopover(
@@ -77,6 +76,20 @@ output$reject_update_ui <- renderUI({
 })
 outputOptions(output, name = "reject_update_ui", suspendWhenHidden = FALSE)
 
+GetDesign <- reactive({
+  n_hypo <- nrow(input$hypothesesMatrix)
+  sapply(seq_len(n_hypo), function(i){
+    if (input[[paste0("design_type_", i)]] %in% c("fix")){
+      "fixed design"
+    } else if(input[[paste0("design_type_", i)]] == "gs_upload"){
+      ##Read in uploaded design
+      rds <- input[[paste0("btn_gsdesign_",i)]]
+      req(rds)
+      readRDS(rds$datapath)$gs_object
+    }
+  })
+})
+
 GetPval <- reactive({
   n_hypo <- nrow(input$hypothesesMatrix)
   sapply(seq_len(n_hypo), function(i){
@@ -90,9 +103,9 @@ GetPval <- reactive({
       ##get observed events from input
       obsEvents <- sapply(input[[paste0("pvalMatrix_", i)]][,"ObsEvents"], arithmetic_to_numeric, USE.NAMES = FALSE)
       ##spending time
-      if (input$spending_interim == "info"){
+      if (input[[paste0("spending_interim_", i)]] == "info"){
         spendingTime <- obsEvents/max(design$gs_object$n.I)
-      } else if (input$spending_interim == "pmin") {
+      } else if (input[[paste0("spending_interim_", i)]] == "pmin") {
         spendingTime <- apply(cbind(obsEvents,design$gs_object$n.I[1:length(obsEvents)]),1,min)/max(design$gs_object$n.I)
       }
       #spendingTime <- ifelse(spendingTime>1,1,spendingTime)
@@ -107,17 +120,11 @@ GetPval <- reactive({
   })
 })
 
-GetGSRej <- reactive({
-  n_hypo <- nrow(input$hypothesesMatrix)
-  sapply(seq_len(n_hypo), function(i){
-  })
-})
-
 GetReject <- reactive({
   n_hypo <- nrow(input$hypothesesMatrix)
   sapply(
     seq_len(n_hypo), function(i) {
-      1 - as.numeric(input[[paste0("reject_", i)]]) # rejection decision is reversed
+      1 - ifelse(isTRUE(input[[paste0("reject_", i)]]),1,0)
     }
   )
 })
@@ -137,13 +144,18 @@ SeqPlotInput <- reactive({
   gMCPLite::gMCP(graph = SeqGraph, pvalues = pval, alpha = FWER)
 })
 
-output$theSeqPlot <- renderUI({
-  alphaHypotheses <- sapply(input$hypothesesMatrix[, "Alpha"], arithmetic_to_numeric)
-  FWER <- sum(alphaHypotheses)
-  ngraphs <- length(SeqPlotInput()@graphs)
 
-  myGraph <- list()
-  for (k in 1:ngraphs){
+output$theSeqPlot <- renderUI({
+  myGraph <- lapply(seq_len(length(SeqPlotInput()@graphs)),function(k){
+    tabPanel(title = paste0("Graph_",k),
+             plotOutput(paste0("graph",k)))
+  })
+  do.call(tabsetPanel,myGraph)
+})
+
+
+observe(
+  lapply(seq_len(length(SeqPlotInput()@graphs)),function(k){
     m = SeqPlotInput()@graphs[[k]]@m
     rownames(m)<-NULL
     colnames(m)<-NULL
@@ -151,7 +163,7 @@ output$theSeqPlot <- renderUI({
       gMCPLite::hGraph(
         nHypotheses = nrow(input$hypothesesMatrix),
         nameHypotheses = stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Name"]),
-        alphaHypotheses = SeqPlotInput()@graphs[[k]]@weights * FWER,
+        alphaHypotheses = SeqPlotInput()@graphs[[k]]@weights * sum(sapply(input$hypothesesMatrix[, "Alpha"], arithmetic_to_numeric)),
         m = m,
         fill = factor(stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Group"]),
                       levels = unique(stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Group"]))
@@ -183,46 +195,47 @@ output$theSeqPlot <- renderUI({
           as.numeric(input$nodeposMatrix[, "y"])
         },
         wchar = stringi::stri_unescape_unicode(rv_nodes$wchar)
-      ) #+
-      #ggplot2::labs(
-      #  title = stringi::stri_unescape_unicode(input$plotTitle),
-      #  caption = stringi::stri_unescape_unicode(input$plotCaption)
-      #) +
-      #ggplot2::theme(
-      #  plot.title = ggplot2::element_text(size = input$title.textsize, hjust = input$title.position),
-      #  plot.caption = ggplot2::element_text(size = input$caption.textsize, hjust = input$caption.position)
-      #)
+      )
     })
-    myGraph[[k]]<-tabPanel(title = paste0("Graph_",k),
-                           plotOutput(paste0("graph",k)))
-  }
-  do.call(tabsetPanel,myGraph)
-})
+  })
+)
 
 
 
 # Initial Design output ---------------------------------------------------------------
 output$gsDesign <- renderUI({
+  myDesign <- lapply(1:nrow(input$hypothesesMatrix),function(i){
+    if (input$knowpval=="yes"&input[[paste0("design_type_", i)]] == "fix"){
+      tabPanel(title = input$hypothesesMatrix[i,"Name"],
+               h3(paste0(input$hypothesesMatrix[i,"Name"], " is fixed sample size design.")))
+    }else if (input$knowpval=="yes"&input[[paste0("design_type_", i)]] != "fix"){
+      tabPanel(title = input$hypothesesMatrix[i,"Name"],
+               htmlOutput(paste0("tmp",i)))
+    }})
+  do.call(tabsetPanel,myDesign)
+  })
+
+observe(lapply(1:nrow(input$hypothesesMatrix),function(i){
   if (input$knowpval == "yes"){
-    myDesign<-list()
-    for (i in 1:nrow(input$hypothesesMatrix)){
-      if (input[[paste0("design_type_", i)]] == "fix"){
-        myDesign[[i]]<-tabPanel(title = input$hypothesesMatrix[i,"Name"],
-                 h3(paste0(input$hypothesesMatrix[i,"Name"], " is fixed sample size design.")))
+    if (input[[paste0("design_type_", i)]] == "gs_upload"){
+      rds <- input[[paste0("btn_gsdesign_",i)]]
+      req(rds)
+      design <- readRDS(rds$datapath)
+      output[[paste0("tmp",i)]]<-renderTable({
+        x <- gsDesign::gsBoundSummary(design$gs_object,
+                                 digits   = rv_digits$digits,
+                                 ddigits  = rv_digits$ddigits,
+                                 tdigits  = rv_digits$tdigits)
+        if ("Efficacy" %in% names(x)) x$Efficacy <- format(x$Efficacy, nsmall = rv_digits$digits)
+        if ("Futility" %in% names(x)) x$Futility <- format(x$Futility, nsmall = rv_digits$digits)
+        x
+      },include.rownames=FALSE)
     }
-      if (input[[paste0("design_type_", i)]] != "fix"){
-        rds <- input[[paste0("btn_gsdesign_",i)]]
-        req(rds)
-        design <- readRDS(rds$datapath)
-        output[[paste0("tmp",i)]]<-renderTable({
-          gsDesign::gsBoundSummary(design$gs_object)
-        },include.rownames=FALSE)
-        myDesign[[i]]<-tabPanel(title = input$hypothesesMatrix[i,"Name"],
-                                htmlOutput(paste0("tmp",i)))}
-    }
-    do.call(tabsetPanel,myDesign)
   }
-})
+}
+))
+
+
 
 # Tabular output ---------------------------------------------------------------
 output$TestResultsHTML <- renderUI(
@@ -244,17 +257,17 @@ output$TestResultsHTML <- renderUI(
         )
       )
     }
-    rejected <- rejected %>%
-      filter(Rejected) %>%
-      group_by(Name) %>%
-      summarize(graphRejecting = min(Stage) - 1, .groups = "drop") %>%
-      arrange(graphRejecting)
 
     lastWeights <- as.numeric(SeqPlotInput()@graphs[[ngraphs]]@weights)
     lastGraph <- rep(ngraphs, nrow(EOCtab))
 
     # We will update for rejected hypotheses with last positive weight for each
     if (ngraphs > 1) {
+      rejected <- rejected %>%
+        filter(Rejected) %>%
+        group_by(Name) %>%
+        summarize(graphRejecting = min(Stage) - 1, .groups = "drop") %>%
+        arrange(graphRejecting)
       for (i in 1:(ngraphs - 1)) {
         lastWeights[rejected$Name[i]] <- as.numeric(SeqPlotInput()@graphs[[i]]@weights[rejected$Name[i]])
         lastGraph[rejected$Name[i]] <- i
@@ -266,6 +279,9 @@ output$TestResultsHTML <- renderUI(
     names(EOCtabx) <- c(
       "Name", "Group", "Sequential p",
       "Rejected", "Adjusted p", "Max alpha allocated", "Last Graph")
+    EOCtabx[,3] <- format(EOCtabx[,3], digits = 0, nsmall = rv_digits$digits)
+    EOCtabx[,6] <- format(EOCtabx[,6], digits = 0, nsmall = rv_digits$digits)
+    EOCtabx[,5] <- format(EOCtabx[,5], digits = 0, nsmall = rv_digits$digits)
     output$tmp_seqp <- renderTable({
       EOCtabx %>% select(c(1:3, 6, 4:5, 7))
     })
@@ -279,7 +295,7 @@ output$TestResultsHTML <- renderUI(
         # If not group sequential for this hypothesis, print the max alpha allocated
         # and the nominal p-value
         bounds[[i]]<-tabPanel(title = input$hypothesesMatrix[i,"Name"],
-                                                             h3(paste0(input$hypothesesMatrix[i,"Name"],": Maximum alpha allocated: ",EOCtab$lastAlpha[i],", Nominal p-value for hypothesis test: ",input[[paste0("pval_", i)]])))
+                              h3(paste0(input$hypothesesMatrix[i,"Name"],": Maximum alpha allocated: ",EOCtab$lastAlpha[i],", Nominal p-value for hypothesis test: ",input[[paste0("pval_", i)]])))
       } else {
         ##Read in uploaded design
         rds <- input[[paste0("btn_gsdesign_",i)]]
@@ -288,9 +304,9 @@ output$TestResultsHTML <- renderUI(
         ##get observed events from input
         obsEvents <- sapply(input[[paste0("pvalMatrix_", i)]][,"ObsEvents"], arithmetic_to_numeric, USE.NAMES = FALSE)
         ##spending time
-        if (input$spending_interim == "info"){
+        if (input[[paste0("spending_interim_", i)]] == "info"){
           spendingTime <- obsEvents/max(design$gs_object$n.I)
-        } else if (input$spending_interim == "pmin"){
+        } else if (input[[paste0("spending_interim_", i)]] == "pmin"){
           spendingTime <- apply(cbind(obsEvents,design$gs_object$n.I[1:length(obsEvents)]),1,min)/max(design$gs_object$n.I)
         }
         #spendingTime <- ifelse(spendingTime>1,1,spendingTime)
@@ -327,12 +343,18 @@ output$TestResultsHTML <- renderUI(
             sfupar = d$upper$param
           )
           output[[paste0("tmp_update",i)]]<-renderTable({
-            gsDesign::gsBoundSummary(dupdate,#Nname = "Events",
+            x <- gsDesign::gsBoundSummary(dupdate,
                                      exclude = c(
                                        "B-value", "CP", "CP H1", "Spending",
                                        "~delta at bound", "P(Cross) if delta=0",
-                                       "PP", "P(Cross) if delta=1")
+                                       "PP", "P(Cross) if delta=1"),
+                                     digits   = rv_digits$digits,
+                                     ddigits  = rv_digits$ddigits,
+                                     tdigits  = rv_digits$tdigits
             )
+            if ("Efficacy" %in% names(x)) x$Efficacy <- format(x$Efficacy, nsmall = rv_digits$digits)
+            if ("Futility" %in% names(x)) x$Futility <- format(x$Futility, nsmall = rv_digits$digits)
+            x
           },include.rownames=FALSE)
           bounds[[i]] <- tabPanel(title = input$hypothesesMatrix[i,"Name"],
                                   htmlOutput(paste0("tmp_update",i)))
@@ -347,3 +369,77 @@ output$TestResultsHTML <- renderUI(
   }
 )
 
+# Report output ---------------------------------------------------------------
+GetReportText <- reactive({
+  report <- tempfile(fileext = ".Rmd")
+  brew::brew("templates/report.Rmd", output = report)
+  paste0(readLines(report), collapse = "\n")
+})
+
+output$ReportText <- renderRmd({
+  htmltools::htmlEscape(GetReportText())
+})
+
+observeEvent(input$btn_gmcp_rmd_modal, {
+  showModal(modalDialog(
+    title = "Download Report (R Markdown)",
+    textInputAddonRight("filename_rmd_gmcp", label = "Name the report:", value = "gMCP", addon = ".Rmd", width = "100%"),
+    easyClose = TRUE,
+    footer = tagList(
+      downloadButton("downloadRmd", "Download Report (R Markdown)", class = "btn btn-primary"),
+      modalButton("Cancel")
+    )
+  ))
+})
+
+
+
+output$downloadRmd <- downloadHandler(
+  filename = function() {
+    x <- input$filename_rmd_gmcp
+    # sanitize from input
+    fn0 <- if (x == "") "gMCP" else sanitize_filename(x)
+    # sanitize again
+    fn <- if (fn0 == "") "gMCP" else fn0
+    paste0(fn, ".Rmd")
+  },
+  content = function(file) {
+    writeLines(GetReportText(), con = file)
+  }
+)
+
+observeEvent(input$btn_gmcp_html_modal, {
+  showModal(modalDialog(
+    title = "Download Report (HTML)",
+    textInputAddonRight("filename_html_gmcp", label = "Name the report:", value = "gMCP", addon = ".html", width = "100%"),
+    easyClose = TRUE,
+    footer = tagList(
+      downloadButton("downloadHTML", "Download Report (HTML)", class = "btn btn-primary"),
+      modalButton("Cancel")
+    )
+  ))
+})
+
+
+
+output$downloadHTML <- downloadHandler(
+  filename = function() {
+    x <- input$filename_html_gmcp
+    # sanitize from input
+    fn0 <- if (x == "") "gMCP" else sanitize_filename(x)
+    # sanitize again
+    fn <- if (fn0 == "") "gMCP" else fn0
+    paste0(fn, ".html")
+  },
+  content = function(file) {
+    rmd <- tempfile(fileext = ".Rmd")
+    writeLines(GetReportText(), con = rmd)
+
+    owd <- setwd(dirname(rmd))
+    on.exit(setwd(owd))
+
+    html <- tempfile(fileext = ".html")
+    out <- rmarkdown::render(rmd, output_file = html, quiet = TRUE)
+    file.rename(out, file)
+  }
+)

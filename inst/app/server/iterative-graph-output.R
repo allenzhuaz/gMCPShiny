@@ -206,7 +206,7 @@ observeEvent(SeqPlotInput(), {
   shinyjs::delay(50, {
     shinyjs::runjs(activate_last_tab_plots)
   })
-})
+}, ignoreNULL = FALSE, ignoreInit = FALSE, once = FALSE)
 
 # Initial Design output ---------------------------------------------------------------
 output$gsDesign <- renderUI({

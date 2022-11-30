@@ -107,10 +107,8 @@ GetPval <- reactive({
   })
 })
 
-GetGSRej <- reactive({
-  n_hypo <- nrow(input$hypothesesMatrix)
-  sapply(seq_len(n_hypo), function(i){
-  })
+n_hypo <- reactive({
+  nrow(input$hypothesesMatrix)
 })
 
 GetReject <- reactive({
@@ -214,6 +212,13 @@ observe(
     })
   })
 )
+# active the last tab display
+
+observeEvent(sapply(seq_len(nrow(input$hypothesesMatrix)), function(i) {input[[paste0("reject_", i)]]}), {
+  shinyjs::delay(50, {
+    shinyjs::runjs(activate_last_tab_plots)
+  })
+})
 
 # Initial Design output ---------------------------------------------------------------
 output$gsDesign <- renderUI({

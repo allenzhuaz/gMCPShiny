@@ -2,6 +2,7 @@ tabPanel(
   title = "Iterative Graphs Update",
   icon = icon("hourglass"),
   fluidRow(
+    useShinyjs(),
     column(
       width = 10, offset = 1,
       fluidRow(

@@ -200,7 +200,13 @@ observe(
   })
 )
 
+# active the last tab display
 
+observeEvent(SeqPlotInput(), {
+  shinyjs::delay(50, {
+    shinyjs::runjs(activate_last_tab_plots)
+  })
+})
 
 # Initial Design output ---------------------------------------------------------------
 output$gsDesign <- renderUI({

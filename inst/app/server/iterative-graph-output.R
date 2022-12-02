@@ -200,11 +200,10 @@ observe(
   })
 )
 
-# active the last tab display
-
+# Activate the last tab
 observeEvent(SeqPlotInput(), {
-  shinyjs::delay(50, {
-    shinyjs::runjs(activate_last_tab_plots)
+  shinyjs::delay(100, {
+    shinyjs::runjs(activate_last_tab_seqplot)
   })
 }, ignoreNULL = FALSE, ignoreInit = FALSE, once = FALSE)
 

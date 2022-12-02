@@ -18,14 +18,8 @@ library(dplyr)
 # See <https://github.com/rstudio/shiny/blob/main/R/imageutils.R>
 options(shiny.useragg = TRUE)
 
-
-# user JS to activate the last tab
-activate_last_tab_plots <- '
-const activetab = document.querySelector("#theSeqPlot .nav-tabs li.active");
-const lasttab = document.querySelector("#theSeqPlot .nav-tabs li:last-child");
-activetab.classList.remove("active");
-lasttab.classList.add("active");
-'
+# Use JS to activate the last tab after creation
+activate_last_tab_seqplot <- paste0(readLines("www/js/lasttab.js"), collapse = "\n")
 
 # UI ---------------------------------------------------------------------------
 

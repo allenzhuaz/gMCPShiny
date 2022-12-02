@@ -2,7 +2,7 @@ headerCard(
   "Outputs",
   tabsetPanel(
     tabPanel(
-      "Graph",
+      "Iterative Graph Updates",
       uiOutput("theSeqPlot"),
       br(),
       hr(),
@@ -22,7 +22,9 @@ headerCard(
     ),
     tabPanel(
       "Report",
-      "WIP"
+      rmdOutput("ReportText"),
+      actionButton("btn_gmcp_rmd_modal", label = "Download Report (R Markdown)", class = "btn btn-outline-primary", icon = icon("download")),
+      actionButton("btn_gmcp_html_modal", label = "Download Report (HTML)", class = "btn btn-outline-primary", icon = icon("download"))
     )
   )
 )

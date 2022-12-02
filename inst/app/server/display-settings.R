@@ -331,3 +331,58 @@ observeEvent(input$btn_edge_settings_save, {
   rv_edges$offset <- input$offset
   removeModal()
 })
+
+
+
+
+#------------------------------- Digits Settings ---------------------------------
+rv_digits <- reactiveValues("digits" = 4, "ddigits" = 2, "tdigits" = 1)
+
+# Display settings modal (from gmcp tab)
+observeEvent(input$btn_gmcp_setting_modal, {
+  showModal(modalDialog(
+    title = "Display Settings",
+    h5("Numeric Formats", style = "margin-top: 0;"),
+    hr(),
+    numericInput("setting_digits",
+                 label = tagList(
+                   "digits:",
+                   helpPopover(
+                     "digits",
+                     "Number of digits past the decimal to be printed in the body of the table"
+                   )
+                 ), value = rv_digits$digits, min = 1, max = 10, step = 1, width = "100%"
+    ),
+    numericInput("setting_ddigits",
+                 label = tagList(
+                   "ddigits:",
+                   helpPopover(
+                     "ddigits",
+                     "Number of digits past the decimal to be printed for the natural parameter delta"
+                   )
+                 ), value = rv_digits$ddigits, min = 1, max = 10, step = 1, width = "100%"
+    ),
+    numericInput("setting_tdigits",
+                 label = tagList(
+                   "tdigits:",
+                   helpPopover(
+                     "tdigits",
+                     "Number of digits past the decimal point to be shown for estimated timing of each analysis"
+                   )
+                 ), value = rv_digits$tdigits, min = 0, max = 10, step = 1, width = "100%"
+    ),
+    hr(),
+    easyClose = TRUE,
+    footer = tagList(
+      actionButton("btn_gmcp_settings_save", label = "Save Settings", class = "btn-primary", icon = icon("save")),
+      modalButton("Cancel")
+    )
+  ))
+})
+
+observeEvent(input$btn_gmcp_settings_save, {
+  rv_digits$digits <- input$setting_digits
+  rv_digits$ddigits <- input$setting_ddigits
+  rv_digits$tdigits <- input$setting_tdigits
+  removeModal()
+})

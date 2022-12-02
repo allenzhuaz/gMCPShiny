@@ -21,15 +21,15 @@ remotes::install_github("Merck/gMCPShiny")
 To run the app locally:
 
 ```r
-gMCPShiny::run()
+gMCPShiny::run_app()
 ```
 
 ## Deployed instances
 
 ### Production version
 
-- <https://gmcp.shinyapps.io/prod/>
 - <https://rinpharma.shinyapps.io/gmcp/> (faster and more scalable access)
+- <https://gmcp.shinyapps.io/prod/>
 
 ### Development version
 

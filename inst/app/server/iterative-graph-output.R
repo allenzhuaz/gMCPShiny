@@ -1,8 +1,24 @@
+gethypothesesMatrix <- reactive({
+  row.empty <- unique(which(input$hypothesesMatrix == '', arr.ind=TRUE)[,1])
+  if (identical(row.empty, integer(0))) {input$hypothesesMatrix}else{
+    input$hypothesesMatrix[- row.empty,]
+  }
+})
+
+n_hypo <- reactive({
+  nrow(gethypothesesMatrix())
+})
+
+fwerInput <- reactive({
+  alphaHypotheses <- sapply(gethypothesesMatrix()[, "Alpha"], arithmetic_to_numeric)
+  sum(alphaHypotheses)
+})
+
 output$pval_update_ui <- renderUI({
-  lapply(seq_len(nrow(input$hypothesesMatrix)), function(i) {
+  lapply(seq_len(n_hypo()), function(i) {
     tagList(
       hr(),
-      h5(paste0("Hypothesis ", input$hypothesesMatrix[, "Name"][i])),
+      h5(paste0("Hypothesis ", gethypothesesMatrix()[, "Name"][i])),
 
       selectInput(
         inputId = paste0("design_type_", i),
@@ -65,11 +81,11 @@ output$pval_update_ui <- renderUI({
 outputOptions(output, name = "pval_update_ui", suspendWhenHidden = FALSE)
 
 output$reject_update_ui <- renderUI({
-  lapply(seq_len(nrow(input$hypothesesMatrix)), function(i) {
+  lapply(seq_len(n_hypo()), function(i) {
     tagList(
       checkboxInput(
         inputId = paste0("reject_", i),
-        label = paste0("Reject hypothesis ", input$hypothesesMatrix[, "Name"][i])
+        label = paste0("Reject hypothesis ", gethypothesesMatrix()[, "Name"][i])
       )
     )
   })
@@ -77,8 +93,7 @@ output$reject_update_ui <- renderUI({
 outputOptions(output, name = "reject_update_ui", suspendWhenHidden = FALSE)
 
 GetDesign <- reactive({
-  n_hypo <- nrow(input$hypothesesMatrix)
-  sapply(seq_len(n_hypo), function(i){
+  sapply(seq_len(n_hypo()), function(i){
     if (input[[paste0("design_type_", i)]] %in% c("fix")){
       "fixed design"
     } else if(input[[paste0("design_type_", i)]] == "gs_upload"){
@@ -91,8 +106,7 @@ GetDesign <- reactive({
 })
 
 GetPval <- reactive({
-  n_hypo <- nrow(input$hypothesesMatrix)
-  sapply(seq_len(n_hypo), function(i){
+  sapply(seq_len(n_hypo()), function(i){
     if (input[[paste0("design_type_", i)]] %in% c("fix")){
       input[[paste0("pval_", i)]]
     } else if(input[[paste0("design_type_", i)]] == "gs_upload"){
@@ -121,9 +135,8 @@ GetPval <- reactive({
 })
 
 GetReject <- reactive({
-  n_hypo <- nrow(input$hypothesesMatrix)
   sapply(
-    seq_len(n_hypo), function(i) {
+    seq_len(n_hypo()), function(i) {
       1 - isTruthy(input[[paste0("reject_", i)]])
     }
   )
@@ -131,17 +144,16 @@ GetReject <- reactive({
 
 SeqPlotInput <- reactive({
   Trans <- data.frame(input$trwtMatrix)
-  keepTransRows <- (Trans[, 1] %in% input$hypothesesMatrix[, 1]) & (Trans[, 2] %in% input$hypothesesMatrix[, 1])
+  keepTransRows <- (Trans[, 1] %in% gethypothesesMatrix()[, 1]) & (Trans[, 2] %in% gethypothesesMatrix()[, 1])
   transitions <- Trans[keepTransRows, ]
 
   ## Ensure m and alphaHypotheses converted from different types to numeric
-  m <- df2graph(namesH = input$hypothesesMatrix[, 1], df = transitions)
-  alphaHypotheses <- sapply(input$hypothesesMatrix[, "Alpha"], arithmetic_to_numeric)
+  m <- df2graph(namesH = gethypothesesMatrix()[, 1], df = transitions)
+  alphaHypotheses <- sapply(gethypothesesMatrix()[, "Alpha"], arithmetic_to_numeric)
 
-  FWER <- sum(alphaHypotheses)
-  SeqGraph <- gMCPLite::setWeights(object = gMCPLite::matrix2graph(m), weights = alphaHypotheses / FWER)
+  SeqGraph <- gMCPLite::setWeights(object = gMCPLite::matrix2graph(m), weights = alphaHypotheses / fwerInput())
   pval <- if (input$knowpval == "yes") GetPval() else GetReject()
-  gMCPLite::gMCP(graph = SeqGraph, pvalues = pval, alpha = FWER)
+  gMCPLite::gMCP(graph = SeqGraph, pvalues = pval, alpha = fwerInput())
 })
 
 
@@ -161,15 +173,15 @@ observe(
     colnames(m) <- NULL
     output[[paste("graph",k)]]<-renderPlot({
       gMCPLite::hGraph(
-        nHypotheses = nrow(input$hypothesesMatrix),
-        nameHypotheses = stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Name"]),
-        alphaHypotheses = SeqPlotInput()@graphs[[k]]@weights * sum(sapply(input$hypothesesMatrix[, "Alpha"], arithmetic_to_numeric)),
+        nHypotheses = n_hypo(),
+        nameHypotheses = stringi::stri_unescape_unicode(gethypothesesMatrix()[, "Name"]),
+        alphaHypotheses = SeqPlotInput()@graphs[[k]]@weights * sum(sapply(gethypothesesMatrix()[, "Alpha"], arithmetic_to_numeric)),
         m = m,
-        fill = factor(stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Group"]),
-                      levels = unique(stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Group"]))
+        fill = factor(stringi::stri_unescape_unicode(gethypothesesMatrix()[, "Group"]),
+                      levels = unique(stringi::stri_unescape_unicode(gethypothesesMatrix()[, "Group"]))
         ),
-        palette = hgraph_palette(pal_name = rv_nodes$pal_name, n = length(unique(input$hypothesesMatrix[, "Group"])), alpha = rv_nodes$pal_alpha),
-        labels = unique(stringi::stri_unescape_unicode(input$hypothesesMatrix[, "Group"])),
+        palette = hgraph_palette(pal_name = rv_nodes$pal_name, n = length(unique(gethypothesesMatrix()[, "Group"])), alpha = rv_nodes$pal_alpha),
+        labels = unique(stringi::stri_unescape_unicode(gethypothesesMatrix()[, "Group"])),
         legend.name = input$legend.name,
         legend.position = input$legendPosition,
         halfWid = rv_nodes$width,
@@ -184,12 +196,12 @@ observe(
         legend.textsize = input$legend.textsize,
         arrowsize = rv_edges$arrowsize,
         offset = rv_edges$offset,
-        x = if (is.null(input$nodeposMatrix[, "x"]) | !setequal(input$nodeposMatrix[, "Hypothesis"], input$hypothesesMatrix[, "Name"])) {
+        x = if (is.null(input$nodeposMatrix[, "x"]) | !setequal(input$nodeposMatrix[, "Hypothesis"], gethypothesesMatrix()[, "Name"])) {
           NULL
         } else {
           as.numeric(input$nodeposMatrix[, "x"])
         },
-        y = if (is.null(input$nodeposMatrix[, "y"]) | !setequal(input$nodeposMatrix[, "Hypothesis"], input$hypothesesMatrix[, "Name"])) {
+        y = if (is.null(input$nodeposMatrix[, "y"]) | !setequal(input$nodeposMatrix[, "Hypothesis"], gethypothesesMatrix()[, "Name"])) {
           NULL
         } else {
           as.numeric(input$nodeposMatrix[, "y"])
@@ -209,18 +221,18 @@ observeEvent(SeqPlotInput(), {
 
 # Initial Design output ---------------------------------------------------------------
 output$gsDesign <- renderUI({
-  design_tabs <- lapply(1:nrow(input$hypothesesMatrix),function(i){
+  design_tabs <- lapply(1:n_hypo(),function(i){
     if (input$knowpval=="yes"&input[[paste0("design_type_", i)]] == "fix"){
-      tabPanel(title = input$hypothesesMatrix[i,"Name"],
-               h3(paste0(input$hypothesesMatrix[i,"Name"], " is fixed sample size design.")))
+      tabPanel(title = gethypothesesMatrix()[i,"Name"],
+               h3(paste0(gethypothesesMatrix()[i,"Name"], " is fixed sample size design.")))
     }else if (input$knowpval=="yes"&input[[paste0("design_type_", i)]] != "fix"){
-      tabPanel(title = input$hypothesesMatrix[i,"Name"],
+      tabPanel(title = gethypothesesMatrix()[i,"Name"],
                htmlOutput(paste0("tmp",i)))
     }})
   do.call(tabsetPanel,design_tabs)
   })
 
-observe(lapply(1:nrow(input$hypothesesMatrix),function(i){
+observe(lapply(1:n_hypo(),function(i){
   if (input$knowpval == "yes"){
     if (input[[paste0("design_type_", i)]] == "gs_upload"){
       rds <- input[[paste0("btn_gsdesign_",i)]]
@@ -246,11 +258,11 @@ observe(lapply(1:nrow(input$hypothesesMatrix),function(i){
 output$TestResultsHTML <- renderUI(
   {
     ##sequntial pvalues to graphs comparison
-    EOCtab <- data.frame(input$hypothesesMatrix[,c(1,3)])
+    EOCtab <- data.frame(gethypothesesMatrix()[,c(1,3)])
     EOCtab$seqp <- GetPval()
     EOCtab$Rejected <- SeqPlotInput()@rejected
     EOCtab$adjPValues <- SeqPlotInput()@adjPValues
-    FWER <- sum(sapply(input$hypothesesMatrix[, "Alpha"], arithmetic_to_numeric))
+    FWER <- fwerInput()
     ngraphs <- length(SeqPlotInput()@graphs)
     rejected <- NULL
     for (i in 1:ngraphs){
@@ -284,23 +296,29 @@ output$TestResultsHTML <- renderUI(
     names(EOCtabx) <- c(
       "Name", "Group", "Sequential p",
       "Rejected", "Adjusted p", "Max alpha allocated", "Last Graph")
-    EOCtabx[,3] <- format(EOCtabx[,3], digits = 0, nsmall = rv_digits$digits)
-    EOCtabx[,6] <- format(EOCtabx[,6], digits = 0, nsmall = rv_digits$digits)
-    EOCtabx[,5] <- format(EOCtabx[,5], digits = 0, nsmall = rv_digits$digits)
+    EOCtabx[,3] <- format(round(EOCtabx[,3],rv_digits$digits), nsmall = rv_digits$digits)
+    EOCtabx[,6] <- format(round(EOCtabx[,6],rv_digits$digits), nsmall = rv_digits$digits)
+    EOCtabx[,5] <- format(round(EOCtabx[,5],rv_digits$digits), nsmall = rv_digits$digits)
+    EOCtabOutput <- if (input$knowpval=="yes"){
+      EOCtabx %>% select(c(1:3, 6, 4:5, 7))}else{
+      EOCtabx %>% select(c(1:2, 6, 4:5, 7))}
     output$tmp_seqp <- renderTable({
-      EOCtabx %>% select(c(1:3, 6, 4:5, 7))
-    })
+      EOCtabOutput})
     seqp <- htmlOutput('tmp_seqp')
 
     #Bounds at allocated alpha
     bounds<-list()
-    for (i in 1:nrow(input$hypothesesMatrix)) {
+    for (i in 1:n_hypo()) {
       ##Get input results
       if (input[[paste0("design_type_", i)]] %in% c("fix")){
         # If not group sequential for this hypothesis, print the max alpha allocated
         # and the nominal p-value
-        bounds[[i]]<-tabPanel(title = input$hypothesesMatrix[i,"Name"],
-                              h3(paste0(input$hypothesesMatrix[i,"Name"],": Maximum alpha allocated: ",EOCtab$lastAlpha[i],", Nominal p-value for hypothesis test: ",input[[paste0("pval_", i)]])))
+        bounds[[i]]<-if(input$knowpval=="yes"){
+          tabPanel(title = gethypothesesMatrix()[i,"Name"],
+                   h3(paste0(gethypothesesMatrix()[i,"Name"],": Maximum alpha allocated: ",EOCtab$lastAlpha[i],", Nominal p-value for hypothesis test: ",input[[paste0("pval_", i)]])))}else{
+                     tabPanel(title = gethypothesesMatrix()[i,"Name"],
+                              h3(paste0(gethypothesesMatrix()[i,"Name"],": Maximum alpha allocated: ",EOCtab$lastAlpha[i],".")))
+                              }
       } else {
         ##Read in uploaded design
         rds <- input[[paste0("btn_gsdesign_",i)]]
@@ -361,7 +379,7 @@ output$TestResultsHTML <- renderUI(
             if ("Futility" %in% names(x)) x$Futility <- format(x$Futility, nsmall = rv_digits$digits)
             x
           },include.rownames=FALSE)
-          bounds[[i]] <- tabPanel(title = input$hypothesesMatrix[i,"Name"],
+          bounds[[i]] <- tabPanel(title = gethypothesesMatrix()[i,"Name"],
                                   htmlOutput(paste0("tmp_update",i)))
         }
       }

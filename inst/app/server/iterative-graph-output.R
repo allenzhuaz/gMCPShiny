@@ -1,8 +1,5 @@
 gethypothesesMatrix <- reactive({
-  row.empty <- unique(which(input$hypothesesMatrix == '', arr.ind=TRUE)[,1])
-  if (identical(row.empty, integer(0))) {input$hypothesesMatrix}else{
-    input$hypothesesMatrix[- row.empty,]
-  }
+  input$hypothesesMatrix[!apply(input$hypothesesMatrix == "", 1, all),]
 })
 
 n_hypo <- reactive({

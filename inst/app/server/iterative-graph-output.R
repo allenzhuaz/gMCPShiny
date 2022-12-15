@@ -1,5 +1,5 @@
 gethypothesesMatrix <- reactive({
-  input$hypothesesMatrix[!apply(input$hypothesesMatrix == "", 1, all),]
+  input$hypothesesMatrix[!(apply(input$hypothesesMatrix == "", 1, all)),]
 })
 
 n_hypo <- reactive({

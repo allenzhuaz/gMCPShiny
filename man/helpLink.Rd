@@ -7,14 +7,14 @@
 helpLink(href)
 }
 \arguments{
-\item{href}{TBA}
+\item{href}{URL to open.}
 }
 \value{
-TBA
+Link element.
 }
 \description{
 Help link with an icon and opens in a new window or tab.
 }
 \examples{
-NULL
+helpLink("https://en.wikipedia.org/wiki/List_of_Unicode_characters")
 }

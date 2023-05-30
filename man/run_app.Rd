@@ -16,13 +16,14 @@ by Google Chrome for being considered unsafe: 3659, 4045, 5060,
 ports will be tried.}
 }
 \value{
-TBA
+An object that represents the app.
+Printing the object or passing it to \code{\link[shiny:runApp]{shiny::runApp()}} will run the app.
 }
 \description{
 Run Shiny app
 }
 \examples{
-\dontrun{
-gMCPShiny::run_app()
+if (interactive()) {
+  gMCPShiny::run_app()
 }
 }

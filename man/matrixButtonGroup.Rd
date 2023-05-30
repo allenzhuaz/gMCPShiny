@@ -13,16 +13,16 @@ addMatrixRow(x)
 delMatrixRow(x)
 }
 \arguments{
-\item{inputId}{TBA}
+\item{inputId}{ID of the matrix input.}
 
-\item{x}{TBA}
+\item{x}{Name of the matrix input to add a row to or delete a row from.}
 }
 \value{
-TBA
+A matrix button group.
 }
 \description{
-Buttons to add/delete rows and reset a matrix input
+Buttons to add/delete rows and reset a matrix input.
 }
 \examples{
-NULL
+matrixButtonGroup("matrix")
 }

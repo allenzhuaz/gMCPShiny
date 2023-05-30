@@ -28,18 +28,47 @@ will be used when \code{expr} is evaluated. If \code{expr} is a quosure and you
 would like to use its expression as a value for \code{expr}, then you must set
 \code{quoted} to \code{TRUE}.}
 
-\item{outputArgs}{TBA}
+\item{outputArgs}{List of additional arguments to pass to the
+output function.}
 
-\item{delay}{TBA}
+\item{delay}{Delay in milliseconds before syntax highlighting starts.}
 
 \item{outputId}{Output variable to read the R code from.}
 }
 \value{
-TBA
+A render function similar to \code{\link[shiny:renderPrint]{shiny::renderText()}}.
 }
 \description{
-Description TBA
+Renders R code with syntax highlighting using the highlight.js library.
 }
 \examples{
-NULL
+if (interactive()) {
+  library("shiny")
+
+  ui <- fluidPage(
+    fluidRow(
+      column(
+        4,
+        textAreaInput(
+          "rcode_in",
+          label = NULL,
+          width = "100\%", height = "300px",
+          value = "library('shiny')\n\nset.seed(42)\nx <- runif(10)"
+        )
+      ),
+      column(
+        8,
+        rcodeOutput("rcode_out")
+      )
+    )
+  )
+
+  server <- function(input, output) {
+    output$rcode_out <- renderRcode({
+      htmltools::htmlEscape(input$rcode_in)
+    })
+  }
+
+  shinyApp(ui = ui, server = server)
+}
 }

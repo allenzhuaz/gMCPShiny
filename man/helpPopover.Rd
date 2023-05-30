@@ -7,16 +7,19 @@
 helpPopover(title, content)
 }
 \arguments{
-\item{title}{TBA}
+\item{title}{Title of the popover.}
 
-\item{content}{TBA}
+\item{content}{Content of the popover.}
 }
 \value{
-TBA
+Popover element.
 }
 \description{
-Help popovers (with question mark icon)
+Help popovers with question mark icon (Bootstrap 5).
 }
 \examples{
-NULL
+helpPopover(
+  "digits",
+  "Number of digits past the decimal."
+)
 }

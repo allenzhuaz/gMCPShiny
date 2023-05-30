@@ -44,11 +44,18 @@ object.}
 \item{placeholder}{The text to show before a file has been uploaded.}
 }
 \value{
-TBA
+Button for file input.
 }
 \description{
-File input but with only the button
+File input but with only the button.
 }
 \examples{
-NULL
+fileButtonInput(
+  "restore",
+  label = NULL,
+  buttonLabel = "Restore",
+  multiple = FALSE,
+  accept = ".rds",
+  width = "50\%"
+)
 }

@@ -12,18 +12,20 @@ hgraph_palette(
 )
 }
 \arguments{
-\item{pal_name}{Color palette name}
+\item{pal_name}{Color palette name.}
 
-\item{n}{How many different colors for the selected color palette}
+\item{n}{How many different colors for the selected color palette?}
 
 \item{alpha}{Transparency level, a real number in (0, 1].}
 }
 \value{
-TBA
+A vector of color hex values.
 }
 \description{
-Adaptive color palette generator for hGraph using \code{pal_adaptive()} and \code{pal_ramp()}.
+Adaptive color palette generator for hGraph using
+\code{pal_adaptive()} and \code{pal_ramp()}.
 }
 \examples{
-NULL
+hgraph_palette("gray", n = 10)
+hgraph_palette("Okabe-Ito", n = 15)
 }

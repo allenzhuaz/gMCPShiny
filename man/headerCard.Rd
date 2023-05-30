@@ -7,16 +7,18 @@
 headerCard(title, ...)
 }
 \arguments{
-\item{title}{TBA}
+\item{title}{Card title.}
 
-\item{...}{TBA}
+\item{...}{List of elements to include in the body of the card.}
 }
 \value{
-TBA
+Card element with header and body.
 }
 \description{
-Card with header
+Card with header (Bootstrap 5).
 }
 \examples{
-NULL
+if (interactive()) {
+  headerCard("Card title", "Card body")
+}
 }

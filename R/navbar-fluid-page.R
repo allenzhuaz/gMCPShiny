@@ -1,41 +1,49 @@
 #' Create a page with a top level navigation bar within a fluid container
 #'
-#' Slightly modified from shiny::navbarPage to support:
-#' * navbar inside a fluid container instead of full width
-#' * brand image before title.
+#' Slightly modified from [shiny::navbarPage()] to support:
+#' - Navbar inside a fluid container instead of full width.
+#' - Brand image before title.
 #'
 #' @inheritParams shiny::navbarPage
-#' @param brand_image TBA
-#' @param brand_image_width TBA
-#' @param brand_image_height TBA
+#' @param brand_image Path to the brand image.
+#' @param brand_image_width Width of the brand image in pixels.
+#' @param brand_image_height Height of the brand image in pixels.
 #'
-#' @return TBA
+#' @return A page with a top level navigation bar within a fluid container.
 #'
-#' @export navbarFluidPage
+#' @export
 #'
 #' @examples
-#' NULL
+#' library(shiny)
 #'
+#' navbarFluidPage(
+#'   "App Title",
+#'   tabPanel("Plot"),
+#'   tabPanel("Summary"),
+#'   tabPanel("Table")
+#' )
+
 # shiny and bslib versions:
 # https://github.com/rstudio/shiny/tree/9389160af06b2f26d3746fa06c6ac0df8e76c8dd
 # https://github.com/rstudio/bslib/tree/888fbe064491692deb56fd90dc23455052e31073
-#'
-navbarFluidPage <- function(title,
-                            ...,
-                            id = NULL,
-                            selected = NULL,
-                            position = c("static-top", "fixed-top", "fixed-bottom"),
-                            header = NULL,
-                            footer = NULL,
-                            inverse = FALSE,
-                            collapsible = FALSE,
-                            fluid = TRUE,
-                            theme = NULL,
-                            windowTitle = NA,
-                            lang = NULL,
-                            brand_image,
-                            brand_image_width,
-                            brand_image_height) {
+
+navbarFluidPage <- function(
+    title,
+    ...,
+    id = NULL,
+    selected = NULL,
+    position = c("static-top", "fixed-top", "fixed-bottom"),
+    header = NULL,
+    footer = NULL,
+    inverse = FALSE,
+    collapsible = FALSE,
+    fluid = TRUE,
+    theme = NULL,
+    windowTitle = NA,
+    lang = NULL,
+    brand_image,
+    brand_image_width,
+    brand_image_height) {
   remove_first_class <- function(x) {
     class(x) <- class(x)[-1]
     x
@@ -71,17 +79,18 @@ find_characters <- function(x) {
 }
 
 #' @importFrom bslib bs_theme
-page_navbar <- function(..., title = NULL, id = NULL, selected = NULL,
-                        position = c("static-top", "fixed-top", "fixed-bottom"),
-                        header = NULL, footer = NULL,
-                        bg = NULL, inverse = "auto",
-                        collapsible = TRUE, fluid = TRUE,
-                        theme = bs_theme(),
-                        window_title = NA,
-                        lang = NULL,
-                        brand_image,
-                        brand_image_width,
-                        brand_image_height) {
+page_navbar <- function(
+    ..., title = NULL, id = NULL, selected = NULL,
+    position = c("static-top", "fixed-top", "fixed-bottom"),
+    header = NULL, footer = NULL,
+    bg = NULL, inverse = "auto",
+    collapsible = TRUE, fluid = TRUE,
+    theme = bs_theme(),
+    window_title = NA,
+    lang = NULL,
+    brand_image,
+    brand_image_width,
+    brand_image_height) {
   # https://github.com/rstudio/shiny/issues/2310
   if (!is.null(title) && isTRUE(is.na(window_title))) {
     window_title <- unlist(find_characters(title))
@@ -111,15 +120,16 @@ page_navbar <- function(..., title = NULL, id = NULL, selected = NULL,
 
 #' @importFrom htmltools css tagAppendAttributes
 #' @importFrom bslib bs_get_contrast
-navs_bar <- function(..., title = NULL, id = NULL, selected = NULL,
-                     # TODO: add sticky-top as well?
-                     position = c("static-top", "fixed-top", "fixed-bottom"),
-                     header = NULL, footer = NULL,
-                     bg = NULL, inverse = "auto",
-                     collapsible = TRUE, fluid = TRUE,
-                     brand_image,
-                     brand_image_width,
-                     brand_image_height) {
+navs_bar <- function(
+    ..., title = NULL, id = NULL, selected = NULL,
+    # TODO: add sticky-top as well?
+    position = c("static-top", "fixed-top", "fixed-bottom"),
+    header = NULL, footer = NULL,
+    bg = NULL, inverse = "auto",
+    collapsible = TRUE, fluid = TRUE,
+    brand_image,
+    brand_image_width,
+    brand_image_height) {
   if (identical(inverse, "auto")) {
     inverse <- TRUE
     if (!is.null(bg)) {
@@ -313,8 +323,9 @@ buildNavItem <- function(divTag, tabsetId, index) {
 # declared inside the buildTabset() function and it's been
 # refactored for clarity and reusability). Called internally
 # by buildTabset.
-buildTabItem <- function(index, tabsetId, foundSelected, tabs = NULL,
-                         divTag = NULL, textFilter = NULL) {
+buildTabItem <- function(
+    index, tabsetId, foundSelected, tabs = NULL,
+    divTag = NULL, textFilter = NULL) {
   divTag <- divTag %||% tabs[[index]]
 
   # Handles navlistPanel() headers and dropdown dividers
@@ -472,22 +483,23 @@ tag_has_class_ <- function(x, class) {
 #  (with minor modifications)
 # -----------------------------------------------------------------------
 #' @importFrom htmltools tagList tagAppendChild
-navbarPage_ <- function(title,
-                        ...,
-                        id = NULL,
-                        selected = NULL,
-                        position = c("static-top", "fixed-top", "fixed-bottom"),
-                        header = NULL,
-                        footer = NULL,
-                        inverse = FALSE,
-                        collapsible = FALSE,
-                        fluid = TRUE,
-                        theme = NULL,
-                        windowTitle = title,
-                        lang = NULL,
-                        brand_image,
-                        brand_image_width,
-                        brand_image_height) {
+navbarPage_ <- function(
+    title,
+    ...,
+    id = NULL,
+    selected = NULL,
+    position = c("static-top", "fixed-top", "fixed-bottom"),
+    header = NULL,
+    footer = NULL,
+    inverse = FALSE,
+    collapsible = FALSE,
+    fluid = TRUE,
+    theme = NULL,
+    windowTitle = title,
+    lang = NULL,
+    brand_image,
+    brand_image_width,
+    brand_image_height) {
   # alias title so we can avoid conflicts w/ title in withTags
   pageTitle <- title
 

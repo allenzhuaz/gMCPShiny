@@ -2,15 +2,16 @@
 #'
 #' @inheritParams shiny::runApp
 #'
-#' @return TBA
+#' @return An object that represents the app.
+#'   Printing the object or passing it to [shiny::runApp()] will run the app.
 #'
 #' @importFrom shiny shinyAppFile
 #'
-#' @export run_app
+#' @export
 #'
 #' @examples
-#' \dontrun{
-#' gMCPShiny::run_app()
+#' if (interactive()) {
+#'   gMCPShiny::run_app()
 #' }
 run_app <- function(port = getOption("shiny.port")) {
   shiny::shinyAppFile(

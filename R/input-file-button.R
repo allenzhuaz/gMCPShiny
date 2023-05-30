@@ -1,10 +1,10 @@
 #' File input button
 #'
-#' File input but with only the button
+#' File input but with only the button.
 #'
 #' @inheritParams shiny::fileInput
 #'
-#' @return TBA
+#' @return Button for file input.
 #'
 #' @importFrom htmltools tags span
 #' @importFrom shiny validateCssUnit restoreInput
@@ -12,9 +12,22 @@
 #' @export fileButtonInput
 #'
 #' @examples
-#' NULL
-fileButtonInput <- function(inputId, label, multiple = FALSE, accept = NULL, width = NULL,
-                            buttonLabel = "Browse...", placeholder = "No file selected") {
+#' fileButtonInput(
+#'   "restore",
+#'   label = NULL,
+#'   buttonLabel = "Restore",
+#'   multiple = FALSE,
+#'   accept = ".rds",
+#'   width = "50%"
+#' )
+fileButtonInput <- function(
+    inputId,
+    label,
+    multiple = FALSE,
+    accept = NULL,
+    width = NULL,
+    buttonLabel = "Browse...",
+    placeholder = "No file selected") {
   restoredValue <- restoreInput(id = inputId, default = NULL)
   if (!is.null(restoredValue) && !is.data.frame(restoredValue)) {
     warning("Restored value for ", inputId, " has incorrect format.")
@@ -58,10 +71,11 @@ fileButtonInput <- function(inputId, label, multiple = FALSE, accept = NULL, wid
 }
 
 # Copy of shiny:::toJSON()
-toJSON_ <- function(x, ..., dataframe = "columns", null = "null", na = "null",
-                    auto_unbox = TRUE, digits = getOption("shiny.json.digits", 16),
-                    use_signif = TRUE, force = TRUE, POSIXt = "ISO8601", UTC = TRUE,
-                    rownames = FALSE, keep_vec_names = TRUE, strict_atomic = TRUE) {
+toJSON_ <- function(
+    x, ..., dataframe = "columns", null = "null", na = "null",
+    auto_unbox = TRUE, digits = getOption("shiny.json.digits", 16),
+    use_signif = TRUE, force = TRUE, POSIXt = "ISO8601", UTC = TRUE,
+    rownames = FALSE, keep_vec_names = TRUE, strict_atomic = TRUE) {
   if (strict_atomic) {
     x <- I(x)
   }

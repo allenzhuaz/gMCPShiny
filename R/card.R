@@ -1,18 +1,20 @@
 #' Card with header
 #'
-#' Card with header
+#' Card with header (Bootstrap 5).
 #'
-#' @param title TBA
-#' @param ... TBA
+#' @param title Card title.
+#' @param ... List of elements to include in the body of the card.
 #'
-#' @return TBA
+#' @return Card element with header and body.
 #'
 #' @importFrom htmltools tags div
 #'
-#' @export headerCard
+#' @export
 #'
 #' @examples
-#' NULL
+#' if (interactive()) {
+#'   headerCard("Card title", "Card body")
+#' }
 headerCard <- function(title, ...) {
   div(
     class = "card",

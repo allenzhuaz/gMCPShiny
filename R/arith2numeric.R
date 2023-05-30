@@ -1,10 +1,10 @@
 #' Convert arithmetic (character) format to numeric
 #'
-#' @param x character string containing arithmetic operators
+#' @param x Character string containing arithmetic operators.
 #'
-#' @return TBA
+#' @return The numeric value from evaluating the arithmetic expression.
 #'
-#' @export arithmetic_to_numeric
+#' @export
 #'
 #' @examples
 #' # Return numeric values
@@ -20,9 +20,11 @@ arithmetic_to_numeric <- function(x) {
   if (inherits(w_numeric, "try-error")) NA else w_numeric
 }
 
-#' Evaluate evaluate arithmetic expressions (in character string format) safely
+#' Evaluate arithmetic expressions (in character string format) safely
 #'
-#' @param x Must be a character string
+#' @param x A character string.
+#'
+#' @noRd
 #'
 #' @examples
 #' # Can't access variables outside of that environment
@@ -37,8 +39,6 @@ arithmetic_to_numeric <- function(x) {
 #'
 #' # Can't return non-numeric values
 #' safe_eval_str('"a"')
-#'
-#' @noRd
 safe_eval_str <- function(x) {
   if (!is.character(x)) stop("`x` must be a character.")
   res <- eval(parse(text = x), envir = env_safe())
@@ -46,9 +46,13 @@ safe_eval_str <- function(x) {
   res
 }
 
-# Create a calculator environment to evaluate arithmetic expressions safely
-# Modified from https://stackoverflow.com/a/18391779
+#' Create a calculator environment to evaluate arithmetic expressions safely
+#'
+#' Modified from <https://stackoverflow.com/a/18391779>.
+#'
 #' @importFrom methods getGroupMembers
+#'
+#' @noRd
 env_safe <- function() {
   safe_f <- c(getGroupMembers("Math"), getGroupMembers("Arith"), "(", "pi")
   safe_env <- new.env(parent = emptyenv())

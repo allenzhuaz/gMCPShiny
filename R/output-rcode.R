@@ -1,20 +1,54 @@
 #' Render R code with syntax highlighting
 #'
-#' Description TBA
+#' Renders R code with syntax highlighting using the highlight.js library.
 #'
 #' @inheritParams shiny::renderText
-#' @param outputArgs TBA
-#' @param delay TBA
+#' @param outputArgs List of additional arguments to pass to the
+#'   output function.
+#' @param delay Delay in milliseconds before syntax highlighting starts.
 #'
-#' @return TBA
+#' @return A render function similar to [shiny::renderText()].
 #'
 #' @importFrom shiny exprToFunction markRenderFunction
 #'
-#' @export renderRcode
+#' @export
 #'
 #' @examples
-#' NULL
-renderRcode <- function(expr, env = parent.frame(), quoted = FALSE, outputArgs = list(), delay = 100) {
+#' if (interactive()) {
+#'   library("shiny")
+#'
+#'   ui <- fluidPage(
+#'     fluidRow(
+#'       column(
+#'         4,
+#'         textAreaInput(
+#'           "rcode_in",
+#'           label = NULL,
+#'           width = "100%", height = "300px",
+#'           value = "library('shiny')\n\nset.seed(42)\nx <- runif(10)"
+#'         )
+#'       ),
+#'       column(
+#'         8,
+#'         rcodeOutput("rcode_out")
+#'       )
+#'     )
+#'   )
+#'
+#'   server <- function(input, output) {
+#'     output$rcode_out <- renderRcode({
+#'       htmltools::htmlEscape(input$rcode_in)
+#'     })
+#'   }
+#'
+#'   shinyApp(ui = ui, server = server)
+#' }
+renderRcode <- function(
+    expr,
+    env = parent.frame(),
+    quoted = FALSE,
+    outputArgs = list(),
+    delay = 100) {
   func <- exprToFunction(expr, env, quoted)
   renderFunc <- function(shinysession, name, ...) {
     value <- func()
@@ -33,7 +67,7 @@ renderRcode <- function(expr, env = parent.frame(), quoted = FALSE, outputArgs =
 #' @importFrom htmltools tagList
 #' @importFrom shiny uiOutput
 #'
-#' @export rcodeOutput
+#' @export
 rcodeOutput <- function(outputId) {
   tagList(
     rcodeHighlightDeps(),

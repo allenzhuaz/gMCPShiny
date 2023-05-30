@@ -1,20 +1,54 @@
 #' Render R Markdown with syntax highlighting
 #'
-#' Description TBA
+#' Renders R Markdown with syntax highlighting using the highlight.js library.
 #'
 #' @inheritParams shiny::renderText
-#' @param outputArgs TBA
-#' @param delay TBA
+#' @param outputArgs List of additional arguments to pass to the
+#'   output function.
+#' @param delay Delay in milliseconds before syntax highlighting starts.
 #'
-#' @return TBA
+#' @return A render function similar to [shiny::renderText()].
 #'
 #' @importFrom shiny exprToFunction markRenderFunction
 #'
-#' @export renderRmd
+#' @export
 #'
 #' @examples
-#' NULL
-renderRmd <- function(expr, env = parent.frame(), quoted = FALSE, outputArgs = list(), delay = 100) {
+#' if (interactive()) {
+#'   library("shiny")
+#'
+#'   ui <- fluidPage(
+#'     fluidRow(
+#'       column(
+#'         4,
+#'         textAreaInput(
+#'           "rmd_in",
+#'           label = NULL,
+#'           width = "100%", height = "500px",
+#'           value = "---\ntitle: Title\noutput: pdf_document\n---\n\n# Heading"
+#'         )
+#'       ),
+#'       column(
+#'         8,
+#'         rmdOutput("rmd_out")
+#'       )
+#'     )
+#'   )
+#'
+#'   server <- function(input, output) {
+#'     output$rmd_out <- renderRmd({
+#'       htmltools::htmlEscape(input$rmd_in)
+#'     })
+#'   }
+#'
+#'   shinyApp(ui = ui, server = server)
+#' }
+renderRmd <- function(
+    expr,
+    env = parent.frame(),
+    quoted = FALSE,
+    outputArgs = list(),
+    delay = 100) {
   func <- exprToFunction(expr, env, quoted)
   renderFunc <- function(shinysession, name, ...) {
     value <- func()

@@ -13,7 +13,7 @@
 #' @importFrom htmltools tags span
 #' @importFrom shiny validateCssUnit restoreInput
 #'
-#' @export textInputAddonRight
+#' @export
 #'
 #' @examples
 #' textInputAddonRight(

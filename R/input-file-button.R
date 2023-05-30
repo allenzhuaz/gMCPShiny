@@ -9,7 +9,7 @@
 #' @importFrom htmltools tags span
 #' @importFrom shiny validateCssUnit restoreInput
 #'
-#' @export fileButtonInput
+#' @export
 #'
 #' @examples
 #' fileButtonInput(

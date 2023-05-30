@@ -67,7 +67,7 @@ renderRmd <- function(
 #' @importFrom htmltools tagList
 #' @importFrom shiny uiOutput
 #'
-#' @export rmdOutput
+#' @export
 rmdOutput <- function(outputId) {
   tagList(
     rmdHighlightDeps(),

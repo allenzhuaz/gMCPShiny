@@ -7,10 +7,10 @@
 arithmetic_to_numeric(x)
 }
 \arguments{
-\item{x}{character string containing arithmetic operators}
+\item{x}{Character string containing arithmetic operators.}
 }
 \value{
-TBA
+The numeric value from evaluating the arithmetic expression.
 }
 \description{
 Convert arithmetic (character) format to numeric

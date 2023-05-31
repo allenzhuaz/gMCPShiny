@@ -1,10 +1,10 @@
-#' Adaptive palette (discrete)
+#' Adaptive color palette (discrete)
 #'
 #' Create a discrete palette that will use the first `n` colors from
 #' the supplied color values when the palette has enough colors.
 #' Otherwise, use an interpolated color palette.
 #'
-#' @param values Color values.
+#' @param values A vector of color values.
 #'
 #' @importFrom grDevices colorRampPalette
 #'
@@ -22,20 +22,16 @@ pal_ramp <- function(values) {
 
 #' Adaptive color palette generator
 #'
-#' Adaptive color palette generator for ggsci color palettes using `pal_ramp()`.
+#' Adaptive color palette generator using `pal_ramp()`.
 #'
 #' @param raw_cols Character vector of color hex values.
 #' @param alpha Transparency level, a real number in (0, 1].
-#'
-#' @details See `names(ggsci:::ggsci_db)` for all color palette names in ggsci.
-#' See `names(ggsci:::ggsci_db$"pal")` for available palette types under
-#' the palette `pal`.
 #'
 #' @importFrom grDevices col2rgb rgb
 #'
 #' @noRd
 pal_adaptive <- function(raw_cols, alpha = 1) {
-  if (alpha > 1L | alpha <= 0L) stop("alpha must be in (0, 1]")
+  if (alpha > 1L || alpha <= 0L) stop("alpha must be in (0, 1]")
   raw_cols_rgb <- col2rgb(raw_cols)
   alpha_cols <- rgb(
     raw_cols_rgb[1L, ], raw_cols_rgb[2L, ], raw_cols_rgb[3L, ],
@@ -81,27 +77,30 @@ hgraph_pal_hex <- list(
 
 #' Adaptive color palette generator for hGraph
 #'
-#' Adaptive color palette generator for hGraph using `pal_adaptive()` and `pal_ramp()`.
+#' Adaptive color palette generator for hGraph using
+#' `pal_adaptive()` and `pal_ramp()`.
 #'
-#' @param pal_name Color palette name
-#' @param n How many different colors for the selected color palette
+#' @param pal_name Color palette name.
+#' @param n How many different colors for the selected color palette?
 #' @param alpha Transparency level, a real number in (0, 1].
 #'
-#' @return TBA
+#' @return A vector of color hex values.
 #'
-#' @export hgraph_palette
+#' @export
 #'
 #' @examples
-#' NULL
-hgraph_palette <- function(pal_name = c(
-                             "gray",
-                             "Okabe-Ito",
-                             "d3.category10",
-                             "d3.category20",
-                             "d3.category20b",
-                             "d3.category20c",
-                             "Teal"
-                           ), n, alpha = 1) {
+#' hgraph_palette("gray", n = 10)
+#' hgraph_palette("Okabe-Ito", n = 15)
+hgraph_palette <- function(
+    pal_name = c(
+      "gray",
+      "Okabe-Ito",
+      "d3.category10",
+      "d3.category20",
+      "d3.category20b",
+      "d3.category20c",
+      "Teal"
+    ), n, alpha = 1) {
   pal_name <- match.arg(pal_name)
 
   if (pal_name == "gray") {

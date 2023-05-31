@@ -1,19 +1,22 @@
 #' Help popovers
 #'
-#' Help popovers (with question mark icon)
+#' Help popovers with question mark icon (Bootstrap 5).
 #'
-#' @param title TBA
-#' @param content TBA
+#' @param title Title of the popover.
+#' @param content Content of the popover.
 #'
-#' @return TBA
+#' @return Popover element.
 #'
 #' @importFrom htmltools tags tagList
 #' @importFrom shiny icon
 #'
-#' @export helpPopover
+#' @export
 #'
 #' @examples
-#' NULL
+#' helpPopover(
+#'   "digits",
+#'   "Number of digits past the decimal."
+#' )
 helpPopover <- function(title, content) {
   tagList(
     includePopoverJs(),
@@ -49,17 +52,17 @@ includePopoverJs <- function() singleton(list(injectPopoverHandler()))
 #'
 #' Help link with an icon and opens in a new window or tab.
 #'
-#' @param href TBA
+#' @param href URL to open.
 #'
-#' @return TBA
+#' @return Link element.
 #'
 #' @importFrom htmltools tags
 #' @importFrom shiny icon
 #'
-#' @export helpLink
+#' @export
 #'
 #' @examples
-#' NULL
+#' helpLink("https://en.wikipedia.org/wiki/List_of_Unicode_characters")
 helpLink <- function(href) {
   tags$a(
     href = href,

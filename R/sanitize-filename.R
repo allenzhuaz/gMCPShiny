@@ -3,12 +3,12 @@
 #' Sanitizes file name (without the extension part).
 #' Ported and modified from `fs::path_sanitize()`.
 #'
-#' @param filename TBA
-#' @param replacement TBA
+#' @param filename Input file name.
+#' @param replacement Replacement for illegal characters.
 #'
-#' @return TBA
+#' @return Sanitized file name.
 #'
-#' @export sanitize_filename
+#' @export
 #'
 #' @examples
 #' x <- " znul/zzz.z>z/\\z "

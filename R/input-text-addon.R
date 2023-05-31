@@ -1,20 +1,28 @@
 #' Text input addon
 #'
 #' Text input with addon on the right side.
-#' From <https://getbootstrap.com/docs/5.2/forms/input-group/>.
 #'
 #' @inheritParams shiny::textInput
-#' @param addon Addon text
+#' @param addon Addon text.
 #'
-#' @return TBA
+#' @return Text input with addon on the right side.
+#'
+#' @references
+#' <https://getbootstrap.com/docs/5.3/forms/input-group/>
 #'
 #' @importFrom htmltools tags span
 #' @importFrom shiny validateCssUnit restoreInput
 #'
-#' @export textInputAddonRight
+#' @export
 #'
 #' @examples
-#' NULL
+#' textInputAddonRight(
+#'   "filename",
+#'   label = "Name of the report:",
+#'   value = "gMCPShiny",
+#'   addon = ".Rmd",
+#'   width = "100%"
+#' )
 textInputAddonRight <- function(inputId, label, value = "", width = NULL, placeholder = NULL, addon = NULL) {
   value <- restoreInput(id = inputId, default = value)
   div(

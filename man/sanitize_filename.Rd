@@ -7,12 +7,12 @@
 sanitize_filename(filename, replacement = "-")
 }
 \arguments{
-\item{filename}{TBA}
+\item{filename}{Input file name.}
 
-\item{replacement}{TBA}
+\item{replacement}{Replacement for illegal characters.}
 }
 \value{
-TBA
+Sanitized file name.
 }
 \description{
 Sanitizes file name (without the extension part).

@@ -82,24 +82,29 @@ default).}
 This will be used as the lang in the \code{<html>} tag, as in \code{<html lang="en">}.
 The default (NULL) results in an empty string.}
 
-\item{brand_image}{TBA}
+\item{brand_image}{Path to the brand image.}
 
-\item{brand_image_width}{TBA}
+\item{brand_image_width}{Width of the brand image in pixels.}
 
-\item{brand_image_height}{TBA}
+\item{brand_image_height}{Height of the brand image in pixels.}
 }
 \value{
-TBA
+A page with a top level navigation bar within a fluid container.
 }
 \description{
-Slightly modified from shiny::navbarPage to support:
+Slightly modified from \code{\link[shiny:navbarPage]{shiny::navbarPage()}} to support:
 \itemize{
-\item navbar inside a fluid container instead of full width
-\item brand image before title.
+\item Navbar inside a fluid container instead of full width.
+\item Brand image before title.
 }
 }
 \examples{
-NULL
+library(shiny)
 
-
+navbarFluidPage(
+  "App Title",
+  tabPanel("Plot"),
+  tabPanel("Summary"),
+  tabPanel("Table")
+)
 }

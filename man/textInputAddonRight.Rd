@@ -27,15 +27,23 @@ see \code{\link[shiny:validateCssUnit]{validateCssUnit()}}.}
 be entered into the control. Internet Explorer 8 and 9 do not support this
 option.}
 
-\item{addon}{Addon text}
+\item{addon}{Addon text.}
 }
 \value{
-TBA
+Text input with addon on the right side.
 }
 \description{
 Text input with addon on the right side.
-From \url{https://getbootstrap.com/docs/5.2/forms/input-group/}.
 }
 \examples{
-NULL
+textInputAddonRight(
+  "filename",
+  label = "Name of the report:",
+  value = "gMCPShiny",
+  addon = ".Rmd",
+  width = "100\%"
+)
+}
+\references{
+\url{https://getbootstrap.com/docs/5.3/forms/input-group/}
 }
